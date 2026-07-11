@@ -76,23 +76,28 @@ jobs:
       - name: Validate + tokenise each face (Watch Face Push validation tool)
         run: |
           mkdir -p out/faces out/tokens
-          VAL_VER="1.0.0-alpha10"   # §11: re-verify the current validator version
-          if ! curl -fsSL -o validator-cli.jar \
-            "https://dl.google.com/dl/android/maven2/com/google/android/wearable/watchface/validator/validator-push-cli/${VAL_VER}/validator-push-cli-${VAL_VER}.jar"; then
-            echo "::warning::validator-push-cli ${VAL_VER} download failed — confirm the artifact/URL (WFP-RESEARCH.md §11)"
-          fi
+          # Validator is a self-contained fat jar; latest published version is alpha09
+          # (Google Maven; alpha10 does NOT exist). Invoke: java -jar cli --apk_path --package_name.
+          VAL_VER="1.0.0-alpha09"
+          curl -fsSL -o validator-cli.jar \
+            "https://dl.google.com/android/maven2/com/google/android/wearable/watchface/validator/validator-push-cli/${VAL_VER}/validator-push-cli-${VAL_VER}.jar"
+          echo "validator jar: $(stat -c%s validator-cli.jar) bytes"
+          fail=0
           for d in facepacks/*/; do
             key=$(basename "$d")
             apk=$(ls "$d"build/outputs/apk/release/*.apk 2>/dev/null | head -1)
-            [ -n "$apk" ] || { echo "::warning::no APK for $key"; continue; }
+            [ -n "$apk" ] || { echo "::warning::no APK for $key"; fail=1; continue; }
             cp "$apk" "out/faces/${key}.apk"
-            if [ -f validator-cli.jar ]; then
-              echo "== validating $key =="
-              java -jar validator-cli.jar --apk_path="$apk" --package_name=com.dialed.app \
-                | tee "out/tokens/${key}.out" || echo "::warning::validation failed for $key"
-            fi
+            echo "== validating $key =="
+            if java -jar validator-cli.jar --apk_path="$apk" --package_name="$MARKETPLACE_ID" > "out/tokens/${key}.out" 2>&1; then
+              grep -qi 'Validation is successful' "out/tokens/${key}.out" || fail=1
+            else fail=1; fi
+            tail -3 "out/tokens/${key}.out"
           done
           echo "== staged =="; ls -R out
+          [ "$fail" -eq 0 ] || echo "::warning::one or more faces failed WFP validation — inspect the dialed-facepacks artifact"
+        env:
+          MARKETPLACE_ID: com.dialed.app
 
       - uses: actions/upload-artifact@v4
         with:

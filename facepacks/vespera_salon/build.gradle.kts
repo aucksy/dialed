@@ -28,15 +28,32 @@ android {
             keyPassword = "android"
         }
     }
+    // AGP 9's built-in Kotlin bundles kotlin-stdlib metadata (kotlin/*.kotlin_builtins) into
+    // the APK; WFP's strict entry allowlist (AndroidManifest.xml / resources.arsc / res/** /
+    // META-INF/** only) rejects the kotlin/ dir. hasCode=false means it's never used — drop it.
+    packaging {
+        resources {
+            excludes += listOf(
+                "kotlin/**",
+                "**/*.kotlin_builtins",
+                "META-INF/*.kotlin_module",
+                "META-INF/versions/**",
+                "DebugProbesKt.bin",
+            )
+        }
+    }
+
     buildTypes {
+        // minify MUST stay OFF: hasCode=false already yields no dex, and enabling R8 renames
+        // resources (res/0I.png), breaking WFF @drawable/<name> lookups and the WFP
+        // memory-footprint asset check. Matches the original fablecollection face config.
         release {
             signingConfig = signingConfigs.getByName("faces")
-            isMinifyEnabled = true      // strip the (empty) dex — required for WFF/WFP validity
-            isShrinkResources = false
+            isMinifyEnabled = false
         }
         debug {
             signingConfig = signingConfigs.getByName("faces")
-            isMinifyEnabled = true
+            isMinifyEnabled = false
         }
     }
 }

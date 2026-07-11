@@ -32,8 +32,8 @@ import androidx.wear.compose.material3.EdgeButton
 import androidx.wear.compose.material3.EdgeButtonSize
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.ProgressIndicatorDefaults
+import androidx.wear.compose.foundation.ScrollInfoProvider
 import androidx.wear.compose.material3.ScreenScaffold
-import androidx.wear.compose.material3.ScrollInfoProvider
 import androidx.wear.compose.material3.SegmentedCircularProgressIndicator
 import androidx.wear.compose.material3.Text
 import com.dialed.app.wear.ui.theme.DialedWearColors

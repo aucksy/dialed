@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.foundation.ScrollInfoProvider
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.ScreenScaffold
-import androidx.wear.compose.material3.ScrollInfoProvider
 import androidx.wear.compose.material3.Text
 import com.dialed.app.wear.ui.components.BezelIndeterminate
 import com.dialed.app.wear.ui.components.BezelSegments

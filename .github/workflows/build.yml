@@ -10,8 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  # Phase 1 — the phone storefront APK. This is the primary, always-run artifact.
-  app:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,14 +24,55 @@ jobs:
         with:
           gradle-version: '9.4.1'
 
-      - name: Build storefront (:app)
+      # Phase 0 — repackage every face to the WFP naming, signed with the faces key.
+      # release + minify strips the (empty) classes.dex WFP forbids; res names stay intact.
+      - name: Build all facepacks
+        run: |
+          set -e
+          TASKS=""
+          for d in facepacks/*/; do TASKS="$TASKS :facepacks:$(basename "$d"):assembleRelease"; done
+          echo "Building:$TASKS"
+          gradle $TASKS --no-daemon --stacktrace
+
+      # Validate each face with Google's Watch Face Push validator (fat jar, alpha09 —
+      # alpha10 does not exist), extract its token, and bundle apk+token into :app assets.
+      # STRICT: any face that fails validation fails the build.
+      - name: Validate + tokenise + bundle faces
+        run: |
+          set -e
+          FACES=app/src/main/assets/faces
+          TOKENS=app/src/main/assets/tokens
+          mkdir -p "$FACES" "$TOKENS"
+          VAL_VER="1.0.0-alpha09"
+          curl -fsSL -o validator-cli.jar \
+            "https://dl.google.com/android/maven2/com/google/android/wearable/watchface/validator/validator-push-cli/${VAL_VER}/validator-push-cli-${VAL_VER}.jar"
+          fail=0
+          for d in facepacks/*/; do
+            key=$(basename "$d")
+            apk=$(ls "$d"build/outputs/apk/release/*.apk 2>/dev/null | head -1)
+            [ -n "$apk" ] || { echo "::error::no APK for $key"; fail=1; continue; }
+            out=$(java -jar validator-cli.jar --apk_path="$apk" --package_name=com.dialed.app 2>&1) || true
+            token=$(printf '%s\n' "$out" | sed -n 's/.*generated token: //p' | head -1)
+            if printf '%s\n' "$out" | grep -qi 'Validation is successful' && [ -n "$token" ]; then
+              cp "$apk" "$FACES/${key}.apk"
+              printf '%s' "$token" > "$TOKENS/${key}.token"
+              echo "  ✓ $key"
+            else
+              echo "::error::WFP validation failed for $key"
+              printf '%s\n' "$out" | grep -i 'Failed check'
+              fail=1
+            fi
+          done
+          echo "bundled $(ls "$FACES" 2>/dev/null | wc -l) faces + $(ls "$TOKENS" 2>/dev/null | wc -l) tokens"
+          [ "$fail" -eq 0 ] || { echo "::error::one or more faces failed WFP validation"; exit 1; }
+
+      - name: Build storefront (:app) with bundled faces
         run: gradle :app:assembleDebug --no-daemon --stacktrace
 
       - name: Stage APK
         run: |
           mkdir -p out
-          name="${GITHUB_REF_NAME:-main}"
-          cp app/build/outputs/apk/debug/app-debug.apk "out/dialed-${name}.apk"
+          cp app/build/outputs/apk/debug/app-debug.apk "out/dialed-${GITHUB_REF_NAME:-main}.apk"
           ls -la out
 
       - uses: actions/upload-artifact@v4
@@ -46,63 +86,3 @@ jobs:
         with:
           files: out/*.apk
           generate_release_notes: true
-
-  # Phase 0 — repackage every face to the WFP naming + validate + tokenise.
-  # continue-on-error while the validator-push-cli artifact/output format is confirmed
-  # on first real run (§11 moving target); never blocks the storefront build above.
-  faces:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '9.4.1'
-
-      - name: Build all facepacks (release — minify strips the empty classes.dex)
-        run: |
-          set -e
-          # release + minify=true strips the (empty) classes.dex WFP forbids; res names are
-          # kept in the arsc (validator resolves by name). watchface.xml already patched to
-          # bare resource names by tools/gen-facepacks.mjs. Signed with the faces key.
-          TASKS=""
-          for d in facepacks/*/; do TASKS="$TASKS :facepacks:$(basename "$d"):assembleRelease"; done
-          echo "Building:$TASKS"
-          gradle $TASKS --no-daemon --stacktrace
-
-      - name: Validate + tokenise each face (Watch Face Push validation tool)
-        run: |
-          mkdir -p out/faces out/tokens
-          # Validator is a self-contained fat jar; latest published version is alpha09
-          # (Google Maven; alpha10 does NOT exist). Invoke: java -jar cli --apk_path --package_name.
-          VAL_VER="1.0.0-alpha09"
-          curl -fsSL -o validator-cli.jar \
-            "https://dl.google.com/android/maven2/com/google/android/wearable/watchface/validator/validator-push-cli/${VAL_VER}/validator-push-cli-${VAL_VER}.jar"
-          echo "validator jar: $(stat -c%s validator-cli.jar) bytes"
-          fail=0
-          for d in facepacks/*/; do
-            key=$(basename "$d")
-            apk=$(ls "$d"build/outputs/apk/release/*.apk 2>/dev/null | head -1)
-            [ -n "$apk" ] || { echo "::warning::no APK for $key"; fail=1; continue; }
-            cp "$apk" "out/faces/${key}.apk"
-            echo "== validating $key =="
-            if java -jar validator-cli.jar --apk_path="$apk" --package_name="$MARKETPLACE_ID" > "out/tokens/${key}.out" 2>&1; then
-              grep -qi 'Validation is successful' "out/tokens/${key}.out" || fail=1
-            else fail=1; fi
-            tail -3 "out/tokens/${key}.out"
-          done
-          echo "== staged =="; ls -R out
-          [ "$fail" -eq 0 ] || echo "::warning::one or more faces failed WFP validation — inspect the dialed-facepacks artifact"
-        env:
-          MARKETPLACE_ID: com.dialed.app
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dialed-facepacks
-          path: out/**

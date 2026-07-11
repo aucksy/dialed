@@ -13,6 +13,11 @@ captures/
 *.ap_
 *.dex
 
+# CI-generated bundle: face APKs + validation tokens are produced fresh each build
+# (tokens are matched to that build's APK bytes) — never commit them.
+app/src/main/assets/faces/
+app/src/main/assets/tokens/
+
 # IDE
 .idea/*
 !.idea/icon.png

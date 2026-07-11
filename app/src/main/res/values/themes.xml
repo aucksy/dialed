@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme: UI is driven entirely by Compose; this only sets the window shell. -->
+    <style name="Theme.Dialed" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/dialed_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <!-- Launch theme (androidx core-splashscreen). Logo sweep = F6, handled in Compose. -->
+    <style name="Theme.Dialed.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/dialed_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Dialed</item>
+    </style>
+</resources>

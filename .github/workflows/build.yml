@@ -1,0 +1,100 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['dialed-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # Phase 1 — the phone storefront APK. This is the primary, always-run artifact.
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.4.1'
+
+      - name: Build storefront (:app)
+        run: gradle :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Stage APK
+        run: |
+          mkdir -p out
+          name="${GITHUB_REF_NAME:-main}"
+          cp app/build/outputs/apk/debug/app-debug.apk "out/dialed-${name}.apk"
+          ls -la out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dialed-app
+          path: out/*.apk
+
+      - name: Release (dialed-v* tags only)
+        if: startsWith(github.ref, 'refs/tags/dialed-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*.apk
+          generate_release_notes: true
+
+  # Phase 0 — repackage every face to the WFP naming + validate + tokenise.
+  # continue-on-error while the validator-push-cli artifact/output format is confirmed
+  # on first real run (§11 moving target); never blocks the storefront build above.
+  faces:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.4.1'
+
+      - name: Build all facepacks (release, signed with dialed-faces key)
+        run: |
+          set -e
+          TASKS=""
+          for d in facepacks/*/; do TASKS="$TASKS :facepacks:$(basename "$d"):assembleRelease"; done
+          echo "Building:$TASKS"
+          gradle $TASKS --no-daemon --stacktrace
+
+      - name: Validate + tokenise each face (Watch Face Push validation tool)
+        run: |
+          mkdir -p out/faces out/tokens
+          VAL_VER="1.0.0-alpha10"   # §11: re-verify the current validator version
+          if ! curl -fsSL -o validator-cli.jar \
+            "https://dl.google.com/dl/android/maven2/com/google/android/wearable/watchface/validator/validator-push-cli/${VAL_VER}/validator-push-cli-${VAL_VER}.jar"; then
+            echo "::warning::validator-push-cli ${VAL_VER} download failed — confirm the artifact/URL (WFP-RESEARCH.md §11)"
+          fi
+          for d in facepacks/*/; do
+            key=$(basename "$d")
+            apk=$(ls "$d"build/outputs/apk/release/*.apk 2>/dev/null | head -1)
+            [ -n "$apk" ] || { echo "::warning::no APK for $key"; continue; }
+            cp "$apk" "out/faces/${key}.apk"
+            if [ -f validator-cli.jar ]; then
+              echo "== validating $key =="
+              java -jar validator-cli.jar --apk_path="$apk" --package_name=com.dialed.app \
+                | tee "out/tokens/${key}.out" || echo "::warning::validation failed for $key"
+            fi
+          done
+          echo "== staged =="; ls -R out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dialed-facepacks
+          path: out/**

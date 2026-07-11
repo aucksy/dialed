@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aether · Horizon</string>
+
+    <string name="cfg_theme">Time tint</string>
+    <string name="theme_0">Pure White</string>
+    <string name="theme_1">Warm Ivory</string>
+    <string name="theme_2">Sky Blue</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Top readout</string>
+    <string name="slot_2">Horizon left</string>
+    <string name="slot_3">Horizon right</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kinetik · Orrery</string>
+
+    <string name="cfg_theme">Theme</string>
+    <string name="theme_0">Solar Gold</string>
+    <string name="theme_1">Blue Giant</string>
+    <string name="theme_2">Red Dwarf</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Lower left</string>
+    <string name="slot_2">Lower right</string>
+</resources>

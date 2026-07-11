@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFaceInfo>
+    <Preview value="@drawable/preview" />
+    <MultipleInstancesAllowed value="false" />
+    <!-- Editable=true surfaces the on-watch / companion customization editor
+         (themes, toggles, complication slots). Without it the face renders but
+         can't be edited. NOT checked by the wff-validator — do not remove. -->
+    <Editable value="true" />
+</WatchFaceInfo>

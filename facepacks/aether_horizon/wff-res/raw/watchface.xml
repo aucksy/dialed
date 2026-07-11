@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AETHER · HORIZON (Fable Collection — Twelve&Sixty design 03·A)
+  Watch Face Format v2 · canvas 300×300
+
+  The sun crosses the dial on a solar arc; the sky repaints by time segment.
+  WFF has no sunrise/sunset data source, so the face uses the showcase's fixed
+  solar day (sunrise 5.9 h, sunset 20.5 h) — the two horizon slots default to
+  the live SUNRISE_SUNSET complication for real local times.
+    sky        = 4 gradient washes, each alpha-gated by its own time range
+                 (proven time-range-ternary pattern, one gate per element)
+    sun / moon = sprite on a rotating arm Group (r=112 about 150,190); outer
+                 Group carries the day/night gate, inner Group the angle
+                 Transform — one expression per node. Moon splits into evening
+                 and morning arms so no expression needs a midnight wrap.
+    guide arc  = native dashed stroke (the design's ellipse is drawn as the
+                 r=112 circle the sun actually rides — endpoints identical)
+  AOD: dashed arc + outline disc at the current position + dim time.
+-->
+<WatchFace width="300" height="300" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <UserConfigurations>
+    <ColorConfiguration id="accent" displayName="@string/cfg_theme" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_0" colors="#FFFFFFFF" />
+      <ColorOption id="1" displayName="@string/theme_1" colors="#FFFFE9C4" />
+      <ColorOption id="2" displayName="@string/theme_2" colors="#FFCFE4FF" />
+    </ColorConfiguration>
+    <BooleanConfiguration id="pureBlack" displayName="@string/cfg_dark" defaultValue="FALSE" />
+  </UserConfigurations>
+
+  <Scene backgroundColor="#FF000000">
+
+    <!-- ======== SKY (4 gated washes; whole group yields to pure-black) ======== -->
+    <Group name="sky_wrap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Group name="sky" x="0" y="0" width="300" height="300">
+      <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
+      <!-- night -->
+      <PartDraw x="0" y="0" width="300" height="300" alpha="0">
+        <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 5.9) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt;= 20.5)) ? 0 : 255" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF0B1226">
+            <LinearGradient startX="150" startY="0" endX="150" endY="300"
+                            colors="#FF050915 #FF0B1226 #FF141B33" positions="0 0.6 1" />
+          </Fill>
+        </Rectangle>
+      </PartDraw>
+      <!-- dawn 5.9–7.5 -->
+      <PartDraw x="0" y="0" width="300" height="300" alpha="0">
+        <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 5.9) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt; 7.5)) ? 255 : 0" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF7A4A63">
+            <LinearGradient startX="150" startY="0" endX="150" endY="300"
+                            colors="#FF1A2340 #FF7A4A63 #FFE8935C" positions="0 0.55 1" />
+          </Fill>
+        </Rectangle>
+      </PartDraw>
+      <!-- day 7.5–17 -->
+      <PartDraw x="0" y="0" width="300" height="300" alpha="0">
+        <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 7.5) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt; 17)) ? 255 : 0" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF6E9BCF">
+            <LinearGradient startX="150" startY="0" endX="150" endY="300"
+                            colors="#FF2E5A9E #FF6E9BCF #FFBCD3E8" positions="0 0.55 1" />
+          </Fill>
+        </Rectangle>
+      </PartDraw>
+      <!-- dusk 17–20.5 -->
+      <PartDraw x="0" y="0" width="300" height="300" alpha="0">
+        <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 17) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt;= 20.5)) ? 255 : 0" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF8A4A5E">
+            <LinearGradient startX="150" startY="0" endX="150" endY="300"
+                            colors="#FF2A2C55 #FF8A4A5E #FFF0A05A" positions="0 0.5 1" />
+          </Fill>
+        </Rectangle>
+      </PartDraw>
+      </Group>
+    </Group>
+
+    <!-- Dashed solar guide arc (interactive + dimmer AOD twin) -->
+    <PartDraw name="arc" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Arc centerX="150" centerY="190" width="224" height="224"
+           startAngle="-90" endAngle="90" direction="CLOCKWISE">
+        <Stroke color="#38FFFFFF" thickness="1" dashIntervals="2 5" cap="BUTT" />
+      </Arc>
+    </PartDraw>
+    <PartDraw name="arc_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Arc centerX="150" centerY="190" width="224" height="224"
+           startAngle="-90" endAngle="90" direction="CLOCKWISE">
+        <Stroke color="#24FFFFFF" thickness="1" dashIntervals="2 5" cap="BUTT" />
+      </Arc>
+    </PartDraw>
+
+    <!-- ======== SUN (day arm) ======== -->
+    <Group name="sun_arm_gate" x="0" y="0" width="300" height="300" alpha="0">
+      <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 5.9) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt;= 20.5)) ? 255 : 0" />
+      <Group name="sun_arm" x="114" y="42" width="72" height="296" angle="0">
+        <Transform target="angle" value="((([HOUR_0_23] + [MINUTE] / 60) - 5.9) / 14.6) * 180 - 90" />
+        <PartImage x="0" y="0" width="72" height="72">
+          <Image resource="sun" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartImage x="26" y="26" width="20" height="20" alpha="0">
+          <Image resource="disc_aod" />
+          <Variant mode="AMBIENT" target="alpha" value="255" />
+        </PartImage>
+      </Group>
+    </Group>
+
+    <!-- ======== MOON (evening arm, 20.5→24) ======== -->
+    <Group name="moon_pm_gate" x="0" y="0" width="300" height="300" alpha="0">
+      <Transform target="alpha" value="(([HOUR_0_23] + [MINUTE] / 60) &gt; 20.5) ? 255 : 0" />
+      <Group name="moon_pm_arm" x="114" y="42" width="72" height="296" angle="0">
+        <Transform target="angle" value="((([HOUR_0_23] + [MINUTE] / 60) - 20.5) / 9.4) * 180 - 90" />
+        <PartImage x="0" y="0" width="72" height="72">
+          <Image resource="moon" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartImage x="26" y="26" width="20" height="20" alpha="0">
+          <Image resource="disc_aod" />
+          <Variant mode="AMBIENT" target="alpha" value="255" />
+        </PartImage>
+      </Group>
+    </Group>
+    <!-- ======== MOON (morning arm, 0→5.9) ======== -->
+    <Group name="moon_am_gate" x="0" y="0" width="300" height="300" alpha="0">
+      <Transform target="alpha" value="(([HOUR_0_23] + [MINUTE] / 60) &lt; 5.9) ? 255 : 0" />
+      <Group name="moon_am_arm" x="114" y="42" width="72" height="296" angle="0">
+        <Transform target="angle" value="((([HOUR_0_23] + [MINUTE] / 60) + 3.5) / 9.4) * 180 - 90" />
+        <PartImage x="0" y="0" width="72" height="72">
+          <Image resource="moon" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartImage x="26" y="26" width="20" height="20" alpha="0">
+          <Image resource="disc_aod" />
+          <Variant mode="AMBIENT" target="alpha" value="255" />
+        </PartImage>
+      </Group>
+    </Group>
+
+    <!-- ======== GROUND (4 gated colours; hidden in AOD & pure-black) ======== -->
+    <Group name="ground_wrap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Group name="ground" x="0" y="0" width="300" height="300">
+      <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
+      <PartDraw x="0" y="0" width="300" height="300" alpha="0">
+        <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 5.9) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt;= 20.5)) ? 0 : 255" />
+        <Rectangle x="0" y="204" width="300" height="96"><Fill color="#FF04050A" /></Rectangle>
+      </PartDraw>
+      <PartDraw x="0" y="0" width="300" height="300" alpha="0">
+        <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 5.9) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt; 7.5)) ? 255 : 0" />
+        <Rectangle x="0" y="204" width="300" height="96"><Fill color="#FF140F1C" /></Rectangle>
+      </PartDraw>
+      <PartDraw x="0" y="0" width="300" height="300" alpha="0">
+        <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 7.5) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt; 17)) ? 255 : 0" />
+        <Rectangle x="0" y="204" width="300" height="96"><Fill color="#FF1B2733" /></Rectangle>
+      </PartDraw>
+      <PartDraw x="0" y="0" width="300" height="300" alpha="0">
+        <Transform target="alpha" value="((([HOUR_0_23] + [MINUTE] / 60) &gt;= 17) &amp;&amp; (([HOUR_0_23] + [MINUTE] / 60) &lt;= 20.5)) ? 255 : 0" />
+        <Rectangle x="0" y="204" width="300" height="96"><Fill color="#FF161020" /></Rectangle>
+      </PartDraw>
+      </Group>
+    </Group>
+
+    <!-- Horizon line (interactive 30% full width / AOD 18% inset) -->
+    <PartDraw name="horizon" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Rectangle x="0" y="204" width="300" height="1"><Fill color="#4DFFFFFF" /></Rectangle>
+    </PartDraw>
+    <PartDraw name="horizon_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Rectangle x="34" y="204" width="232" height="1"><Fill color="#2EFFFFFF" /></Rectangle>
+    </PartDraw>
+
+    <!-- Time (accent-tinted) + date, above the ground band bottom-centre -->
+    <DigitalClock x="0" y="201" width="300" height="56">
+      <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
+                x="0" y="0" width="300" height="56">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+        <Font family="barlow_condensed_semibold" size="56" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" />
+      </TimeText>
+      <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
+                x="0" y="8" width="300" height="48" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+        <Font family="barlow_condensed_medium" size="48" weight="MEDIUM" color="#80F2F0EA" />
+      </TimeText>
+    </DigitalClock>
+    <PartText name="date" x="0" y="261" width="300" height="12">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="archivo_semibold" size="9" weight="SEMI_BOLD" color="#80FFFFFF" letterSpacing="0.33">
+        <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
+      </Font></Text>
+    </PartText>
+
+    <!-- Slot 1 · top-centre readout (default steps; assign Weather for the
+         design's temperature) -->
+    <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="75" y="20" width="150" height="36">
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="150" height="36" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="0" width="150" height="24">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="21" weight="SEMI_BOLD" color="#EBFFFFFF">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle">
+            <PartText x="0" y="25" width="150" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="7.5" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="25" width="150" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="7.5" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="0" y="0" width="150" height="24">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="21" weight="SEMI_BOLD" color="#EBFFFFFF">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitleR">
+            <PartText x="0" y="25" width="150" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="7.5" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="25" width="150" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="7.5" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Slot 2 · horizon-left (default sunrise/sunset) -->
+    <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
+                      supportedTypes="SHORT_TEXT EMPTY"
+                      x="24" y="172" width="56" height="32">
+      <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="56" height="32" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="14" width="56" height="12">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="START"><Font family="ibm_plex_mono_medium" size="9" weight="MEDIUM" color="#8CFFFFFF">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Slot 3 · horizon-right (default sunrise/sunset) -->
+    <ComplicationSlot slotId="3" name="s3" displayName="@string/slot_3"
+                      supportedTypes="SHORT_TEXT EMPTY"
+                      x="220" y="172" width="56" height="32">
+      <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="56" height="32" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="14" width="56" height="12">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="END"><Font family="ibm_plex_mono_medium" size="9" weight="MEDIUM" color="#8CFFFFFF">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+  </Scene>
+</WatchFace>

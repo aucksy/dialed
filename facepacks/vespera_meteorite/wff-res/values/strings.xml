@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vespera · Meteorite</string>
+
+    <string name="cfg_theme">Accent</string>
+    <string name="theme_0">Silver</string>
+    <string name="theme_1">Gold</string>
+    <string name="theme_2">Mint</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Twelve o’clock</string>
+    <string name="slot_2">Six o’clock</string>
+</resources>

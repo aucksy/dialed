@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Settype · Marquee</string>
+
+    <string name="cfg_theme">Bulbs</string>
+    <string name="theme_0">Tungsten</string>
+    <string name="theme_1">Neon Red</string>
+    <string name="theme_2">Ice</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Billing line 1</string>
+    <string name="slot_2">Billing line 2</string>
+</resources>

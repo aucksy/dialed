@@ -65,9 +65,12 @@ jobs:
         with:
           gradle-version: '9.4.1'
 
-      - name: Build all facepacks (release, signed with dialed-faces key)
+      - name: Build all facepacks (release — minify strips the empty classes.dex)
         run: |
           set -e
+          # release + minify=true strips the (empty) classes.dex WFP forbids; res names are
+          # kept in the arsc (validator resolves by name). watchface.xml already patched to
+          # bare resource names by tools/gen-facepacks.mjs. Signed with the faces key.
           TASKS=""
           for d in facepacks/*/; do TASKS="$TASKS :facepacks:$(basename "$d"):assembleRelease"; done
           echo "Building:$TASKS"

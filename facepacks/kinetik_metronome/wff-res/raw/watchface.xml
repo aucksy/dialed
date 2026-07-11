@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  KINETIK · METRONOME (Fable Collection — Twelve&Sixty design 02·E)
+  Watch Face Format v2 · canvas 300×300
+
+  Inverted pendulum keeping the beat. The ±24° swing is baked as a 24-frame
+  sprite sequence (2 s ease-in-out cycle) played by the platform's
+  AnimationController (ON_VISIBLE, repeating) — the only animation mechanism
+  WFF offers. If a device declines to loop it, beforePlaying=FIRST_FRAME parks
+  the wand at the left of its arc (the design's static fallback pose).
+  AOD: wand parked vertical as a 1 px outline, dim time (~4% APL).
+-->
+<WatchFace width="300" height="300" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <UserConfigurations>
+    <ColorConfiguration id="accent" displayName="@string/cfg_theme" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_0" colors="#FFE0704F" />
+      <ColorOption id="1" displayName="@string/theme_1" colors="#FFC9A96A" />
+      <ColorOption id="2" displayName="@string/theme_2" colors="#FF9FB6C9" />
+    </ColorConfiguration>
+    <BooleanConfiguration id="pureBlack" displayName="@string/cfg_dark" defaultValue="FALSE" />
+  </UserConfigurations>
+
+  <Scene backgroundColor="#FF000000">
+
+    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw name="bg" x="0" y="0" width="300" height="300">
+        <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF0B0908" />
+        </Rectangle>
+      </PartDraw>
+    </Group>
+
+    <!-- Time (mono, letter-spaced) -->
+    <Group name="time" x="0" y="34" width="300" height="54">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartText x="0" y="0" width="300" height="54">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+        <Text align="CENTER"><Font family="ibm_plex_mono_semibold" size="52" weight="SEMI_BOLD" color="#FFEDE7DA" letterSpacing="0.019">
+          <Template>%s:%s<Parameter expression="[HOUR_1_12_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+      <PartText x="0" y="0" width="300" height="54">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
+        <Text align="CENTER"><Font family="ibm_plex_mono_semibold" size="52" weight="SEMI_BOLD" color="#FFEDE7DA" letterSpacing="0.019">
+          <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+    </Group>
+    <Group name="time_aod" x="0" y="52" width="300" height="48" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <PartText x="0" y="0" width="300" height="48">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="46" weight="MEDIUM" color="#80EDE7DA">
+          <Template>%s:%s<Parameter expression="[HOUR_1_12_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+      <PartText x="0" y="0" width="300" height="48">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="46" weight="MEDIUM" color="#80EDE7DA">
+          <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- Date · AM/PM -->
+    <Group name="dateline" x="0" y="92" width="300" height="12">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartText x="0" y="0" width="300" height="12">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="8.5" weight="MEDIUM" color="#FF6B6858" letterSpacing="0.35">
+          <Upper><Template>%s %s · %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /><Parameter expression="[AMPM_STRING]" /></Template></Upper>
+        </Font></Text>
+      </PartText>
+      <PartText x="0" y="0" width="300" height="12">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="8.5" weight="MEDIUM" color="#FF6B6858" letterSpacing="0.35">
+          <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
+        </Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- Dotted guide arc (chord 82,158→218,158, r=92 → centre 150,220, ±47.6°) -->
+    <PartDraw name="guide" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Arc centerX="150" centerY="220" width="184" height="184"
+           startAngle="-47.6" endAngle="47.6" direction="CLOCKWISE">
+        <Stroke color="#26EDE7DA" thickness="1" dashIntervals="1 6" cap="BUTT" />
+      </Arc>
+    </PartDraw>
+
+    <!-- Pendulum wand: 24-frame swing, accent-tinted; parks on first frame if
+         the platform declines to play. Hidden in AOD. -->
+    <PartAnimatedImage name="wand" x="88" y="130" width="124" height="120"
+                       tintColor="[CONFIGURATION.accent.0]">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <AnimationController play="ON_VISIBLE" repeat="TRUE" beforePlaying="FIRST_FRAME" />
+      <SequenceImages frameRate="12">
+        <Image resource="wand_00" />
+        <Image resource="wand_01" />
+        <Image resource="wand_02" />
+        <Image resource="wand_03" />
+        <Image resource="wand_04" />
+        <Image resource="wand_05" />
+        <Image resource="wand_06" />
+        <Image resource="wand_07" />
+        <Image resource="wand_08" />
+        <Image resource="wand_09" />
+        <Image resource="wand_10" />
+        <Image resource="wand_11" />
+        <Image resource="wand_12" />
+        <Image resource="wand_13" />
+        <Image resource="wand_14" />
+        <Image resource="wand_15" />
+        <Image resource="wand_16" />
+        <Image resource="wand_17" />
+        <Image resource="wand_18" />
+        <Image resource="wand_19" />
+        <Image resource="wand_20" />
+        <Image resource="wand_21" />
+        <Image resource="wand_22" />
+        <Image resource="wand_23" />
+      </SequenceImages>
+    </PartAnimatedImage>
+
+    <!-- AOD wand: parked vertical outline -->
+    <PartImage name="wand_aod" x="88" y="130" width="124" height="120" alpha="0">
+      <Image resource="wand_aod" />
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+    </PartImage>
+
+    <!-- Pivot cap (interactive fill / AOD outline) -->
+    <PartDraw name="cap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Ellipse x="142" y="240" width="16" height="16">
+        <Fill color="#FFEDE7DA" />
+      </Ellipse>
+    </PartDraw>
+    <PartDraw name="cap_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Ellipse x="144" y="242" width="12" height="12">
+        <Stroke color="#66EDE7DA" thickness="1" />
+      </Ellipse>
+    </PartDraw>
+
+    <!-- Slot 1 · lower-left (accent label; default heart rate) -->
+    <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="26" y="190" width="76" height="34">
+      <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="76" height="34" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="0" width="76" height="18">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle">
+            <PartText x="0" y="19" width="76" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.15">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="19" width="76" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.15">HEART RATE</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="0" y="0" width="76" height="18">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitleR">
+            <PartText x="0" y="19" width="76" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.15">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="19" width="76" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.15">HEART RATE</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Slot 2 · lower-right (default next event; the design's "alarm" has no
+         system provider — assign an alarm complication to restore it) -->
+    <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="198" y="190" width="76" height="34">
+      <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="76" height="34" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="0" width="76" height="18">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2">
+            <PartText x="0" y="19" width="76" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="19" width="76" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">NEXT EVENT</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="0" y="0" width="76" height="18">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2R">
+            <PartText x="0" y="19" width="76" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="19" width="76" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">NEXT EVENT</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Footer -->
+    <PartText name="footer" x="0" y="268" width="300" height="10">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="7" weight="MEDIUM" color="#FF494638" letterSpacing="0.28">TEMPO 60 · LARGO</Font></Text>
+    </PartText>
+
+  </Scene>
+</WatchFace>

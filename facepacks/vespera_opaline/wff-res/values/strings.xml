@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vespera · Opaline</string>
+
+    <string name="cfg_theme">Hands</string>
+    <string name="theme_0">Blued Steel</string>
+    <string name="theme_1">Oxblood</string>
+    <string name="theme_2">Racing Green</string>
+
+    <string name="slot_1">Ten o’clock</string>
+    <string name="slot_2">Two o’clock</string>
+</resources>

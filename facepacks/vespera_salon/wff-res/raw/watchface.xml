@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  VESPERA · SALON (Fable Collection — Twelve&Sixty design 05·C)
+  Watch Face Format v2 · canvas 300×300
+
+  Art-deco: baked sunray fan over the upper dial (fixed cream 5%), double
+  hairline ring, Marcellus 12/6, two faceted hexagon cartouches at nine and
+  three (fixed dark fill + accent-tinted border sprites). Pencil hands —
+  hour is theme-tinted, minute stays cream; diamond cap is a rotated square.
+  Slot 2 defaults to battery (no weather system provider — assign one).
+  AOD: numerals + outline hands + outline diamond (~4% APL).
+-->
+<WatchFace width="300" height="300" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <UserConfigurations>
+    <ColorConfiguration id="accent" displayName="@string/cfg_theme" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_0" colors="#FFD4B36A #66D4B36A #33D4B36A" />
+      <ColorOption id="1" displayName="@string/theme_1" colors="#FF63F0C9 #6663F0C9 #3363F0C9" />
+      <ColorOption id="2" displayName="@string/theme_2" colors="#FFFF8A5C #66FF8A5C #33FF8A5C" />
+    </ColorConfiguration>
+    <BooleanConfiguration id="pureBlack" displayName="@string/cfg_dark" defaultValue="FALSE" />
+  </UserConfigurations>
+
+  <Scene backgroundColor="#FF000000">
+
+    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw name="bg" x="0" y="0" width="300" height="300">
+        <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF12100C" />
+        </Rectangle>
+      </PartDraw>
+    </Group>
+
+    <!-- Sunray fan (baked, fixed cream) -->
+    <PartImage name="sunray" x="0" y="0" width="300" height="300">
+      <Image resource="sunray" />
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+    </PartImage>
+
+    <!-- Double hairline ring -->
+    <PartDraw name="rings" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Ellipse x="34" y="34" width="232" height="232">
+        <Stroke color="[CONFIGURATION.accent.2]" thickness="1" />
+      </Ellipse>
+      <Ellipse x="39" y="39" width="222" height="222">
+        <Stroke color="[CONFIGURATION.accent.1]" thickness="1" />
+      </Ellipse>
+    </PartDraw>
+
+    <!-- Numerals 12 / 6 -->
+    <PartText name="n12" x="0" y="22" width="300" height="30">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="marcellus_regular" size="26" color="[CONFIGURATION.accent.0]">12</Font></Text>
+    </PartText>
+    <PartText name="n6" x="0" y="248" width="300" height="30">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="marcellus_regular" size="26" color="[CONFIGURATION.accent.0]">6</Font></Text>
+    </PartText>
+    <!-- AOD numerals (fixed dim gold) -->
+    <Group name="nums_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <PartText x="0" y="24" width="300" height="28">
+        <Text align="CENTER"><Font family="marcellus_regular" size="24" color="#73D4B36A">12</Font></Text>
+      </PartText>
+      <PartText x="0" y="250" width="300" height="28">
+        <Text align="CENTER"><Font family="marcellus_regular" size="24" color="#59D4B36A">6</Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- Date above 6 -->
+    <PartText name="date" x="0" y="229" width="300" height="12">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="9" weight="MEDIUM" color="#80F2E9D8" letterSpacing="0.22">
+        <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
+      </Font></Text>
+    </PartText>
+
+    <!-- Slot 1 · cartouche at nine (default steps) -->
+    <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="30" y="129" width="58" height="42">
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="58" height="42" />
+      <Complication type="SHORT_TEXT">
+        <PartImage x="0" y="0" width="58" height="42">
+          <Image resource="cartouche_fill" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartImage x="0" y="0" width="58" height="42" tintColor="[CONFIGURATION.accent.0]">
+          <Image resource="cartouche_border" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartText x="3" y="8" width="52" height="14">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12" weight="MEDIUM" color="#FFF2E9D8">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle">
+            <PartText x="3" y="24" width="52" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.18">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="3" y="24" width="52" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.18">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartImage x="0" y="0" width="58" height="42">
+          <Image resource="cartouche_fill" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartImage x="0" y="0" width="58" height="42" tintColor="[CONFIGURATION.accent.0]">
+          <Image resource="cartouche_border" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartText x="3" y="8" width="52" height="14">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12" weight="MEDIUM" color="#FFF2E9D8">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitleR">
+            <PartText x="3" y="24" width="52" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.18">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="3" y="24" width="52" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.18">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Slot 2 · cartouche at three (default battery) -->
+    <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="212" y="129" width="58" height="42">
+      <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="58" height="42" />
+      <Complication type="SHORT_TEXT">
+        <PartImage x="0" y="0" width="58" height="42">
+          <Image resource="cartouche_fill" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartImage x="0" y="0" width="58" height="42" tintColor="[CONFIGURATION.accent.0]">
+          <Image resource="cartouche_border" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartText x="3" y="8" width="52" height="14">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12" weight="MEDIUM" color="#FFF2E9D8">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2">
+            <PartText x="3" y="24" width="52" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.18">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="3" y="24" width="52" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.18">BATTERY</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartImage x="0" y="0" width="58" height="42">
+          <Image resource="cartouche_fill" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartImage x="0" y="0" width="58" height="42" tintColor="[CONFIGURATION.accent.0]">
+          <Image resource="cartouche_border" />
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+        </PartImage>
+        <PartText x="3" y="8" width="52" height="14">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12" weight="MEDIUM" color="#FFF2E9D8">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2R">
+            <PartText x="3" y="24" width="52" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.18">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="3" y="24" width="52" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.18">BATTERY</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Pencil hands: hour theme-tinted, minute fixed cream -->
+    <AnalogClock x="0" y="0" width="300" height="300">
+      <HourHand resource="hour" x="144" y="82" width="12" height="68"
+                pivotX="0.5" pivotY="1.0" tintColor="[CONFIGURATION.accent.0]">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </HourHand>
+      <HourHand resource="hour_aod" x="144" y="82" width="12" height="68"
+                pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </HourHand>
+      <MinuteHand resource="minute" x="144" y="50" width="12" height="100"
+                  pivotX="0.5" pivotY="1.0">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </MinuteHand>
+      <MinuteHand resource="minute_aod" x="145" y="50" width="10" height="100"
+                  pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </MinuteHand>
+    </AnalogClock>
+
+    <!-- Diamond cap (rotated square; AOD outline) -->
+    <PartDraw name="cap" x="145" y="145" width="10" height="10" angle="45">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Rectangle x="0" y="0" width="10" height="10">
+        <Fill color="[CONFIGURATION.accent.0]" />
+      </Rectangle>
+    </PartDraw>
+    <PartDraw name="cap_aod" x="146" y="146" width="8" height="8" angle="45" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Rectangle x="0.5" y="0.5" width="7" height="7">
+        <Stroke color="#8CD4B36A" thickness="1" />
+      </Rectangle>
+    </PartDraw>
+
+  </Scene>
+</WatchFace>

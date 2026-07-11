@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Settype · Halftone</string>
+
+    <string name="cfg_theme">Ink</string>
+    <string name="theme_0">Cream</string>
+    <string name="theme_1">Signal Red</string>
+    <string name="theme_2">Volt</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Footer readout</string>
+</resources>

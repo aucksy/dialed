@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ARCLIGHT · Face 02 — PULSAR (standalone APK com.arclight.pulsar; WFF v1)
+  Instrument cluster. Design source: FABLE-Arclight-Showcase.html #f=1 (accent #45e0ee; Reactor theme).
+  ONE FACE PER APK: WFF ComplicationSlot is Scene-global (Scene-only, <=8, cannot nest in a face-switch),
+  so per-face complications require a package per face. Pulsar's slots below are ITS OWN (slotId 1-4).
+  Signature master gauge is battery-drawn (dashed, always-on). Coords scaled x0.9375 from 480-space.
+  Fonts: bundled jetbrainsmono (Chakra Petch substitute — fidelity gap). Themes/options/master-as-
+  complication deferred to the Pulsar flesh-out pass.
+-->
+<WatchFace width="450" height="450" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <Scene backgroundColor="#FF000000">
+
+    <!-- background (themed; true black in ambient) -->
+    <Group name="pulBg" x="0" y="0" width="450" height="450">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw x="0" y="0" width="450" height="450">
+        <Rectangle x="0" y="0" width="450" height="450"><Fill color="#050607" /></Rectangle>
+      </PartDraw>
+    </Group>
+
+    <!-- 60-tick seconds ring + live seconds progress rim (interactive only) -->
+    <Group name="pulSecRing" x="0" y="0" width="450" height="450">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw x="0" y="0" width="450" height="450">
+        <Line startX="225" startY="13" endX="225" endY="8"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="247" startY="14" endX="248" endY="10"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="269" startY="18" endX="270" endY="13"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="291" startY="23" endX="292" endY="19"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="311" startY="31" endX="313" endY="27"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="331" startY="41" endX="333" endY="38"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="350" startY="53" endX="352" endY="50"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="367" startY="67" endX="370" endY="64"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="383" startY="83" endX="386" endY="80"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="397" startY="100" endX="400" endY="98"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="409" startY="119" endX="412" endY="117"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="419" startY="139" endX="423" endY="137"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="427" startY="159" endX="431" endY="158"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="432" startY="181" endX="437" endY="180"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="436" startY="203" endX="440" endY="202"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="437" startY="225" endX="442" endY="225"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="436" startY="247" endX="440" endY="248"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="432" startY="269" endX="437" endY="270"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="427" startY="291" endX="431" endY="292"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="419" startY="311" endX="423" endY="313"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="409" startY="331" endX="412" endY="333"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="397" startY="350" endX="400" endY="352"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="383" startY="367" endX="386" endY="370"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="367" startY="383" endX="370" endY="386"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="350" startY="397" endX="352" endY="400"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="331" startY="409" endX="333" endY="412"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="311" startY="419" endX="313" endY="423"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="291" startY="427" endX="292" endY="431"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="269" startY="432" endX="270" endY="437"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="247" startY="436" endX="248" endY="440"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="225" startY="437" endX="225" endY="442"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="203" startY="436" endX="202" endY="440"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="181" startY="432" endX="180" endY="437"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="159" startY="427" endX="158" endY="431"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="139" startY="419" endX="137" endY="423"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="119" startY="409" endX="117" endY="412"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="100" startY="397" endX="98" endY="400"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="83" startY="383" endX="80" endY="386"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="67" startY="367" endX="64" endY="370"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="53" startY="350" endX="50" endY="352"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="41" startY="331" endX="38" endY="333"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="31" startY="311" endX="27" endY="313"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="23" startY="291" endX="19" endY="292"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="18" startY="269" endX="13" endY="270"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="14" startY="247" endX="10" endY="248"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="13" startY="225" endX="8" endY="225"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="14" startY="203" endX="10" endY="202"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="18" startY="181" endX="13" endY="180"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="23" startY="159" endX="19" endY="158"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="31" startY="139" endX="27" endY="137"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="41" startY="119" endX="38" endY="117"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="53" startY="100" endX="50" endY="98"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="67" startY="83" endX="64" endY="80"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="83" startY="67" endX="80" endY="64"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="100" startY="53" endX="98" endY="50"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="119" startY="41" endX="117" endY="38"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="139" startY="31" endX="137" endY="27"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="159" startY="23" endX="158" endY="19"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="181" startY="18" endX="180" endY="13"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+        <Line startX="203" startY="14" endX="202" endY="10"><Stroke color="#5f7a80" thickness="1.4" cap="ROUND" /></Line>
+      </PartDraw>
+      <PartDraw x="0" y="0" width="450" height="450">
+        <Arc centerX="225" centerY="225" width="438" height="438" startAngle="0" endAngle="0" direction="CLOCKWISE">
+          <Transform target="endAngle" value="[SECOND] * 6" />
+          <Stroke color="#3fe0ee" thickness="2.5" cap="ROUND" />
+        </Arc>
+      </PartDraw>
+    </Group>
+
+    <!-- master gauge (left edge, 205-345 = 140 deg), battery-driven fill, SEGMENTED (28 dashes) -->
+    <Group name="pulMaster" x="0" y="0" width="450" height="450">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw x="0" y="0" width="450" height="450">
+        <Arc centerX="225" centerY="225" width="375" height="375" startAngle="205" endAngle="345" direction="CLOCKWISE">
+          <Stroke color="#132227" thickness="11" cap="BUTT" />
+        </Arc>
+        <Arc centerX="225" centerY="225" width="375" height="375" startAngle="205" endAngle="205" direction="CLOCKWISE">
+          <Transform target="endAngle" value="205 + (140 * ([BATTERY_PERCENT] / 100.0))" />
+          <Stroke color="#3fe0ee" thickness="11" cap="BUTT" />
+        </Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="208.3" endAngle="210.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="213.3" endAngle="215.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="218.3" endAngle="220.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="223.3" endAngle="225.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="228.3" endAngle="230.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="233.3" endAngle="235.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="238.3" endAngle="240.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="243.3" endAngle="245.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="248.3" endAngle="250.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="253.3" endAngle="255.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="258.3" endAngle="260.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="263.3" endAngle="265.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="268.3" endAngle="270.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="273.3" endAngle="275.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="278.3" endAngle="280.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="283.3" endAngle="285.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="288.3" endAngle="290.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="293.3" endAngle="295.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="298.3" endAngle="300.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="303.3" endAngle="305.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="308.3" endAngle="310.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="313.3" endAngle="315.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="318.3" endAngle="320.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="323.3" endAngle="325.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="328.3" endAngle="330.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="333.3" endAngle="335.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="338.3" endAngle="340.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+          <Arc centerX="225" centerY="225" width="375" height="375" startAngle="343.3" endAngle="345.0" direction="CLOCKWISE"><Stroke color="#050607" thickness="14" cap="BUTT" /></Arc>
+      </PartDraw>
+      <PartText x="70" y="220" width="150" height="34">
+        <Text align="START"><Font family="jetbrainsmono" size="28" weight="NORMAL" color="#e8f4f6"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- condensed time, off-centre right -->
+    <Group name="pulTime" x="0" y="0" width="450" height="450">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <DigitalClock x="94" y="190" width="300" height="92">
+        <TimeText format="h:mm" align="CENTER" x="0" y="0" width="300" height="92">
+          <Font family="jetbrainsmono" size="56" weight="NORMAL" color="#e8f4f6" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+    <Group name="pulTimeAod" x="0" y="0" width="450" height="450" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <DigitalClock x="94" y="190" width="300" height="92">
+        <TimeText format="h:mm" align="CENTER" x="0" y="0" width="300" height="92">
+          <Font family="jetbrainsmono" size="56" weight="NORMAL" color="#79c6ce" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+
+    <!-- AM/PM (12h only, interactive): nested single-condition gates -->
+    <Group name="pulAmPmWrap" x="0" y="0" width="450" height="450">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Group name="pulAmPm12h" x="0" y="0" width="450" height="450">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+        <PartText x="164" y="256" width="160" height="16">
+          <Text align="CENTER"><Font family="jetbrainsmono" size="10" weight="NORMAL" color="#5f7a80"><Template>%s<Parameter expression="[AMPM_STRING]" /></Template></Font></Text>
+        </PartText>
+      </Group>
+    </Group>
+
+    <!-- ================= PULSAR'S OWN COMPLICATIONS (slotId 1-4; not shared with any other face) ================= -->
+    <ComplicationSlot x="289" y="93" width="58" height="58" slotId="1" name="satUpper" displayName="slot_sat_upper"
+        supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingOval x="0" y="0" width="58" height="58" outlinePadding="2" />
+      <Complication type="SHORT_TEXT">
+        <PartDraw x="0" y="0" width="58" height="58">
+          <Ellipse x="2" y="2" width="54" height="54"><Stroke color="#132227" thickness="1.6" /></Ellipse>
+        </PartDraw>
+        <PartImage x="22" y="7" width="14" height="14"><Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" /></PartImage>
+        <PartText x="0" y="30" width="58" height="20">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="58" height="58">
+          <Ellipse x="2" y="2" width="54" height="54"><Stroke color="#132227" thickness="1.6" /></Ellipse>
+        </PartDraw>
+        <PartImage x="22" y="7" width="14" height="14"><Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" /></PartImage>
+        <PartText x="0" y="30" width="58" height="20">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
+        </PartText>
+      </Complication>
+    </ComplicationSlot>
+    <ComplicationSlot x="335" y="191" width="58" height="58" slotId="2" name="satMid" displayName="slot_sat_mid"
+        supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingOval x="0" y="0" width="58" height="58" outlinePadding="2" />
+      <Complication type="SHORT_TEXT">
+        <PartDraw x="0" y="0" width="58" height="58">
+          <Ellipse x="2" y="2" width="54" height="54"><Stroke color="#132227" thickness="1.6" /></Ellipse>
+        </PartDraw>
+        <PartImage x="22" y="7" width="14" height="14"><Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" /></PartImage>
+        <PartText x="0" y="30" width="58" height="20">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="58" height="58">
+          <Ellipse x="2" y="2" width="54" height="54"><Stroke color="#132227" thickness="1.6" /></Ellipse>
+        </PartDraw>
+        <PartImage x="22" y="7" width="14" height="14"><Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" /></PartImage>
+        <PartText x="0" y="30" width="58" height="20">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
+        </PartText>
+      </Complication>
+    </ComplicationSlot>
+    <ComplicationSlot x="296" y="292" width="58" height="58" slotId="3" name="satLower" displayName="slot_sat_lower"
+        supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingOval x="0" y="0" width="58" height="58" outlinePadding="2" />
+      <Complication type="SHORT_TEXT">
+        <PartDraw x="0" y="0" width="58" height="58">
+          <Ellipse x="2" y="2" width="54" height="54"><Stroke color="#132227" thickness="1.6" /></Ellipse>
+        </PartDraw>
+        <PartImage x="22" y="7" width="14" height="14"><Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" /></PartImage>
+        <PartText x="0" y="30" width="58" height="20">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="58" height="58">
+          <Ellipse x="2" y="2" width="54" height="54"><Stroke color="#132227" thickness="1.6" /></Ellipse>
+        </PartDraw>
+        <PartImage x="22" y="7" width="14" height="14"><Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" /></PartImage>
+        <PartText x="0" y="30" width="58" height="20">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
+        </PartText>
+      </Complication>
+    </ComplicationSlot>
+    <ComplicationSlot x="135" y="38" width="180" height="26" slotId="4" name="header" displayName="slot_header"
+        supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <DefaultProviderPolicy defaultSystemProvider="DATE" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="180" height="26" outlinePadding="2" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="2" width="180" height="22">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="12" weight="NORMAL" color="#5f7a80"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
+        </PartText>
+      </Complication>
+    </ComplicationSlot>
+
+  </Scene>
+</WatchFace>

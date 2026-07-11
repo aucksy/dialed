@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  VESPERA · OPALINE (Fable Collection — Twelve&Sixty design 05·E)
+  Watch Face Format v2 · canvas 300×300
+
+  The one porcelain dial: warm-white radial (native gradient), railroad
+  minute track (native dashed strokes: hairline + 120 fine ticks), Cormorant
+  numerals, the twelve&sixty signature, blued-steel hands (theme-tinted) with
+  a fixed red sweep second.
+  LIGHT DIAL: exempt from the pure-black toggle per the line rule — its AOD
+  inverts to cream-outline-on-black (designed).
+-->
+<WatchFace width="300" height="300" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <UserConfigurations>
+    <ColorConfiguration id="hands" displayName="@string/cfg_theme" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_0" colors="#FF3E5C8A" />
+      <ColorOption id="1" displayName="@string/theme_1" colors="#FF8A3B2B" />
+      <ColorOption id="2" displayName="@string/theme_2" colors="#FF2B7A5B" />
+    </ColorConfiguration>
+  </UserConfigurations>
+
+  <Scene backgroundColor="#FF000000">
+
+    <!-- Porcelain (interactive only; AOD inverts to black) -->
+    <PartDraw name="porcelain" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Rectangle x="0" y="0" width="300" height="300">
+        <Fill color="#FFEBE6DA">
+          <RadialGradient centerX="138" centerY="120" radius="260"
+                          colors="#FFF7F4ED #FFEBE6DA #FFEBE6DA" positions="0 0.78 1" />
+        </Fill>
+      </Rectangle>
+    </PartDraw>
+
+    <!-- Railroad minute track: outer hairline + 120 fine ticks -->
+    <PartDraw name="track" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Ellipse x="18" y="18" width="264" height="264">
+        <Stroke color="#59171512" thickness="1" />
+      </Ellipse>
+      <Ellipse x="23" y="23" width="254" height="254">
+        <Stroke color="#4D171512" thickness="5" dashIntervals="0.4 6.25" />
+      </Ellipse>
+    </PartDraw>
+
+    <!-- Numerals 12 / 3 / 6 / 9 -->
+    <PartText name="n12" x="0" y="28" width="300" height="26">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="cormorant_garamond_semibold" size="22" weight="SEMI_BOLD" color="#FF2A2620">12</Font></Text>
+    </PartText>
+    <PartText name="n6" x="0" y="246" width="300" height="26">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="cormorant_garamond_semibold" size="22" weight="SEMI_BOLD" color="#FF2A2620">6</Font></Text>
+    </PartText>
+    <PartText name="n9" x="34" y="137" width="30" height="26">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="cormorant_garamond_semibold" size="22" weight="SEMI_BOLD" color="#FF2A2620">9</Font></Text>
+    </PartText>
+    <PartText name="n3" x="236" y="137" width="30" height="26">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="cormorant_garamond_semibold" size="22" weight="SEMI_BOLD" color="#FF2A2620">3</Font></Text>
+    </PartText>
+    <!-- AOD numerals 12/6 (dim cream) -->
+    <Group name="nums_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <PartText x="0" y="30" width="300" height="24">
+        <Text align="CENTER"><Font family="cormorant_garamond_medium" size="20" weight="MEDIUM" color="#73EBE6DA">12</Font></Text>
+      </PartText>
+      <PartText x="0" y="248" width="300" height="24">
+        <Text align="CENTER"><Font family="cormorant_garamond_medium" size="20" weight="MEDIUM" color="#59EBE6DA">6</Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- Signature -->
+    <PartText name="sig" x="0" y="76" width="300" height="14">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="cormorant_garamond_medium_italic" size="11" weight="MEDIUM" slant="ITALIC" color="#FF8A8272">twelve &amp; sixty</Font></Text>
+    </PartText>
+
+    <!-- Date above 6 -->
+    <PartText name="date" x="0" y="218" width="300" height="12">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="9" weight="MEDIUM" color="#FF8A8272" letterSpacing="0.22">
+        <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
+      </Font></Text>
+    </PartText>
+
+    <!-- Slot 1 · printed readout at ten (default steps) -->
+    <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="60" y="108" width="60" height="32">
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="60" height="32" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="4" width="60" height="13">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#FF2A2620">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle">
+            <PartText x="0" y="18" width="60" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="#FF8A8272" letterSpacing="0.18">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="18" width="60" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="#FF8A8272" letterSpacing="0.18">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="0" y="4" width="60" height="13">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#FF2A2620">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitleR">
+            <PartText x="0" y="18" width="60" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="#FF8A8272" letterSpacing="0.18">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="18" width="60" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="#FF8A8272" letterSpacing="0.18">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Slot 2 · printed readout at two (default sunrise/sunset) -->
+    <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="180" y="108" width="60" height="32">
+      <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="60" height="32" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="4" width="60" height="13">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#FF2A2620">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2">
+            <PartText x="0" y="18" width="60" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="#FF8A8272" letterSpacing="0.18">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="18" width="60" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="#FF8A8272" letterSpacing="0.18">SUNSET</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="0" y="4" width="60" height="13">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#FF2A2620">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2R">
+            <PartText x="0" y="18" width="60" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="#FF8A8272" letterSpacing="0.18">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="18" width="60" height="8">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="5.5" weight="SEMI_BOLD" color="#FF8A8272" letterSpacing="0.18">SUNSET</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Blued-steel hands (theme-tinted), fixed red sweep second -->
+    <AnalogClock x="0" y="0" width="300" height="300">
+      <HourHand resource="hour" x="144" y="80" width="12" height="70"
+                pivotX="0.5" pivotY="1.0" tintColor="[CONFIGURATION.hands.0]">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </HourHand>
+      <HourHand resource="hour_aod" x="145" y="80" width="10" height="70"
+                pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </HourHand>
+      <MinuteHand resource="minute" x="145" y="46" width="10" height="104"
+                  pivotX="0.5" pivotY="1.0" tintColor="[CONFIGURATION.hands.0]">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </MinuteHand>
+      <MinuteHand resource="minute_aod" x="145" y="46" width="10" height="104"
+                  pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </MinuteHand>
+      <SecondHand resource="second" x="147" y="32" width="6" height="118"
+                  pivotX="0.5" pivotY="1.0">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+        <Sweep frequency="15" />
+      </SecondHand>
+    </AnalogClock>
+
+    <!-- Cap (theme-tinted fill / AOD outline) -->
+    <PartDraw name="cap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Ellipse x="146" y="146" width="8" height="8">
+        <Fill color="[CONFIGURATION.hands.0]" />
+      </Ellipse>
+    </PartDraw>
+    <PartDraw name="cap_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Ellipse x="146.5" y="146.5" width="7" height="7">
+        <Stroke color="#80EBE6DA" thickness="1" />
+      </Ellipse>
+    </PartDraw>
+
+  </Scene>
+</WatchFace>

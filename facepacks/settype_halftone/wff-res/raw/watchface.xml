@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SETTYPE · HALFTONE (Fable Collection — Twelve&Sixty design 04·E)
+  Watch Face Format v2 · canvas 300×300
+
+  Screen-printed time: hours in a coarse dot screen, minutes in a fine offset
+  screen. WFF cannot clip a pattern to glyphs, so the dot-screened digits are
+  BITMAP FONTS (white dot art baked per digit, ink-tinted via the theme) —
+  the moiré between the two screens survives intact. Digits are tabular in
+  Archivo Black, so the bitmap advances are uniform.
+  AOD: both numbers as true 1 px vector outlines.
+-->
+<WatchFace width="300" height="300" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <UserConfigurations>
+    <ColorConfiguration id="accent" displayName="@string/cfg_theme" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_0" colors="#FFF2E9D8" />
+      <ColorOption id="1" displayName="@string/theme_1" colors="#FFFF5C3D" />
+      <ColorOption id="2" displayName="@string/theme_2" colors="#FFD8FF3E" />
+    </ColorConfiguration>
+    <BooleanConfiguration id="pureBlack" displayName="@string/cfg_dark" defaultValue="FALSE" />
+  </UserConfigurations>
+
+  <BitmapFonts>
+    <BitmapFont name="ht_coarse">
+      <Character name="0" width="75" height="106" resource="ht_coarse_0" />
+      <Character name="1" width="75" height="106" resource="ht_coarse_1" />
+      <Character name="2" width="75" height="106" resource="ht_coarse_2" />
+      <Character name="3" width="75" height="106" resource="ht_coarse_3" />
+      <Character name="4" width="75" height="106" resource="ht_coarse_4" />
+      <Character name="5" width="75" height="106" resource="ht_coarse_5" />
+      <Character name="6" width="75" height="106" resource="ht_coarse_6" />
+      <Character name="7" width="75" height="106" resource="ht_coarse_7" />
+      <Character name="8" width="75" height="106" resource="ht_coarse_8" />
+      <Character name="9" width="75" height="106" resource="ht_coarse_9" />
+    </BitmapFont>
+    <BitmapFont name="ht_fine">
+      <Character name="0" width="75" height="106" resource="ht_fine_0" />
+      <Character name="1" width="75" height="106" resource="ht_fine_1" />
+      <Character name="2" width="75" height="106" resource="ht_fine_2" />
+      <Character name="3" width="75" height="106" resource="ht_fine_3" />
+      <Character name="4" width="75" height="106" resource="ht_fine_4" />
+      <Character name="5" width="75" height="106" resource="ht_fine_5" />
+      <Character name="6" width="75" height="106" resource="ht_fine_6" />
+      <Character name="7" width="75" height="106" resource="ht_fine_7" />
+      <Character name="8" width="75" height="106" resource="ht_fine_8" />
+      <Character name="9" width="75" height="106" resource="ht_fine_9" />
+    </BitmapFont>
+  </BitmapFonts>
+
+  <Scene backgroundColor="#FF000000">
+
+    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw name="bg" x="0" y="0" width="300" height="300">
+        <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF0A0A0B" />
+        </Rectangle>
+      </PartDraw>
+    </Group>
+
+    <!-- HOURS · coarse screen -->
+    <Group name="hh" x="0" y="34" width="300" height="106">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <DigitalClock x="0" y="0" width="300" height="106">
+        <TimeText format="hh" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="0" width="300" height="106">
+          <BitmapFont family="ht_coarse" size="106" color="[CONFIGURATION.accent.0]" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+
+    <!-- MINUTES · fine offset screen -->
+    <Group name="mm" x="0" y="142" width="300" height="106">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <DigitalClock x="0" y="0" width="300" height="106">
+        <TimeText format="mm" align="CENTER" x="0" y="0" width="300" height="106">
+          <BitmapFont family="ht_fine" size="106" color="[CONFIGURATION.accent.0]" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+
+    <!-- Date, top -->
+    <PartText name="date" x="0" y="22" width="300" height="12">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="9" weight="MEDIUM" color="#FF5E5A50" letterSpacing="0.33">
+        <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
+      </Font></Text>
+    </PartText>
+
+    <!-- Slot 1 · footer readout (default steps) -->
+    <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="75" y="256" width="150" height="24">
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="150" height="24" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="5" width="70" height="14">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="END"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#FFECE9E2">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle">
+            <PartText x="76" y="7" width="74" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF5E5A50" letterSpacing="0.21">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="76" y="7" width="74" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF5E5A50" letterSpacing="0.21">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="0" y="5" width="70" height="14">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="END"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#FFECE9E2">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitleR">
+            <PartText x="76" y="7" width="74" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF5E5A50" letterSpacing="0.21">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="76" y="7" width="74" height="10">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF5E5A50" letterSpacing="0.21">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- ============ AOD: true vector outlines ============ -->
+    <Group name="aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <PartText x="0" y="34" width="300" height="106">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+        <Text align="CENTER"><Font family="archivo_black" size="118" weight="BLACK" color="#00F2E9D8" letterSpacing="-0.034">
+          <Outline width="1" color="#73F2E9D8" />
+          <Template>%s<Parameter expression="[HOUR_1_12_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+      <PartText x="0" y="34" width="300" height="106">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
+        <Text align="CENTER"><Font family="archivo_black" size="118" weight="BLACK" color="#00F2E9D8" letterSpacing="-0.034">
+          <Outline width="1" color="#73F2E9D8" />
+          <Template>%s<Parameter expression="[HOUR_0_23_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+      <PartText x="0" y="142" width="300" height="106">
+        <Text align="CENTER"><Font family="archivo_black" size="118" weight="BLACK" color="#00F2E9D8" letterSpacing="-0.034">
+          <Outline width="1" color="#4DF2E9D8" />
+          <Template>%s<Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+    </Group>
+
+  </Scene>
+</WatchFace>

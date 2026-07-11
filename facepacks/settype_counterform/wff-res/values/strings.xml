@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Settype · Counterform</string>
+
+    <string name="cfg_theme">Hour ink</string>
+    <string name="theme_0">Signal Red</string>
+    <string name="theme_1">Volt</string>
+    <string name="theme_2">Ion Cyan</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Upper readout</string>
+    <string name="slot_2">Lower readout</string>
+</resources>

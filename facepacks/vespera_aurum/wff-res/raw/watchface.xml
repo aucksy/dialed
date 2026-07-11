@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  VESPERA · AURUM (Fable Collection — Twelve&Sixty design 05·A)
+  Watch Face Format v2 · canvas 300×300
+
+  Engine-turned guilloché as interference: two baked ring lattices (pitch 7/8,
+  offset centres) tinted to the chosen metal at ~10%. Minute track = native
+  dashed stroke (60 ticks). Twin sub-dials carry complications with live
+  progress arcs. Hands are metal-ramp sprites tinted per theme.
+  Deviation (documented): sub-dial defaults are Steps (left, drives its arc
+  out of the box) and Heart-rate (right) — HR only provides SHORT_TEXT, so
+  giving it the left arc would ship an empty gauge.
+  AOD: 12 dash markers + outline hands + outline cap (dim gold, fixed).
+-->
+<WatchFace width="300" height="300" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <UserConfigurations>
+    <ColorConfiguration id="metal" displayName="@string/cfg_theme" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_0" colors="#FFD4B36A #66D4B36A #33D4B36A" />
+      <ColorOption id="1" displayName="@string/theme_1" colors="#FFC9CDD4 #66C9CDD4 #33C9CDD4" />
+      <ColorOption id="2" displayName="@string/theme_2" colors="#FFD9A0A0 #66D9A0A0 #33D9A0A0" />
+    </ColorConfiguration>
+    <BooleanConfiguration id="pureBlack" displayName="@string/cfg_dark" defaultValue="FALSE" />
+  </UserConfigurations>
+
+  <Scene backgroundColor="#FF000000">
+
+    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw name="bg" x="0" y="0" width="300" height="300">
+        <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF0E0C09" />
+        </Rectangle>
+      </PartDraw>
+    </Group>
+
+    <!-- Guilloché moiré (metal-tinted, ~10%) -->
+    <PartImage name="guilloche" x="0" y="0" width="300" height="300" alpha="26"
+               tintColor="[CONFIGURATION.metal.0]">
+      <Image resource="guilloche" />
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+    </PartImage>
+
+    <!-- Minute track: 60 dash ticks at r=136 -->
+    <PartDraw name="track" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Ellipse x="14" y="14" width="272" height="272">
+        <Stroke color="[CONFIGURATION.metal.1]" thickness="3" dashIntervals="1.42 12.82" />
+      </Ellipse>
+    </PartDraw>
+    <!-- AOD: 12 dash markers (fixed dim gold) -->
+    <PartDraw name="track_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Ellipse x="14" y="14" width="272" height="272">
+        <Stroke color="#4DD4B36A" thickness="2" dashIntervals="11.39 59.81" />
+      </Ellipse>
+    </PartDraw>
+
+    <!-- Centre sector disc -->
+    <PartDraw name="sector" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Ellipse x="92" y="92" width="116" height="116">
+        <Fill color="#FF14110C" />
+      </Ellipse>
+      <Ellipse x="92" y="92" width="116" height="116">
+        <Stroke color="[CONFIGURATION.metal.1]" thickness="1" />
+      </Ellipse>
+    </PartDraw>
+
+    <!-- Roman numerals -->
+    <PartText name="xii" x="0" y="16" width="300" height="15">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="marcellus_regular" size="13" color="[CONFIGURATION.metal.0]">XII</Font></Text>
+    </PartText>
+    <PartText name="vi" x="0" y="245" width="300" height="15">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="marcellus_regular" size="13" color="[CONFIGURATION.metal.0]">VI</Font></Text>
+    </PartText>
+
+    <!-- Date above VI -->
+    <PartText name="date" x="0" y="228" width="300" height="12">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="9" weight="MEDIUM" color="#8CEDE3CC">
+        <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
+      </Font></Text>
+    </PartText>
+
+    <!-- Slot 1 · sub-dial at nine (default steps; arc = live progress) -->
+    <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
+                      supportedTypes="RANGED_VALUE GOAL_PROGRESS SHORT_TEXT EMPTY"
+                      x="42" y="120" width="60" height="60">
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="RANGED_VALUE" />
+      <BoundingOval x="0" y="0" width="60" height="60" />
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="60" height="60">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Fill color="#D914110C" /></Ellipse>
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Stroke color="[CONFIGURATION.metal.2]" thickness="1" /></Ellipse>
+          <Arc centerX="30" centerY="30" width="57" height="57" startAngle="0" endAngle="0" direction="CLOCKWISE">
+            <Stroke color="[CONFIGURATION.metal.0]" thickness="2.5" cap="ROUND" />
+            <Transform target="endAngle" value="((clamp([COMPLICATION.RANGED_VALUE_VALUE], [COMPLICATION.RANGED_VALUE_MIN], [COMPLICATION.RANGED_VALUE_MAX]) - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+          </Arc>
+        </PartDraw>
+        <PartText x="4" y="18" width="52" height="15">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#FFEDE3CC">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <PartText x="4" y="34" width="52" height="9">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">STEPS</Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="GOAL_PROGRESS">
+        <PartDraw x="0" y="0" width="60" height="60">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Fill color="#D914110C" /></Ellipse>
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Stroke color="[CONFIGURATION.metal.2]" thickness="1" /></Ellipse>
+          <Arc centerX="30" centerY="30" width="57" height="57" startAngle="0" endAngle="0" direction="CLOCKWISE">
+            <Stroke color="[CONFIGURATION.metal.0]" thickness="2.5" cap="ROUND" />
+            <Transform target="endAngle" value="(clamp([COMPLICATION.GOAL_PROGRESS_VALUE], 0, [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) * 360" />
+          </Arc>
+        </PartDraw>
+        <PartText x="4" y="18" width="52" height="15">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#FFEDE3CC">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <PartText x="4" y="34" width="52" height="9">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">STEPS</Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="SHORT_TEXT">
+        <PartDraw x="0" y="0" width="60" height="60">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Fill color="#D914110C" /></Ellipse>
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Stroke color="[CONFIGURATION.metal.2]" thickness="1" /></Ellipse>
+        </PartDraw>
+        <PartText x="4" y="18" width="52" height="15">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#FFEDE3CC">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle">
+            <PartText x="4" y="34" width="52" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="4" y="34" width="52" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">DATA</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Slot 2 · sub-dial at three (default heart rate) -->
+    <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
+                      supportedTypes="RANGED_VALUE GOAL_PROGRESS SHORT_TEXT EMPTY"
+                      x="198" y="120" width="60" height="60">
+      <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingOval x="0" y="0" width="60" height="60" />
+      <Complication type="RANGED_VALUE">
+        <PartDraw x="0" y="0" width="60" height="60">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Fill color="#D914110C" /></Ellipse>
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Stroke color="[CONFIGURATION.metal.2]" thickness="1" /></Ellipse>
+          <Arc centerX="30" centerY="30" width="57" height="57" startAngle="0" endAngle="0" direction="CLOCKWISE">
+            <Stroke color="[CONFIGURATION.metal.0]" thickness="2.5" cap="ROUND" />
+            <Transform target="endAngle" value="((clamp([COMPLICATION.RANGED_VALUE_VALUE], [COMPLICATION.RANGED_VALUE_MIN], [COMPLICATION.RANGED_VALUE_MAX]) - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+          </Arc>
+        </PartDraw>
+        <PartText x="4" y="18" width="52" height="15">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#FFEDE3CC">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <PartText x="4" y="34" width="52" height="9">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">HEART RATE</Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="GOAL_PROGRESS">
+        <PartDraw x="0" y="0" width="60" height="60">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Fill color="#D914110C" /></Ellipse>
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Stroke color="[CONFIGURATION.metal.2]" thickness="1" /></Ellipse>
+          <Arc centerX="30" centerY="30" width="57" height="57" startAngle="0" endAngle="0" direction="CLOCKWISE">
+            <Stroke color="[CONFIGURATION.metal.0]" thickness="2.5" cap="ROUND" />
+            <Transform target="endAngle" value="(clamp([COMPLICATION.GOAL_PROGRESS_VALUE], 0, [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) * 360" />
+          </Arc>
+        </PartDraw>
+        <PartText x="4" y="18" width="52" height="15">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#FFEDE3CC">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <PartText x="4" y="34" width="52" height="9">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">HEART RATE</Font></Text>
+        </PartText>
+      </Complication>
+      <Complication type="SHORT_TEXT">
+        <PartDraw x="0" y="0" width="60" height="60">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Fill color="#D914110C" /></Ellipse>
+          <Ellipse x="0.5" y="0.5" width="59" height="59"><Stroke color="[CONFIGURATION.metal.2]" thickness="1" /></Ellipse>
+        </PartDraw>
+        <PartText x="4" y="18" width="52" height="15">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#FFEDE3CC">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2">
+            <PartText x="4" y="34" width="52" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="4" y="34" width="52" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">HEART RATE</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Hands (metal-tinted sprites; AOD outline twins) + native sweep seconds -->
+    <AnalogClock x="0" y="0" width="300" height="300">
+      <HourHand resource="hour" x="144" y="76" width="12" height="74"
+                pivotX="0.5" pivotY="1.0" tintColor="[CONFIGURATION.metal.0]">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </HourHand>
+      <HourHand resource="hour_aod" x="145" y="76" width="10" height="74"
+                pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </HourHand>
+      <MinuteHand resource="minute" x="145" y="42" width="10" height="108"
+                  pivotX="0.5" pivotY="1.0" tintColor="[CONFIGURATION.metal.0]">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </MinuteHand>
+      <MinuteHand resource="minute_aod" x="145" y="46" width="10" height="104"
+                  pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </MinuteHand>
+      <SecondHand resource="second" x="147" y="28" width="6" height="122"
+                  pivotX="0.5" pivotY="1.0" tintColor="[CONFIGURATION.metal.0]">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+        <Sweep frequency="15" />
+      </SecondHand>
+    </AnalogClock>
+
+    <!-- Cap (metal fill / AOD outline) -->
+    <PartDraw name="cap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Ellipse x="145.5" y="145.5" width="9" height="9">
+        <Fill color="[CONFIGURATION.metal.0]" />
+      </Ellipse>
+    </PartDraw>
+    <PartDraw name="cap_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Ellipse x="146.5" y="146.5" width="7" height="7">
+        <Stroke color="#8CD4B36A" thickness="1" />
+      </Ellipse>
+    </PartDraw>
+
+  </Scene>
+</WatchFace>

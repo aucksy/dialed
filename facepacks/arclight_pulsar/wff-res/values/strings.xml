@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Arclight · Pulsar</string>
+
+    <!-- Pulsar's OWN complication slots (this APK's Scene; not shared with any other face) -->
+    <string name="slot_sat_upper">Satellite · 1:30</string>
+    <string name="slot_sat_mid">Satellite · 3:00</string>
+    <string name="slot_sat_lower">Satellite · 4:30</string>
+    <string name="slot_header">Header</string>
+</resources>

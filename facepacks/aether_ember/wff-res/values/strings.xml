@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aether · Ember</string>
+
+    <string name="cfg_theme">Glow</string>
+    <string name="theme_0">Ember Orange</string>
+    <string name="theme_1">Coal Red</string>
+    <string name="theme_2">Amber</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Lower left</string>
+    <string name="slot_2">Lower right</string>
+</resources>

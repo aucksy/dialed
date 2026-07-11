@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Settype · Masthead</string>
+
+    <string name="cfg_theme">Ink</string>
+    <string name="theme_0">Black Ink</string>
+    <string name="theme_1">Oxblood</string>
+    <string name="theme_2">Prussian</string>
+
+    <string name="slot_1">Classified left</string>
+    <string name="slot_2">Classified right</string>
+</resources>

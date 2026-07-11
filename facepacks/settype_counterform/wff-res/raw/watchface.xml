@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SETTYPE · COUNTERFORM (Fable Collection — Twelve&Sixty design 04·B)
+  Watch Face Format v2 · canvas 300×300
+
+  Numerals too big for the dial: accent-filled hours bleed off the top-left,
+  outlined minutes bleed off the bottom-right and collide mid-dial. The
+  showcase's mix-blend "screen" is equivalent to plain draw order for a light
+  outline over a colour fill, so the outline simply draws on top. Tight
+  tracking (−10 px) needs a full Font element, so time is rendered by twin
+  PartTexts gated on [IS_24_HOUR_MODE]. AOD = both numerals as 1 px outlines.
+-->
+<WatchFace width="300" height="300" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <UserConfigurations>
+    <ColorConfiguration id="accent" displayName="@string/cfg_theme" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_0" colors="#FFFF5C3D" />
+      <ColorOption id="1" displayName="@string/theme_1" colors="#FFD8FF3E" />
+      <ColorOption id="2" displayName="@string/theme_2" colors="#FF6EE7F9" />
+    </ColorConfiguration>
+    <BooleanConfiguration id="pureBlack" displayName="@string/cfg_dark" defaultValue="FALSE" />
+  </UserConfigurations>
+
+  <Scene backgroundColor="#FF000000">
+
+    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw name="bg" x="0" y="0" width="300" height="300">
+        <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF08080A" />
+        </Rectangle>
+      </PartDraw>
+    </Group>
+
+    <!-- HOURS · 195 px accent fill, bleeding off top-left (interactive) -->
+    <Group name="hh" x="-14" y="-42" width="230" height="200">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartText x="0" y="0" width="230" height="200">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+        <Text align="START"><Font family="archivo_black" size="195" weight="BLACK" color="[CONFIGURATION.accent.0]" letterSpacing="-0.051">
+          <Template>%s<Parameter expression="[HOUR_1_12_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+      <PartText x="0" y="0" width="230" height="200">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
+        <Text align="START"><Font family="archivo_black" size="195" weight="BLACK" color="[CONFIGURATION.accent.0]" letterSpacing="-0.051">
+          <Template>%s<Parameter expression="[HOUR_0_23_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- MINUTES · 195 px 2 px white outline, bleeding off bottom-right -->
+    <Group name="mm" x="82" y="142" width="230" height="200">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartText x="0" y="0" width="230" height="200">
+        <Text align="END"><Font family="archivo_black" size="195" weight="BLACK" color="#00ECE9E2" letterSpacing="-0.051">
+          <Outline width="2" color="#FFECE9E2" />
+          <Template>%s<Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- AOD: both numerals as 1 px outlines -->
+    <Group name="hh_aod" x="-14" y="-42" width="230" height="200" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <PartText x="0" y="0" width="230" height="200">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+        <Text align="START"><Font family="archivo_black" size="195" weight="BLACK" color="#00ECE9E2" letterSpacing="-0.051">
+          <Outline width="1" color="#73ECE9E2" />
+          <Template>%s<Parameter expression="[HOUR_1_12_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+      <PartText x="0" y="0" width="230" height="200">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
+        <Text align="START"><Font family="archivo_black" size="195" weight="BLACK" color="#00ECE9E2" letterSpacing="-0.051">
+          <Outline width="1" color="#73ECE9E2" />
+          <Template>%s<Parameter expression="[HOUR_0_23_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+    </Group>
+    <Group name="mm_aod" x="82" y="142" width="230" height="200" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <PartText x="0" y="0" width="230" height="200">
+        <Text align="END"><Font family="archivo_black" size="195" weight="BLACK" color="#00ECE9E2" letterSpacing="-0.051">
+          <Outline width="1" color="#4DECE9E2" />
+          <Template>%s<Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- Tiny honest digital time, top-right -->
+    <Group name="minitime" x="126" y="22" width="110" height="14">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartText x="0" y="0" width="110" height="14">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+        <Text align="END"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#99ECE9E2">
+          <Template>%s:%s<Parameter expression="[HOUR_1_12_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+      <PartText x="0" y="0" width="110" height="14">
+        <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
+        <Text align="END"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#99ECE9E2">
+          <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
+        </Font></Text>
+      </PartText>
+    </Group>
+
+    <!-- Vertical date, left edge (rotated block) -->
+    <PartText name="vdate" x="-8" y="104" width="100" height="12" angle="90">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.25">
+        <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
+      </Font></Text>
+    </PartText>
+
+    <!-- Slot 1 · upper of the stacked pair, lower-left (default steps) -->
+    <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="30" y="152" width="80" height="30">
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="80" height="30" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="4" y="2" width="76" height="17">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="START"><Font family="barlow_condensed_semibold" size="15" weight="SEMI_BOLD" color="#FFECE9E2">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle">
+            <PartText x="4" y="19" width="76" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="4" y="19" width="76" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="4" y="2" width="76" height="17">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="START"><Font family="barlow_condensed_semibold" size="15" weight="SEMI_BOLD" color="#FFECE9E2">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitleR">
+            <PartText x="4" y="19" width="76" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="4" y="19" width="76" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">STEPS</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Slot 2 · lower of the pair (default battery) -->
+    <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="30" y="184" width="80" height="30">
+      <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="80" height="30" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="4" y="2" width="76" height="17">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="START"><Font family="barlow_condensed_semibold" size="15" weight="SEMI_BOLD" color="#FFECE9E2">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2">
+            <PartText x="4" y="19" width="76" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="4" y="19" width="76" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">BATTERY</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="4" y="2" width="76" height="17">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="START"><Font family="barlow_condensed_semibold" size="15" weight="SEMI_BOLD" color="#FFECE9E2">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle2R">
+            <PartText x="4" y="19" width="76" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="4" y="19" width="76" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="START"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">BATTERY</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+  </Scene>
+</WatchFace>

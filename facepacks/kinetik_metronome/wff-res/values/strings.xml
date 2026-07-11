@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kinetik · Metronome</string>
+
+    <string name="cfg_theme">Theme</string>
+    <string name="theme_0">Terracotta</string>
+    <string name="theme_1">Brass</string>
+    <string name="theme_2">Steel Blue</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Lower left</string>
+    <string name="slot_2">Lower right</string>
+</resources>

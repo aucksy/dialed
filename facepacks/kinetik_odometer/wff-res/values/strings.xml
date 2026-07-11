@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kinetik · Odometer</string>
+
+    <string name="cfg_theme">Theme</string>
+    <string name="theme_0">Cream</string>
+    <string name="theme_1">Volt</string>
+    <string name="theme_2">Signal Orange</string>
+    <string name="cfg_dark">Pure black background</string>
+
+    <string name="slot_1">Left counter</string>
+    <string name="slot_2">Right counter</string>
+</resources>

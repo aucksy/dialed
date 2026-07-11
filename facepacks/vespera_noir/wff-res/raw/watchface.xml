@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  VESPERA · NOIR (Fable Collection — Twelve&Sixty design 05·B)
+  Watch Face Format v2 · canvas 300×300
+
+  Deep lacquer with one diagonal light sweep (both native gradients). True
+  moonphase at six: eight baked plates gated on [MOON_PHASE_TYPE] (0=new …
+  4=full), one single-condition gate per plate. Date window at three, one
+  quiet slot at nine (default battery — WFF has no weather system provider;
+  assign a weather complication to restore the design's default). Silver
+  baton hands, no seconds. AOD ≈3% APL.
+-->
+<WatchFace width="300" height="300" clipShape="CIRCLE">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+  <UserConfigurations>
+    <ColorConfiguration id="accent" displayName="@string/cfg_theme" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_0" colors="#FFC9CDD4 #66C9CDD4" />
+      <ColorOption id="1" displayName="@string/theme_1" colors="#FFD4B36A #66D4B36A" />
+      <ColorOption id="2" displayName="@string/theme_2" colors="#FF7FE0C3 #667FE0C3" />
+    </ColorConfiguration>
+    <BooleanConfiguration id="pureBlack" displayName="@string/cfg_dark" defaultValue="FALSE" />
+  </UserConfigurations>
+
+  <Scene backgroundColor="#FF000000">
+
+    <!-- Lacquer radial + diagonal light sweep -->
+    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw x="0" y="0" width="300" height="300">
+        <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#FF08080A">
+            <RadialGradient centerX="114" centerY="90" radius="300"
+                            colors="#FF15151A #FF08080A #FF08080A" positions="0 0.7 1" />
+          </Fill>
+        </Rectangle>
+        <Rectangle x="0" y="0" width="300" height="300">
+          <Fill color="#00000000">
+            <LinearGradient startX="0" startY="0" endX="186" endY="238"
+                            colors="#0DFFFFFF #00FFFFFF" positions="0 0.34" />
+          </Fill>
+        </Rectangle>
+      </PartDraw>
+    </Group>
+
+    <!-- Indices: double bar at 12 (accent), single bars 3/6/9 (accent 40%) -->
+    <PartDraw name="indices" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Rectangle x="144" y="14" width="2.5" height="12"><Fill color="[CONFIGURATION.accent.0]" /></Rectangle>
+      <Rectangle x="150.5" y="14" width="2.5" height="12"><Fill color="[CONFIGURATION.accent.0]" /></Rectangle>
+      <Rectangle x="148.75" y="274" width="2.5" height="12"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
+      <Rectangle x="16" y="148.75" width="12" height="2.5"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
+      <Rectangle x="272" y="148.75" width="12" height="2.5"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
+    </PartDraw>
+    <!-- AOD: 12 + 6 markers only -->
+    <PartDraw name="indices_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Rectangle x="149" y="16" width="2" height="10"><Fill color="#66C9CDD4" /></Rectangle>
+      <Rectangle x="149" y="274" width="2" height="10"><Fill color="#4DC9CDD4" /></Rectangle>
+    </PartDraw>
+
+    <!-- Moonphase at six: 8 plates gated on MOON_PHASE_TYPE -->
+    <Group name="moon" x="127" y="198" width="46" height="46">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartImage x="0" y="0" width="46" height="46" alpha="0">
+        <Transform target="alpha" value="([MOON_PHASE_TYPE] == 0) ? 255 : 0" />
+        <Image resource="moon_0" />
+      </PartImage>
+      <PartImage x="0" y="0" width="46" height="46" alpha="0">
+        <Transform target="alpha" value="([MOON_PHASE_TYPE] == 1) ? 255 : 0" />
+        <Image resource="moon_1" />
+      </PartImage>
+      <PartImage x="0" y="0" width="46" height="46" alpha="0">
+        <Transform target="alpha" value="([MOON_PHASE_TYPE] == 2) ? 255 : 0" />
+        <Image resource="moon_2" />
+      </PartImage>
+      <PartImage x="0" y="0" width="46" height="46" alpha="0">
+        <Transform target="alpha" value="([MOON_PHASE_TYPE] == 3) ? 255 : 0" />
+        <Image resource="moon_3" />
+      </PartImage>
+      <PartImage x="0" y="0" width="46" height="46" alpha="0">
+        <Transform target="alpha" value="([MOON_PHASE_TYPE] == 4) ? 255 : 0" />
+        <Image resource="moon_4" />
+      </PartImage>
+      <PartImage x="0" y="0" width="46" height="46" alpha="0">
+        <Transform target="alpha" value="([MOON_PHASE_TYPE] == 5) ? 255 : 0" />
+        <Image resource="moon_5" />
+      </PartImage>
+      <PartImage x="0" y="0" width="46" height="46" alpha="0">
+        <Transform target="alpha" value="([MOON_PHASE_TYPE] == 6) ? 255 : 0" />
+        <Image resource="moon_6" />
+      </PartImage>
+      <PartImage x="0" y="0" width="46" height="46" alpha="0">
+        <Transform target="alpha" value="([MOON_PHASE_TYPE] == 7) ? 255 : 0" />
+        <Image resource="moon_7" />
+      </PartImage>
+    </Group>
+
+    <!-- Date window at three -->
+    <PartDraw name="datebox" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Rectangle x="252.5" y="141.5" width="25" height="17">
+        <Stroke color="#40C9CDD4" thickness="1" />
+      </Rectangle>
+    </PartDraw>
+    <PartText name="datenum" x="252" y="143" width="26" height="14">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="11" weight="MEDIUM" color="#FFC9CDD4">
+        <Template>%s<Parameter expression="[DAY_Z]" /></Template>
+      </Font></Text>
+    </PartText>
+
+    <!-- Slot at nine (default battery) -->
+    <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
+                      supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
+                      x="22" y="134" width="52" height="32">
+      <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="52" height="32" />
+      <Complication type="SHORT_TEXT">
+        <PartText x="0" y="2" width="52" height="14">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12" weight="MEDIUM" color="#FFC9CDD4">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitle">
+            <PartText x="0" y="17" width="52" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="17" width="52" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">BATTERY</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="RANGED_VALUE">
+        <PartText x="0" y="2" width="52" height="14">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12" weight="MEDIUM" color="#FFC9CDD4">
+            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
+          </Font></Text>
+        </PartText>
+        <Condition>
+          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
+          <Compare expression="hasTitleR">
+            <PartText x="0" y="17" width="52" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">
+                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
+              </Font></Text>
+            </PartText>
+          </Compare>
+          <Default>
+            <PartText x="0" y="17" width="52" height="9">
+              <Variant mode="AMBIENT" target="alpha" value="0" />
+              <Text align="CENTER"><Font family="archivo_semibold" size="6" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">BATTERY</Font></Text>
+            </PartText>
+          </Default>
+        </Condition>
+      </Complication>
+      <Complication type="EMPTY" />
+    </ComplicationSlot>
+
+    <!-- Silver baton hands (no seconds) -->
+    <AnalogClock x="0" y="0" width="300" height="300">
+      <HourHand resource="hour" x="145" y="80" width="10" height="70"
+                pivotX="0.5" pivotY="1.0">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </HourHand>
+      <HourHand resource="hour_aod" x="145" y="80" width="10" height="70"
+                pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </HourHand>
+      <MinuteHand resource="minute" x="145" y="46" width="10" height="104"
+                  pivotX="0.5" pivotY="1.0">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </MinuteHand>
+      <MinuteHand resource="minute_aod" x="145" y="46" width="10" height="104"
+                  pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </MinuteHand>
+    </AnalogClock>
+
+    <!-- Cap -->
+    <PartDraw name="cap" x="0" y="0" width="300" height="300">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Ellipse x="146.5" y="146.5" width="7" height="7">
+        <Fill color="#FFE9EBEF" />
+      </Ellipse>
+    </PartDraw>
+    <PartDraw name="cap_aod" x="0" y="0" width="300" height="300" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Ellipse x="147" y="147" width="6" height="6">
+        <Stroke color="#80C9CDD4" thickness="1" />
+      </Ellipse>
+    </PartDraw>
+
+  </Scene>
+</WatchFace>

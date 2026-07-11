@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Arclight · Solstice</string>
+
+    <!-- configuration labels -->
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_first_light">First Light</string>
+    <string name="theme_alpenglow">Alpenglow</string>
+    <string name="theme_midnight_sun">Midnight Sun</string>
+    <string name="theme_paper_dawn">Paper Dawn</string>
+    <string name="theme_pacific">Pacific</string>
+    <string name="cfg_seconds_orbit">Seconds orbit</string>
+    <string name="cfg_sun_halo">Sun halo</string>
+    <string name="cfg_pure_black">Pure black background</string>
+
+    <!-- complication slot labels -->
+    <string name="slot_rail_left">Lower left</string>
+    <string name="slot_rail_centre">Bottom</string>
+    <string name="slot_rail_right">Lower right</string>
+    <string name="slot_sky_left">Upper left</string>
+    <string name="slot_sky_right">Upper right</string>
+</resources>

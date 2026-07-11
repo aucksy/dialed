@@ -69,10 +69,17 @@ jobs:
       - name: Build storefront (:app) with bundled faces
         run: gradle :app:assembleDebug --no-daemon --stacktrace
 
-      - name: Stage APK
+      # Wear companion: WFP bridge. Same debug keystore as :app in this one run, so the two
+      # share a signing cert + applicationId (com.dialed.app) and the Data Layer pairs them.
+      - name: Build wear companion (:wear)
+        run: gradle :wear:assembleDebug --no-daemon --stacktrace
+
+      - name: Stage APKs
         run: |
           mkdir -p out
-          cp app/build/outputs/apk/debug/app-debug.apk "out/dialed-${GITHUB_REF_NAME:-main}.apk"
+          NAME="${GITHUB_REF_NAME:-main}"
+          cp app/build/outputs/apk/debug/app-debug.apk "out/${NAME}-phone.apk"
+          cp wear/build/outputs/apk/debug/wear-debug.apk "out/${NAME}-wear.apk"
           ls -la out
 
       - uses: actions/upload-artifact@v4

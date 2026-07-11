@@ -31,9 +31,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "Dialed"
 
-// :wear-common = shared phone<->watch protocol. :wear (WFP bridge) + :watchface (default
-// face) are added here as they're authored (Phase 3-5).
-include(":app", ":wear-common")
+// :wear-common = shared phone<->watch protocol. :wear = the WFP bridge (Phase 3-4).
+// :watchface (bundled default face) is added when authored (Phase 5).
+include(":app", ":wear-common", ":wear")
 
 // facepacks/ holds one generated Gradle module per bundled face (tools/gen-facepacks.mjs).
 // Each reuses WFF resources from the `faces/` submodule and only overrides applicationId

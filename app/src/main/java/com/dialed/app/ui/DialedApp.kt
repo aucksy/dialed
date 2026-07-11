@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dialed.app.MainViewModel
+import com.dialed.app.ui.components.PushToWatchSheet
 import com.dialed.app.ui.screens.FaceDetailScreen
 import com.dialed.app.ui.screens.HomeScreen
 import com.dialed.app.ui.screens.OnboardingPager
@@ -49,6 +50,9 @@ fun DialedApp(viewModel: MainViewModel) {
             return@Surface
         }
 
+        val pushingFace by viewModel.pushingFace.collectAsStateWithLifecycle()
+        val pushStatus by viewModel.pushStatus.collectAsStateWithLifecycle()
+
         var screen: Screen by rememberSaveable(
             stateSaver = ScreenSaver,
         ) { mutableStateOf(Screen.Home) }
@@ -80,6 +84,7 @@ fun DialedApp(viewModel: MainViewModel) {
                         watchStatus = watchStatus,
                         onBack = { screen = Screen.Home },
                         onUnlock = { screen = Screen.Paywall },
+                        onInstall = { viewModel.startPush(face) },
                     )
                 }
                 is Screen.Paywall -> PaywallScreen(
@@ -98,6 +103,16 @@ fun DialedApp(viewModel: MainViewModel) {
                     onRestore = { viewModel.debugToggleEntitlement() },
                 )
             }
+        }
+
+        pushingFace?.let { face ->
+            PushToWatchSheet(
+                face = face,
+                status = pushStatus,
+                deviceName = watchStatus.deviceName,
+                onRetry = viewModel::retryPush,
+                onDismiss = viewModel::dismissPush,
+            )
         }
     }
 }

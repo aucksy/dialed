@@ -59,9 +59,14 @@ Validate → adversarial review → push main → tag `dialed-v*` → paste the 
 ## Phase status
 - ✅ **Phase 0 COMPLETE + verified** — all 18 faces pass WFP validation (18/18); CI bundles 18 APKs + 18 tokens into `:app` (confirmed in the built APK).
 - ✅ **Phase 1** storefront (Home/FaceDetail/Paywall/Settings/Onboarding + full design system) + debug-unlock. `:wear-common` done.
-- ⏳ **Phase 3-4** Wear bridge + phone→watch transport (NEXT) · **4A** dev/sideload · **Phase 2** Billing · **Phase 5** default face + activation · **Phase 6** polish/publish. Owner must install the `:wear` APK on the Pixel Watch 4 + grant set-active once for end-to-end.
+- ✅ **Phase 3-4 Wear bridge + phone→watch transport** — CODE COMPLETE + adversarially reviewed (4-agent, primary-source API-verified; ships on CI green). `:wear` companion (applicationId `com.dialed.app` = token package_name) = `WatchFacePushRepository` (androidx suspend WFP) + `DialedListenerService` (WearableListenerService: onRequest→proceed byte, onChannelOpened→receiveFile→install→finalize; single-transfer `AtomicBoolean` + one-way `claimTerminal`) + `TransferSession` (process-static bridge to the Wear-Compose UI) + `WfpStateStore` (DataStore: one-shot set-active + permission-denied) + `FacePreviewExtractor` (preview from the received APK). Wear UI (Home/FirstRun/Receive/Concierge/Unsupported) built from the wear design spec. `:app` = `WatchBridge` (CapabilityClient discover `dialed_wfp_install` + Message/Channel sender) + `PushToWatchSheet` + real watch status. CI builds both APKs in one run (same debug key → Data-Layer pairs them). **Owner-gated e2e remains: install `:wear` on the Pixel Watch 4 + grant set-active once.**
+- ⏳ Remaining: **4A** dev/sideload · **Phase 2** Billing · **Phase 5** default face + activation (`DEFAULT_WATCHFACE_VALIDATION_TOKEN` meta-data) · **Phase 6** polish/publish.
 
 ## Known deviations / TODO
-- Instrument Sans not wired (metrics match; typeface pending — `ui-text-google-fonts` + certs).
+- Instrument Sans not wired (metrics match; typeface pending — `ui-text-google-fonts` + certs); wear side uses default typeface too.
 - FaceDial renders real `preview.png` (not procedural dials); `ticking` overlay deferred.
-- CI release-name has a cosmetic double "dialed" (`dialed-dialed-v0.1.0.apk`) — tidy on next tag.
+- CI release APKs now `<tag>-phone.apk` + `<tag>-wear.apk` (fixed the old double-"dialed" name).
+- Wear "Browse/Open on phone" shows the platform `OpenOnPhoneDialog` only — it does NOT deep-link-launch the phone app (avoids the `wear-remote-interactions` dep); wire that in a later polish pass.
+- Watch receive progress is **indeterminate** (the Data Layer file transfer exposes no byte progress); the design's determinate % is not literally reproducible.
+- Phone push sheet has no distinct "unsupported watch" state — a watch that doesn't advertise `dialed_wfp_install` reads as disconnected.
+- `DEFAULT_WATCHFACE_VALIDATION_TOKEN` meta-data intentionally omitted until Phase 5 (needs a real default face APK).

@@ -23,6 +23,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,7 +34,6 @@ import com.dialed.app.transport.PushStatus
 import com.dialed.app.ui.theme.DialedSpacing
 import com.dialed.app.ui.theme.FaceSize
 import com.dialed.app.ui.theme.dialedColors
-import kotlinx.coroutines.delay
 
 /**
  * The money moment (HANDOFF.md F3): the face flies from the phone to the watch. Driven by
@@ -51,13 +52,9 @@ fun PushToWatchSheet(
     val c = dialedColors
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    // Auto-dismiss once the face is on the wrist and already active.
-    LaunchedEffect(status) {
-        if (status is PushStatus.Done && !status.needsActivation) {
-            delay(1600)
-            onDismiss()
-        }
-    }
+    // No auto-dismiss: the success state is shown until the user taps Done or swipes the sheet away.
+    // (Previously the "already active" repeat-push path self-closed in ~1.6s, so the user never saw
+    // any confirmation — the reported "no success on either side" symptom.) Swipe-dismiss stays free.
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -65,7 +62,7 @@ fun PushToWatchSheet(
         containerColor = c.surfaceContainer,
         dragHandle = {
             Box(Modifier.padding(top = 12.dp)) {
-                Box(Modifier.size(width = 36.dp, height = 4.dp).clip(CircleShape).background(c.outline))
+                Box(Modifier.size(width = 36.dp, height = 4.dp).clip(CircleShape).background(c.onSurface.copy(alpha = 0.2f)))
             }
         },
     ) {
@@ -88,10 +85,14 @@ private fun SendingContent(face: Face, deviceName: String?) {
     val c = dialedColors
     FaceDial(face = face, size = FaceSize.sheet)
     Spacer(Modifier.height(DialedSpacing.lg))
-    Text("Sending to your watch", style = MaterialTheme.typography.titleMedium, color = c.onSurface)
+    Text(
+        deviceName?.let { "Sending to $it…" } ?: "Sending to your watch…",
+        style = MaterialTheme.typography.titleMedium,
+        color = c.onPrimaryContainer,
+    )
     Spacer(Modifier.height(6.dp))
     Text(
-        deviceName?.let { "Keep $it close" } ?: "Keep your watch close",
+        "Keep it close",
         style = MaterialTheme.typography.bodyMedium,
         color = c.onSurfaceVariant,
     )
@@ -106,6 +107,9 @@ private fun SendingContent(face: Face, deviceName: String?) {
 @Composable
 private fun DoneContent(face: Face, needsActivation: Boolean, onDone: () -> Unit) {
     val c = dialedColors
+    val haptic = LocalHapticFeedback.current
+    // F3 beat 3 landing haptic — fires once when the success state appears.
+    LaunchedEffect(Unit) { haptic.performHapticFeedback(HapticFeedbackType.Confirm) }
     Box(
         Modifier.size(84.dp).clip(CircleShape).background(c.success.copy(alpha = 0.13f)),
         contentAlignment = Alignment.Center,
@@ -129,10 +133,10 @@ private fun DoneContent(face: Face, needsActivation: Boolean, onDone: () -> Unit
         color = c.onSurfaceVariant,
         textAlign = TextAlign.Center,
     )
-    if (needsActivation) {
-        Spacer(Modifier.height(DialedSpacing.xl))
-        DialedButton("Done", onDone, variant = DialedButtonVariant.TONAL, height = 48.dp)
-    }
+    // Persistent confirmation for BOTH branches — the sheet no longer auto-dismisses, so a real
+    // success is never missed. Tapping Done (or swiping) closes it.
+    Spacer(Modifier.height(DialedSpacing.xl))
+    DialedButton("Done", onDone, variant = DialedButtonVariant.TONAL, height = 48.dp)
 }
 
 @Composable

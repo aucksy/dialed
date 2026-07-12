@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.os.PowerManager
+import android.util.Log
 import com.dialed.app.wear.MainActivity
 import com.dialed.app.wear.common.WatchFaceActivationStrategy
 import com.dialed.app.wear.common.WatchFaceInstallResult
@@ -14,6 +15,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,8 +41,6 @@ import java.io.FileInputStream
  */
 class DialedListenerService : WearableListenerService() {
 
-    private val serviceJob = SupervisorJob()
-    private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
     private val messageClient by lazy { Wearable.getMessageClient(this) }
     private val channelClient by lazy { Wearable.getChannelClient(this) }
     private val repo by lazy { WatchFacePushRepository(this) }
@@ -49,8 +49,12 @@ class DialedListenerService : WearableListenerService() {
     private var timeoutJob: Job? = null
 
     override fun onDestroy() {
+        // A WearableListenerService can be unbound + destroyed the moment its callback returns, even
+        // with a receive/install still in flight. The work runs on the process-scoped [transferScope]
+        // (NOT a service Job), so it survives this teardown — GMS clients are process-scoped too. If a
+        // transfer is still mid-flight here, that is the teardown-race signal we log to confirm on-device.
+        Log.w(TAG, "onDestroy state=${TransferSession.state.value::class.simpleName}")
         super.onDestroy()
-        serviceJob.cancel()
     }
 
     /** Phone asks "may I send a face?". Reply a single byte: proceed (1) or busy (0). */
@@ -69,12 +73,13 @@ class DialedListenerService : WearableListenerService() {
                 // Arm the timeout guard BEFORE launching the UI, so even a startActivity failure
                 // still leaves a path that releases the transfer lock (the guard is the ONLY
                 // terminal path when no channel opens).
-                timeoutJob = serviceScope.launch {
+                timeoutJob = transferScope.launch {
                     delay(WearConstants.TRANSFER_TIMEOUT_MS)
                     if (TransferSession.pending?.request?.transferId == request.transferId &&
                         TransferSession.state.value is ReceiveState.Receiving &&
                         TransferSession.claimTerminal()
                     ) {
+                        Log.w(TAG, "setup timeout, no channel opened t=${request.transferId}")
                         fail(request.faceName)
                         TransferSession.end()
                     }
@@ -82,6 +87,7 @@ class DialedListenerService : WearableListenerService() {
                 runCatching { wakeAndLaunchUi() }
             } catch (e: Exception) {
                 // Setup threw before the guard could fire — release the lock so future pushes work.
+                Log.w(TAG, "onRequest setup failed t=${request.transferId}", e)
                 timeoutJob?.cancel()
                 timeoutJob = null
                 TransferSession.end()
@@ -105,12 +111,17 @@ class DialedListenerService : WearableListenerService() {
         timeoutJob?.cancel()
         timeoutJob = null
 
-        serviceScope.launch {
+        transferScope.launch {
             val request = pending.request
             val tempFile = File.createTempFile("dialed_face", ".apk", cacheDir).apply { deleteOnExit() }
+            // Default so EVERY terminal path finalizes exactly once (in the finally): a failed or
+            // abnormal exit reports FAILED, so the phone fails fast instead of waiting out its
+            // PHONE_FINALIZE_TIMEOUT. Only a genuine install success reassigns this.
+            var finalResult = WatchFaceInstallResult.FAILED
             try {
                 val received = receiveToFile(channel, tempFile)
                 if (!received) {
+                    Log.w(TAG, "receive failed t=${request.transferId}")
                     fail(request.faceName)
                     return@launch
                 }
@@ -121,34 +132,48 @@ class DialedListenerService : WearableListenerService() {
                     repo.installOrUpdate(ParcelFileDescriptor.dup(stream.fd), request.token)
                 }
                 if (!installed) {
+                    Log.w(TAG, "install returned false t=${request.transferId}")
                     fail(request.faceName)
                     return@launch
                 }
 
-                // If we can silently set it active, do it now (one-shot).
+                // ---- Installed: the face is genuinely on the watch. Nothing below may downgrade
+                //      this to FAILED — post-install work is best-effort only. ----
                 var nowActive = pending.strategy == WatchFaceActivationStrategy.NO_ACTION_NEEDED
                 if (pending.strategy == WatchFaceActivationStrategy.CALL_SET_ACTIVE_NO_USER_ACTION) {
-                    if (repo.setActive()) {
-                        store.setActiveApiUsed(true)
-                        nowActive = true
-                    }
+                    runCatching {
+                        if (repo.setActive()) {
+                            store.setActiveApiUsed(true)
+                            nowActive = true
+                        }
+                    }.onFailure { Log.w(TAG, "setActive threw (install already ok) t=${request.transferId}", it) }
                 }
 
-                store.setLastFaceName(request.faceName)
-                preview?.let { FacePreviewExtractor.cache(this@DialedListenerService, it) }
-
                 val uiStrategy = if (nowActive) WatchFaceActivationStrategy.NO_ACTION_NEEDED else pending.strategy
-                val result = if (nowActive) {
+                finalResult = if (nowActive) {
                     WatchFaceInstallResult.INSTALLED_ACTIVE
                 } else {
                     WatchFaceInstallResult.INSTALLED_NEEDS_ACTIVATION
                 }
+                // Commit the success UI BEFORE any fallible side-effect/report so a DataStore or
+                // preview-cache hiccup can never flip a real install to Failed.
                 TransferSession.update(ReceiveState.Success(request.faceName, uiStrategy, preview))
-                sendFinalize(channel.nodeId, request.transferId, result)
+                runCatching {
+                    store.setLastFaceName(request.faceName)
+                    preview?.let { FacePreviewExtractor.cache(this@DialedListenerService, it) }
+                }.onFailure { Log.w(TAG, "post-install side-effect failed (install already ok) t=${request.transferId}", it) }
             } catch (e: Exception) {
+                if (e is CancellationException) {
+                    // Don't mask a teardown/cancel as a plain install failure — surface it.
+                    Log.w(TAG, "transfer CANCELLED t=${request.transferId}")
+                    throw e
+                }
+                Log.w(TAG, "onChannelOpened failed t=${request.transferId} installed=${finalResult != WatchFaceInstallResult.FAILED}", e)
                 fail(request.faceName)
-                runCatching { sendFinalize(channel.nodeId, request.transferId, WatchFaceInstallResult.FAILED) }
             } finally {
+                // Exactly one finalize per transfer, on every terminal path (success OR failure).
+                runCatching { sendFinalize(channel.nodeId, request.transferId, finalResult) }
+                    .onFailure { Log.w(TAG, "sendFinalize failed t=${request.transferId}", it) }
                 tempFile.delete()
                 TransferSession.end()
             }
@@ -160,6 +185,9 @@ class DialedListenerService : WearableListenerService() {
         val done = CompletableDeferred<Boolean>()
         val callback = object : ChannelClient.ChannelCallback() {
             override fun onInputClosed(ch: ChannelClient.Channel, closeReason: Int, appErrorCode: Int) {
+                // reason 1=NORMAL (sendFile closed the stream cleanly = success), 2=DISCONNECTED,
+                // 3=LOCAL_CLOSE, 4=REMOTE_CLOSE. Only NORMAL is a complete transfer (matches androidify).
+                Log.w(TAG, "onInputClosed reason=$closeReason appErr=$appErrorCode")
                 done.complete(closeReason == CLOSE_REASON_NORMAL)
             }
         }
@@ -168,6 +196,7 @@ class DialedListenerService : WearableListenerService() {
             channelClient.receiveFile(channel, Uri.fromFile(tempFile), false)
             withTimeoutOrNull(WearConstants.TRANSFER_TIMEOUT_MS) { done.await() } ?: false
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             false
         } finally {
             runCatching { channelClient.unregisterChannelCallback(callback) }
@@ -211,7 +240,17 @@ class DialedListenerService : WearableListenerService() {
     }
 
     private companion object {
+        const val TAG = "DialedListener"
         const val WAKELOCK_TAG = "dialed:wear"
         const val WAKELOCK_TIMEOUT_MS = 1000L
+
+        /**
+         * Process-scoped (NOT bound to this service's lifecycle): GMS may unbind + destroy an idle
+         * [WearableListenerService] the moment a callback returns, but an in-flight receive/install
+         * must outlive that. GMS clients (channel/message) are process-scoped, so an already-registered
+         * channel callback keeps functioning after the service dies. A per-transfer timeout in
+         * [receiveToFile] plus TransferSession.end() in every finally keep this from leaking coroutines.
+         */
+        private val transferScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
 }

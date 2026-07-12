@@ -53,7 +53,9 @@ private fun Celebration(state: ReceiveState.Success, onDismiss: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     LaunchedEffect(Unit) {
         haptic.performHapticFeedback(HapticFeedbackType.Confirm)
-        delay(1600)
+        // Linger long enough to actually register on the wrist (this returns to Dialed's Home, not
+        // the live face, so vanishing too fast reads as "no confirmation").
+        delay(2600)
         onDismiss()
     }
     DialedScreen(showTimeText = false) {

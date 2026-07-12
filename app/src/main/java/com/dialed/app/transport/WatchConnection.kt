@@ -126,7 +126,9 @@ class WatchBridge(context: Context) {
         val finalize = CompletableDeferred<WatchFaceInstallResult>()
         val listener = MessageClient.OnMessageReceivedListener { event ->
             if (event.path == finalizePath) {
-                finalize.complete(WearConstants.decodeResult(event.data))
+                val decoded = WearConstants.decodeResult(event.data)
+                Log.i(TAG, "finalize recv t=$transferId result=$decoded")
+                finalize.complete(decoded)
             }
         }
 
@@ -150,15 +152,23 @@ class WatchBridge(context: Context) {
             }
 
             val channelPath = WearConstants.PATH_TRANSFER_APK_TEMPLATE.format(transferId)
+            Log.i(TAG, "push start node=$nodeId t=$transferId face=${face.id}")
             val channel = channelClient.openChannel(nodeId, channelPath).await()
             channelClient.sendFile(channel, apkUri).await()
+            Log.i(TAG, "sendFile done t=$transferId, awaiting finalize")
 
             // Wait longer than the watch's receive+install budget so a slow success isn't
             // misreported as a timeout while the face actually changed.
             val result = withTimeoutOrNull(WearConstants.PHONE_FINALIZE_TIMEOUT_MS) { finalize.await() }
             when (result) {
-                null -> emit(PushStatus.Error("The transfer timed out. Keep your watch close and retry."))
-                WatchFaceInstallResult.FAILED -> emit(PushStatus.Error("The watch couldn't install this face."))
+                null -> {
+                    Log.w(TAG, "finalize timed out t=$transferId")
+                    emit(PushStatus.Error("The transfer timed out. Keep your watch close and retry."))
+                }
+                WatchFaceInstallResult.FAILED -> {
+                    Log.w(TAG, "watch reported FAILED t=$transferId")
+                    emit(PushStatus.Error("The watch couldn't install this face."))
+                }
                 WatchFaceInstallResult.INSTALLED_ACTIVE -> emit(PushStatus.Done(needsActivation = false))
                 WatchFaceInstallResult.INSTALLED_NEEDS_ACTIVATION -> emit(PushStatus.Done(needsActivation = true))
             }

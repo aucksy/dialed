@@ -3,8 +3,13 @@
 Dialed is a **native Kotlin/Compose Watch Face Push (WFP) marketplace** for Wear OS 6 — a **living
 hub** that bundles the whole fablecollection watch-face collection, sells it as a **one-time
 purchase**, pushes faces to the watch via WFP, and doubles as the developer's **laptop-free test
-harness**. Repo: **github.com/aucksy/dialed** (live; CI green; tagged `dialed-v0.1.0`). Build guide:
+harness**. Repo: **github.com/aucksy/dialed** (live; CI green; shipped `dialed-v0.2.1`). Build guide:
 `watchface-marketplace-build-guide.md`.
+
+**▶ ACTIVE ROADMAP (post-v0.2.1): `docs/IMPROVEMENTS-PLAN.md`** — the 8 owner-reported on-device issues
+(resolution, installed-state/uninstall, animated showcase, wear setting-face animation, carousel
+visibility, motion jank, complication alignment) phased v0.3.0→v0.8.0. Start there; keep its Progress
+table live. Phase 0 is a research spike that unblocks the faces-repo fixes.
 
 **Design source of truth:**
 - Phone: `Dialed Watch-Face Store-handoff/dialed-watch-face-store/project/Dialed - Design Spec.dc.html` + `HANDOFF.md`.

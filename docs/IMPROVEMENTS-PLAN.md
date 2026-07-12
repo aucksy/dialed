@@ -22,8 +22,10 @@ testing `dialed-v0.2.1` (Pixel Watch 4 42mm + phone). This plans them in phases.
   direct APK links + what to re-test. (See CLAUDE.md "Ship loop".)
 
 ## Open questions / owner-gated
-- **#5 screenshot ("PFA") never arrived.** Re-share the distorted "installing" image before Phase 5 (and
-  it also informs Phase 2's preview-distortion fix).
+- ~~**#5 screenshot never arrived.**~~ ✅ **RECEIVED 2026-07-12** — analysed in `docs/research/R5-screenshot-evidence.md`.
+  Verdict: the distortion is the **platform** system apply-preview, not a Dialed bug (closes #5's distortion half;
+  the animation half → Phase 5). **Still owed, separately:** a plain photo of the **worn, applied face** (for R1
+  #1 resolution) and a **long-press picker** shot (for R4 #6 surface).
 - **Priority order below is a recommendation** (research-first, then highest user value, then face
   quality, then polish). Reorder freely — only Phase 0 must precede 2/3/4/6.
 - Slot=1 UX: confirm the owner accepts "one installed face at a time, Install = Replace" framing (Phase 1).
@@ -34,14 +36,14 @@ testing `dialed-v0.2.1` (Pixel Watch 4 42mm + phone). This plans them in phases.
 
 | # | Issue (owner's words) | Root-cause read | Repo | Phase |
 |---|---|---|---|---|
-| 1 | Watch-face resolution low; worse on bigger watches | 450×450 WFF canvas is fine; **raster `<Image>` assets + text AA scaling** on 384→456px displays | faces | **0 (research) → 2** |
+| 1 | Watch-face resolution low; worse on bigger watches | ~~raster assets~~ **RULED OUT** (all assets ≥2×). Now: likely **full-canvas upscale of the 300-unit faces** (16/18); R1 300→450 twin A/B settles it. Needs worn-face screenshot. | faces | **0 ✅ → 2** |
 | 2 | Home + detail should show which faces are installed; shows "Install to watch" for installed ones — want Uninstall | Phone has no knowledge of watch's installed/active face; **slot=1 → exactly one** | Dialed | **1** |
 | 3 | Uninstall from phone home via a single icon button | `removeWatchFace(slotId)` not implemented; needs phone→watch uninstall command | Dialed | **1** |
 | 4 | The in-app showcase should be animated | Phone `FaceDial` renders a static `preview.png` (F1 "living gallery" never built) | Dialed | **5** |
-| 5 | WearOS: no animation while setting the face; shows the face in **distorted dimensions** | (a) missing themed "setting…" state; (b) `FaceDial` bitmap aspect/`ContentScale` bug | Dialed | **2 (distortion) + 5 (animation)** |
-| 6 | Pushed faces don't appear in the watch's long-press `+` face carousel | WFP marketplace faces may not enter the system favorites picker; **research** whether fixable | both | **0 (research) → 6** |
-| 7 | Motion faces (rotating dial etc.) are janky/not smooth | WFF animation via 41 `<Transform>`; interpolation / update-rate / heavy per-frame expr | faces | **0 (research) → 4** |
-| 8 | Complication alignment bad on most faces | Hardcoded `<ComplicationSlot x/y/w/h>` bounds don't register with the drawn decoration/round safe-zone | faces | **0 (research) → 3** |
+| 5 | WearOS: no animation while setting the face; shows the face in **distorted dimensions** | **CONFIRMED (screenshot): the distorted oval is the platform's system "applying watch face" thumbnail, NOT a Dialed bug.** No `ContentScale` fix. Remedy = keep the user on Dialed's circular Concierge. | Dialed | **~~2~~ → 5 (animation)** |
+| 6 | Pushed faces don't appear in the watch's long-press `+` face carousel | **CONFIRMED platform limit: no favorites/carousel API; slot=1.** Only lever = bundle a **default watch face** → seeds ONE tile in the system **gallery** (not the quick strip). | both | **0 ✅ → 6 (+ Phase 5 default face)** |
+| 7 | Motion faces (rotating dial etc.) are janky/not smooth | **Three offenders:** Metronome (12fps sprite), Pulsar (`[SECOND]*6` tick), Turbine/Escapement (`Sweep=5`). Not expression cost. | faces | **0 ✅ → 4** |
+| 8 | Complication alignment bad on most faces | **NOT a bounds/paint offset** (co-registered everywhere). It's **round-display corner clipping** on the 300 canvas (corners past R=150). | faces | **0 ✅ → 3** |
 
 ---
 
@@ -72,8 +74,9 @@ Deliverables → `docs/research/`:
   `listWatchFaces()`), and the exact cause of the wear preview distortion (extractor bitmap aspect vs
   `ContentScale`). Output: the query-protocol shape for Phase 1 + the FaceDial fix for Phase 2.
 
-**Exit:** research docs merged; Phases 2/3/4/6 each have a concrete recipe. No version bump (docs only) —
-optionally tag a diagnostic face if built.
+**Exit:** ✅ **MET (2026-07-12).** Five recipe-bearing docs + a critic-written index live in `docs/research/`;
+Phases 2/3/4/6 each have a concrete recipe; R5-A gives the Phase-1 protocol. No version bump (docs only); no
+diagnostic face built yet (R1's 300→450 twin is the candidate build, deferred pending the worn-face screenshot).
 
 ## Phase 1 — Installed-state + Uninstall  _(Dialed phone + wear; depends on R5, R4 slot-confirm)_ → **`dialed-v0.3.0`**
 Highest user-facing value and largely independent of the faces work.
@@ -126,13 +129,37 @@ Highest user-facing value and largely independent of the faces work.
 ## Progress
 | Phase | Ver | State | Notes |
 |---|---|---|---|
-| 0 Research spike | — | ⬜ not started | run as a Workflow; outputs → docs/research/ |
-| 1 Installed-state + Uninstall | v0.3.0 | ⬜ | needs R5 + slot-confirm |
-| 2 Resolution + distortion | v0.4.0 | ⬜ | needs R1; re-share #5 screenshot |
-| 3 Complication alignment | v0.5.0 | ⬜ | needs R2 |
-| 4 Smooth animations | v0.6.0 | ⬜ | needs R3 |
-| 5 App animation polish | v0.7.0 | ⬜ | #4 + #5-animation |
-| 6 Carousel/favorites | v0.8.0 | ⬜ | needs R4; may be platform-limited |
+| 0 Research spike | — | ✅ **COMPLETE** 2026-07-12 | 5 docs + index in `docs/research/` (multi-agent workflow, primary-source-verified by an accuracy critic). Findings below rewrote 3 of the 4 root-cause reads. |
+| 1 Installed-state + Uninstall | v0.3.0 | 🟢 **READY** (recommended next) | R5-A query protocol SOLID + R4 slot-count=1 SOLID; unblocked, no screenshot dependency. |
+| 2 Resolution + distortion | v0.4.0 | ⬜ | **#5 distortion = platform UI, NOT an app bug (closed).** #1 resolution still needs a worn-face screenshot ± the R1 300→450 twin test. |
+| 3 Complication alignment | v0.5.0 | ⬜ | R2 SOLID: it's round-display **corner clipping** on the 300 canvas, deterministic geometry fix. |
+| 4 Smooth animations | v0.6.0 | ⬜ | R3 SOLID: Metronome (12fps sprite) / Pulsar (per-sec tick) / Turbine+Escapement (Sweep=5). Metronome true fix = sprite regen (owner design call). |
+| 5 App animation polish | v0.7.0 | ⬜ | #4 living gallery + **the real #5 fix** (cover the system apply moment with Dialed's circular Concierge). |
+| 6 Carousel/favorites | v0.8.0 | ⬜ | R4 DEFINITIVE: **no favorites/carousel API**; slot=1; only lever = bundling a **default watch face** → seeds ONE tile in the system gallery. Merges with the Phase-5 default-face work. |
+
+### Phase 0 findings — the corrected root-cause reads (see `docs/research/` for full recipes)
+- **#1 resolution — raster art is NOT the cause.** Every raster asset in all 18 faces is authored ≥2×
+  its on-canvas footprint, so on a 456px watch every asset *down-samples* (crisp). Leading hypothesis is
+  now a **full-canvas upscale** of the 300-unit faces (would soften text+vectors, worse on bigger
+  watches); the R1 **300→450 canvas twin A/B** settles it. Needs a worn-face screenshot to confirm the
+  *live* face (not the apply thumbnail) is what's soft.
+- **#8 complications — NOT a bounds/paint offset.** Bounds and paint are co-registered on every face.
+  It's **round-display corner clipping**: wide top/bottom bars + offset corner slots on the 300 canvas
+  push corners past the visible circle (R=150), cut by the round bezel (the square preview.png hid it).
+  Fix = inset via exact circle math or `BoundingBox`→`BoundingOval`. Deterministic; can start on paper.
+- **#7 motion — three specific offenders,** not expression cost: **Metronome** (12fps free-running
+  sprite), **Pulsar** (`[SECOND]*6` per-second tick, not a sweep), **Turbine/Escapement** (`Sweep
+  frequency="5"`). Quick XML wins: raise Sweep→`15`/`SYNC_TO_DEVICE`, convert ticks to swept hands;
+  Metronome's real fix is a sprite re-author (owner call).
+- **#6 carousel — DEFINITIVE platform limit.** WO6 marketplace **slot = 1** and there is **no API** to
+  add a pushed face to the long-press favorites/`+` carousel. The one documented path to a browsable
+  "Dialed" tile is bundling a **default watch face** (`assets/default_watchface.apk` +
+  `DEFAULT_WATCHFACE_VALIDATION_TOKEN`), which puts it in the system **gallery** (not the quick
+  favorites strip). This folds Phase 6 into the already-planned Phase-5 default-face work.
+- **#2/#5 — query protocol feasible; distortion is platform.** `listWatchFaces()` +
+  `isWatchFaceActive(pkg)` fully answer "which Dialed face is installed AND active" (slot=1 makes the
+  probe sufficient) → clean Phase-1 wire protocol in R5-A. #5 distortion resolved to the **system apply
+  thumbnail** (screenshot-confirmed), not any Dialed path.
 
 **Update this table + the phase sections as each phase ships. One phase per fresh chat (see
 [[fresh-chat-handoff-protocol]] equivalent): finish → tag → hand off the next kickoff prompt.**

@@ -38,7 +38,7 @@
       <SecondHand resource="rotor" x="42" y="42" width="216" height="216"
                   pivotX="0.5" pivotY="0.5" alpha="51" tintColor="[CONFIGURATION.accent.0]">
         <Variant mode="AMBIENT" target="alpha" value="0" />
-        <Sweep frequency="5" />
+        <Sweep frequency="15" />
       </SecondHand>
     </AnalogClock>
     <!-- AOD rotor: frozen, white 9% -->

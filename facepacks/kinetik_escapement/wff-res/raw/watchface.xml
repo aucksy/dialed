@@ -48,7 +48,7 @@
       <SecondHand resource="gear_small" x="-14" y="124" width="132" height="132"
                   pivotX="0.5" pivotY="0.5" alpha="41" tintColor="[CONFIGURATION.accent.0]">
         <Variant mode="AMBIENT" target="alpha" value="0" />
-        <Sweep frequency="5" />
+        <Sweep frequency="15" />
       </SecondHand>
     </AnalogClock>
 

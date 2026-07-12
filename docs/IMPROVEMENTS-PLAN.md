@@ -95,7 +95,7 @@ Highest user-facing value and largely independent of the faces work.
 - **Test:** push face A → Home badges A, detail shows Uninstall; push B → badge moves to B; uninstall
   icon clears the slot; reflects correctly after app restart.
 
-## Phase 2 — Face resolution + preview distortion  _(faces submodule + Dialed; depends on R1, R5)_ → **`dialed-v0.5.0`** (screenshot-gated; swapped with Phase 3)
+## Phase 2 — Face resolution + preview distortion  _(faces submodule + Dialed; depends on R1, R5)_ → **`dialed-v0.6.0`** (screenshot-gated; floated past Phases 3 & 4)
 - **faces:** apply R1 across all 18 — re-export/upscale (or vectorize) raster assets, fix `<Image>`
   sizing/`renderMode`, text AA. Re-render each `preview.png` crisp.
 - **Dialed:** fix wear `FaceDial` + the "installing" preview distortion (enforce square + `ContentScale`
@@ -110,9 +110,11 @@ Highest user-facing value and largely independent of the faces work.
   Collection-3 faces now on fablecollection main are excluded.
 - **Test:** owner adds complications on the fixed faces; they sit inside the round bezel, not clipped.
 
-## Phase 4 — Smooth animations  _(faces; depends on R3)_ → **`dialed-v0.6.0`**
-- De-jank the rotating/motion faces per R3 (interpolation, sweep vs transform, update-rate, AOD freeze).
-- **Test:** owner confirms smooth second/rotation motion on the affected faces; battery/AOD sane.
+## Phase 4 — Smooth animations  _(faces; depends on R3)_ → **`dialed-v0.5.0`** ✅ SHIPPED (took next sequential; Phase 2 stays screenshot-gated)
+- Raised Turbine + Escapement `<Sweep frequency>` 5→15 Hz (AOD freeze preserved). Pulsar kept as an
+  intentional filling-rim tick (owner call; WFF can't sweep a filling arc). Metronome sprite-regen deferred
+  (needs source art, ~48-60 frames — a design task).
+- **Test:** owner confirms Turbine rotor + Escapement gears sweep smoothly; battery/AOD sane.
 
 ## Phase 5 — App animation polish  _(Dialed UI)_ → **`dialed-v0.7.0`**
 - **Phone (#4):** animated showcase — F1 "living gallery" (animate the gallery/detail dials or the
@@ -134,8 +136,8 @@ Highest user-facing value and largely independent of the faces work.
 | 0 Research spike | — | ✅ **COMPLETE** 2026-07-12 | 5 docs + index in `docs/research/` (multi-agent workflow, primary-source-verified by an accuracy critic). Findings below rewrote 3 of the 4 root-cause reads. |
 | 1 Installed-state + Uninstall | v0.3.0 | ✅ **SHIPPED** 2026-07-12 (`dialed-v0.3.0`) | R5-A wire protocol (`PATH_QUERY_STATE`/`PATH_UNINSTALL` + codecs) + `installedState()`/`removeByPackage()` + 2 onRequest branches + **manifest intent-filters for the 2 new RPC paths** (was the load-bearing catch) + phone Installed/Active badge + single-icon Uninstall + "Replace on watch". Adversarially reviewed (no compile blockers, feature wired e2e). **Owner e2e: push A→badge, push B→badge moves, uninstall clears, survives restart.** |
 | 3 Complication alignment | v0.4.0 | ✅ **SHIPPED** 2026-07-12 (`dialed-v0.4.0`) | R2 corner-clipping fix: 15 slot position-insets across 9 faces (Turbine/Horizon/Halftone/Orrery/Odometer/Ember/Metronome/Noir/Counterform) — pure x/y, no bounds/width changes, so paint stays co-registered. Every edited corner now sits inside R=150 (14/15 also inside Rs=142; Orrery 143.4 per recipe). Comfortable + Arclight faces untouched; adversarial sweep confirmed Masthead/Marquee/Meteorite are inside R (tight but not clipped) so left per scope. **Took v0.4.0 (next sequential) because Phase 2 is screenshot-gated.** Generator now has an 18-face allowlist (fablecollection main gained Collection 3's 25 faces; they are NOT bundled). **Owner e2e: add complications on the fixed faces — they sit inside the round bezel, not clipped.** |
-| 2 Resolution + distortion | v0.5.0 | ⬜ | **Screenshot-gated → bumped to v0.5.0.** #5 distortion = platform UI, NOT an app bug (closed). #1 resolution still needs a worn-face screenshot ± the R1 300→450 twin test. |
-| 4 Smooth animations | v0.6.0 | ⬜ | R3 SOLID: Metronome (12fps sprite) / Pulsar (per-sec tick) / Turbine+Escapement (Sweep=5). Metronome true fix = sprite regen (owner design call). |
+| 4 Smooth animations | v0.5.0 | ✅ **SHIPPED** 2026-07-12 (`dialed-v0.5.0`) | R3 de-jank. **Turbine + Escapement `<Sweep frequency>` 5→15 Hz** (WFF smooth ceiling; quarters the per-frame step on the big rotor / toothed gear) — pure 1-attr edits, AMBIENT alpha-0 + frozen AOD twins untouched. **Pulsar kept as an intentional filling-rim tick per owner** (WFF has no swept-arc primitive; smoothing = redesigning the signature rim into an orbiting dot — declined). **Metronome (12fps sprite pendulum) deferred — needs a ~48-60-frame source-art regen** (no sprite generator in-repo; design+pipeline task). **Took v0.5.0 (next sequential) since Phase 2 stays screenshot-gated → Phase 2 = v0.6.0.** **Owner e2e: Turbine rotor + Escapement gears sweep smoothly (no shimmer).** |
+| 2 Resolution + distortion | v0.6.0 | ⬜ | **Screenshot-gated → floats to v0.6.0.** #5 distortion = platform UI, NOT an app bug (closed). #1 resolution still needs a worn-face screenshot ± the R1 300→450 twin test. |
 | 5 App animation polish | v0.7.0 | ⬜ | #4 living gallery + **the real #5 fix** (cover the system apply moment with Dialed's circular Concierge). |
 | 6 Carousel/favorites | v0.8.0 | ⬜ | R4 DEFINITIVE: **no favorites/carousel API**; slot=1; only lever = bundling a **default watch face** → seeds ONE tile in the system gallery. Merges with the Phase-5 default-face work. |
 

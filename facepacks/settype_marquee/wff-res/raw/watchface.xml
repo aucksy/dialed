@@ -8,7 +8,7 @@
   is static bulbs), NOW SHOWING in accent caps, glowing time (native OutGlow),
   billing lines. AOD = single dotted ring + dim time (~5% APL).
 -->
-<WatchFace width="300" height="300" clipShape="CIRCLE">
+<WatchFace width="450" height="450" clipShape="CIRCLE">
   <Metadata key="CLOCK_TYPE" value="DIGITAL" />
   <Metadata key="PREVIEW_TIME" value="10:08:32" />
 
@@ -24,13 +24,13 @@
   <Scene backgroundColor="#FF000000">
 
     <!-- Warm radial house-lights background -->
-    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+    <Group name="bg_wrap" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartDraw name="bg" x="0" y="0" width="300" height="300">
+      <PartDraw name="bg" x="0" y="0" width="450" height="450">
         <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
-        <Rectangle x="0" y="0" width="300" height="300">
+        <Rectangle x="0" y="0" width="450" height="450">
           <Fill color="#FF0B0705">
-            <RadialGradient centerX="150" centerY="126" radius="270"
+            <RadialGradient centerX="225" centerY="189" radius="405"
                           colors="#FF191008 #FF0B0705 #FF0B0705" positions="0 0.68 1" />
           </Fill>
         </Rectangle>
@@ -38,75 +38,75 @@
     </Group>
 
     <!-- 24 bulbs (one white sprite, group-tinted to the bulb theme) -->
-    <Group name="bulbs" x="0" y="0" width="300" height="300" tintColor="[CONFIGURATION.accent.0]">
+    <Group name="bulbs" x="0" y="0" width="450" height="450" tintColor="[CONFIGURATION.accent.0]">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartImage x="136" y="6" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="170" y="10" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="201" y="23" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="228" y="44" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="249" y="71" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="262" y="102" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="266" y="136" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="262" y="170" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="249" y="201" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="228" y="228" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="201" y="249" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="170" y="262" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="136" y="266" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="102" y="262" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="71" y="249" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="44" y="228" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="23" y="201" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="10" y="170" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="6" y="136" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="10" y="102" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="23" y="71" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="44" y="44" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="71" y="23" width="28" height="28"><Image resource="bulb" /></PartImage>
-      <PartImage x="102" y="10" width="28" height="28"><Image resource="bulb" /></PartImage>
+      <PartImage x="204" y="9" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="255" y="15" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="301.5" y="34.5" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="342" y="66" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="373.5" y="106.5" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="393" y="153" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="399" y="204" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="393" y="255" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="373.5" y="301.5" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="342" y="342" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="301.5" y="373.5" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="255" y="393" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="204" y="399" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="153" y="393" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="106.5" y="373.5" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="66" y="342" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="34.5" y="301.5" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="15" y="255" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="9" y="204" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="15" y="153" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="34.5" y="106.5" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="66" y="66" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="106.5" y="34.5" width="42" height="42"><Image resource="bulb" /></PartImage>
+      <PartImage x="153" y="15" width="42" height="42"><Image resource="bulb" /></PartImage>
     </Group>
 
     <!-- NOW SHOWING -->
-    <PartText name="nowshowing" x="0" y="72" width="300" height="14">
+    <PartText name="nowshowing" x="0" y="108" width="450" height="21">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER"><Font family="archivo_semibold" size="11" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.45">NOW SHOWING</Font></Text>
+      <Text align="CENTER"><Font family="archivo_semibold" size="16.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.45">NOW SHOWING</Font></Text>
     </PartText>
 
     <!-- Time with native accent glow -->
-    <Group name="time" x="0" y="96" width="300" height="76">
+    <Group name="time" x="0" y="144" width="450" height="114">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartText x="0" y="0" width="300" height="76">
+      <PartText x="0" y="0" width="450" height="114">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
-        <Text align="CENTER"><Font family="barlow_condensed_bold" size="74" weight="BOLD" color="#FFF6EBD8">
-          <OutGlow radius="8" color="[CONFIGURATION.accent.1]" />
+        <Text align="CENTER"><Font family="barlow_condensed_bold" size="111" weight="BOLD" color="#FFF6EBD8">
+          <OutGlow radius="12" color="[CONFIGURATION.accent.1]" />
           <Template>%d:%s<Parameter expression="[HOUR_1_12]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
-      <PartText x="0" y="0" width="300" height="76">
+      <PartText x="0" y="0" width="450" height="114">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
-        <Text align="CENTER"><Font family="barlow_condensed_bold" size="74" weight="BOLD" color="#FFF6EBD8">
-          <OutGlow radius="8" color="[CONFIGURATION.accent.1]" />
+        <Text align="CENTER"><Font family="barlow_condensed_bold" size="111" weight="BOLD" color="#FFF6EBD8">
+          <OutGlow radius="12" color="[CONFIGURATION.accent.1]" />
           <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
     </Group>
 
     <!-- Rule + date · AM/PM -->
-    <PartDraw name="rule" x="0" y="0" width="300" height="300">
+    <PartDraw name="rule" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Rectangle x="90" y="178" width="120" height="1"><Fill color="#40F6EBD8" /></Rectangle>
+      <Rectangle x="135" y="267" width="180" height="1.5"><Fill color="#40F6EBD8" /></Rectangle>
     </PartDraw>
-    <Group name="dateline" x="0" y="184" width="300" height="12">
+    <Group name="dateline" x="0" y="276" width="450" height="18">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartText x="0" y="0" width="300" height="12">
+      <PartText x="0" y="0" width="450" height="18">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
-        <Text align="CENTER"><Font family="archivo_semibold" size="9" weight="SEMI_BOLD" color="#8CF6EBD8" letterSpacing="0.33">
+        <Text align="CENTER"><Font family="archivo_semibold" size="13.5" weight="SEMI_BOLD" color="#8CF6EBD8" letterSpacing="0.33">
           <Upper><Template>%s %s · %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /><Parameter expression="[AMPM_STRING]" /></Template></Upper>
         </Font></Text>
       </PartText>
-      <PartText x="0" y="0" width="300" height="12">
+      <PartText x="0" y="0" width="450" height="18">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
-        <Text align="CENTER"><Font family="archivo_semibold" size="9" weight="SEMI_BOLD" color="#8CF6EBD8" letterSpacing="0.33">
+        <Text align="CENTER"><Font family="archivo_semibold" size="13.5" weight="SEMI_BOLD" color="#8CF6EBD8" letterSpacing="0.33">
           <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
         </Font></Text>
       </PartText>
@@ -115,30 +115,30 @@
     <!-- Slot 1 · billing line 1 (default next event) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="60" y="230" width="180" height="19">
+                      x="90" y="345" width="270" height="28.5">
       <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT" />
-      <BoundingBox x="0" y="0" width="180" height="19" />
+      <BoundingBox x="0" y="0" width="270" height="28.5" />
       <Complication type="SHORT_TEXT">
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="0" y="4" width="86" height="11">
+            <PartText x="0" y="6" width="129" height="16.5">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="END"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">
+              <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="4" width="86" height="11">
+            <PartText x="0" y="6" width="129" height="16.5">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="END"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">NEXT EVENT</Font></Text>
+              <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">NEXT EVENT</Font></Text>
             </PartText>
           </Default>
         </Condition>
-        <PartText x="92" y="1" width="88" height="16">
+        <PartText x="138" y="1.5" width="132" height="24">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="START"><Font family="barlow_condensed_semibold" size="13" weight="SEMI_BOLD" color="#FFF6EBD8">
+          <Text align="START"><Font family="barlow_condensed_semibold" size="19.5" weight="SEMI_BOLD" color="#FFF6EBD8">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
@@ -147,23 +147,23 @@
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="0" y="4" width="86" height="11">
+            <PartText x="0" y="6" width="129" height="16.5">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="END"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">
+              <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="4" width="86" height="11">
+            <PartText x="0" y="6" width="129" height="16.5">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="END"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">NEXT EVENT</Font></Text>
+              <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">NEXT EVENT</Font></Text>
             </PartText>
           </Default>
         </Condition>
-        <PartText x="92" y="1" width="88" height="16">
+        <PartText x="138" y="1.5" width="132" height="24">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="START"><Font family="barlow_condensed_semibold" size="13" weight="SEMI_BOLD" color="#FFF6EBD8">
+          <Text align="START"><Font family="barlow_condensed_semibold" size="19.5" weight="SEMI_BOLD" color="#FFF6EBD8">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
@@ -174,30 +174,30 @@
     <!-- Slot 2 · billing line 2 (default battery) -->
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="60" y="248" width="180" height="19">
+                      x="90" y="372" width="270" height="28.5">
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
-      <BoundingBox x="0" y="0" width="180" height="19" />
+      <BoundingBox x="0" y="0" width="270" height="28.5" />
       <Complication type="SHORT_TEXT">
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="0" y="4" width="86" height="11">
+            <PartText x="0" y="6" width="129" height="16.5">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="END"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">
+              <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="4" width="86" height="11">
+            <PartText x="0" y="6" width="129" height="16.5">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="END"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">BATTERY</Font></Text>
+              <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">BATTERY</Font></Text>
             </PartText>
           </Default>
         </Condition>
-        <PartText x="92" y="1" width="88" height="16">
+        <PartText x="138" y="1.5" width="132" height="24">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="START"><Font family="barlow_condensed_semibold" size="13" weight="SEMI_BOLD" color="#FFF6EBD8">
+          <Text align="START"><Font family="barlow_condensed_semibold" size="19.5" weight="SEMI_BOLD" color="#FFF6EBD8">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
@@ -206,23 +206,23 @@
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="0" y="4" width="86" height="11">
+            <PartText x="0" y="6" width="129" height="16.5">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="END"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">
+              <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="4" width="86" height="11">
+            <PartText x="0" y="6" width="129" height="16.5">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="END"><Font family="archivo_semibold" size="8" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">BATTERY</Font></Text>
+              <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#73F6EBD8" letterSpacing="0.25">BATTERY</Font></Text>
             </PartText>
           </Default>
         </Condition>
-        <PartText x="92" y="1" width="88" height="16">
+        <PartText x="138" y="1.5" width="132" height="24">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="START"><Font family="barlow_condensed_semibold" size="13" weight="SEMI_BOLD" color="#FFF6EBD8">
+          <Text align="START"><Font family="barlow_condensed_semibold" size="19.5" weight="SEMI_BOLD" color="#FFF6EBD8">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
@@ -231,17 +231,17 @@
     </ComplicationSlot>
 
     <!-- ============ AOD: dotted ring + dim time ============ -->
-    <Group name="aod" x="0" y="0" width="300" height="300" alpha="0">
+    <Group name="aod" x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
-      <PartDraw x="0" y="0" width="300" height="300">
-        <Ellipse x="20" y="20" width="260" height="260">
-          <Stroke color="#59FFC978" thickness="1" dashIntervals="1 4" cap="ROUND" />
+      <PartDraw x="0" y="0" width="450" height="450">
+        <Ellipse x="30" y="30" width="390" height="390">
+          <Stroke color="#59FFC978" thickness="1.5" dashIntervals="1.5 6" cap="ROUND" />
         </Ellipse>
       </PartDraw>
-      <DigitalClock x="0" y="112" width="300" height="62">
+      <DigitalClock x="0" y="168" width="450" height="93">
         <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
-                  x="0" y="0" width="300" height="62">
-          <Font family="barlow_condensed_medium" size="62" weight="MEDIUM" color="#80F6EBD8" />
+                  x="0" y="0" width="450" height="93">
+          <Font family="barlow_condensed_medium" size="93" weight="MEDIUM" color="#80F6EBD8" />
         </TimeText>
       </DigitalClock>
     </Group>

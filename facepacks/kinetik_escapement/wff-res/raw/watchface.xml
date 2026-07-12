@@ -12,7 +12,7 @@
                   in WFF — the design's own fallback is a static balance).
   AOD: dim time + static outline balance (~6% APL) on pure black.
 -->
-<WatchFace width="300" height="300" clipShape="CIRCLE">
+<WatchFace width="450" height="450" clipShape="CIRCLE">
   <Metadata key="CLOCK_TYPE" value="DIGITAL" />
   <Metadata key="PREVIEW_TIME" value="10:08:32" />
 
@@ -27,11 +27,11 @@
 
   <Scene backgroundColor="#FF000000">
 
-    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+    <Group name="bg_wrap" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartDraw name="bg" x="0" y="0" width="300" height="300">
+      <PartDraw name="bg" x="0" y="0" width="450" height="450">
         <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
-        <Rectangle x="0" y="0" width="300" height="300">
+        <Rectangle x="0" y="0" width="450" height="450">
           <Fill color="#FF0A0908" />
         </Rectangle>
       </PartDraw>
@@ -40,12 +40,12 @@
     <!-- Gear train behind everything, accent-tinted at 16% (alpha 41).
          Axes: large gear (220,90) turns once per hour; small gear (52,190)
          sweeps once per minute. Hidden in AOD. -->
-    <AnalogClock x="0" y="0" width="300" height="300">
-      <MinuteHand resource="gear_large" x="124" y="-6" width="192" height="192"
+    <AnalogClock x="0" y="0" width="450" height="450">
+      <MinuteHand resource="gear_large" x="186" y="-9" width="288" height="288"
                   pivotX="0.5" pivotY="0.5" alpha="41" tintColor="[CONFIGURATION.accent.0]">
         <Variant mode="AMBIENT" target="alpha" value="0" />
       </MinuteHand>
-      <SecondHand resource="gear_small" x="-14" y="124" width="132" height="132"
+      <SecondHand resource="gear_small" x="-21" y="186" width="198" height="198"
                   pivotX="0.5" pivotY="0.5" alpha="41" tintColor="[CONFIGURATION.accent.0]">
         <Variant mode="AMBIENT" target="alpha" value="0" />
         <Sweep frequency="15" />
@@ -53,71 +53,71 @@
     </AnalogClock>
 
     <!-- Time (mono, letter-spaced): 12/24-h twin texts; AOD twin group dims -->
-    <Group name="time" x="0" y="58" width="300" height="56">
+    <Group name="time" x="0" y="87" width="450" height="84">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartText x="0" y="0" width="300" height="56">
+      <PartText x="0" y="0" width="450" height="84">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
-        <Text align="CENTER"><Font family="ibm_plex_mono_semibold" size="54" weight="SEMI_BOLD" color="#FFEDE7DA" letterSpacing="0.037">
+        <Text align="CENTER"><Font family="ibm_plex_mono_semibold" size="81" weight="SEMI_BOLD" color="#FFEDE7DA" letterSpacing="0.037">
           <Template>%s:%s<Parameter expression="[HOUR_1_12_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
-      <PartText x="0" y="0" width="300" height="56">
+      <PartText x="0" y="0" width="450" height="84">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
-        <Text align="CENTER"><Font family="ibm_plex_mono_semibold" size="54" weight="SEMI_BOLD" color="#FFEDE7DA" letterSpacing="0.037">
+        <Text align="CENTER"><Font family="ibm_plex_mono_semibold" size="81" weight="SEMI_BOLD" color="#FFEDE7DA" letterSpacing="0.037">
           <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
     </Group>
-    <Group name="time_aod" x="0" y="70" width="300" height="52" alpha="0">
+    <Group name="time_aod" x="0" y="105" width="450" height="78" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
-      <PartText x="0" y="0" width="300" height="52">
+      <PartText x="0" y="0" width="450" height="78">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
-        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="50" weight="MEDIUM" color="#80EDE7DA" letterSpacing="0.04">
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="75" weight="MEDIUM" color="#80EDE7DA" letterSpacing="0.04">
           <Template>%s:%s<Parameter expression="[HOUR_1_12_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
-      <PartText x="0" y="0" width="300" height="52">
+      <PartText x="0" y="0" width="450" height="78">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
-        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="50" weight="MEDIUM" color="#80EDE7DA" letterSpacing="0.04">
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="75" weight="MEDIUM" color="#80EDE7DA" letterSpacing="0.04">
           <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
     </Group>
 
     <!-- Caliber caption -->
-    <PartText name="caption" x="0" y="120" width="300" height="12">
+    <PartText name="caption" x="0" y="180" width="450" height="18">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="8.5" weight="MEDIUM" color="#FF6B6858" letterSpacing="0.35">
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12.75" weight="MEDIUM" color="#FF6B6858" letterSpacing="0.35">
         <Upper><Template>%s %s · CAL. TS-01 · 21,600 VPH<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
       </Font></Text>
     </PartText>
 
     <!-- Balance wheel (static; interactive form) -->
-    <Group name="balance" x="0" y="0" width="300" height="300">
+    <Group name="balance" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartDraw x="0" y="0" width="300" height="300">
-        <Ellipse x="115" y="159" width="70" height="70">
-          <Stroke color="[CONFIGURATION.accent.0]" thickness="2" />
+      <PartDraw x="0" y="0" width="450" height="450">
+        <Ellipse x="172.5" y="238.5" width="105" height="105">
+          <Stroke color="[CONFIGURATION.accent.0]" thickness="3" />
         </Ellipse>
-        <Rectangle x="149" y="156" width="2" height="76">
+        <Rectangle x="223.5" y="234" width="3" height="114">
           <Fill color="[CONFIGURATION.accent.0]" />
         </Rectangle>
-        <Rectangle x="122" y="193.5" width="56" height="1">
+        <Rectangle x="183" y="290.25" width="84" height="1.5">
           <Fill color="[CONFIGURATION.accent.1]" />
         </Rectangle>
-        <Ellipse x="146.5" y="190.5" width="7" height="7">
+        <Ellipse x="219.75" y="285.75" width="10.5" height="10.5">
           <Fill color="#FFEDE7DA" />
         </Ellipse>
       </PartDraw>
     </Group>
     <!-- Balance wheel (AOD outline, fixed dim gold) -->
-    <Group name="balance_aod" x="0" y="0" width="300" height="300" alpha="0">
+    <Group name="balance_aod" x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
-      <PartDraw x="0" y="0" width="300" height="300">
-        <Ellipse x="118" y="168" width="64" height="64">
-          <Stroke color="#59C9A96A" thickness="1" />
+      <PartDraw x="0" y="0" width="450" height="450">
+        <Ellipse x="177" y="252" width="96" height="96">
+          <Stroke color="#59C9A96A" thickness="1.5" />
         </Ellipse>
-        <Rectangle x="149.5" y="168" width="1" height="64">
+        <Rectangle x="224.25" y="252" width="1.5" height="96">
           <Fill color="#59C9A96A" />
         </Rectangle>
       </PartDraw>
@@ -126,67 +126,67 @@
     <!-- Slot 1 · left circular sub-dial (default: heart rate) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="26" y="158" width="64" height="64">
+                      x="39" y="237" width="96" height="96">
       <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
-      <BoundingOval x="0" y="0" width="64" height="64" />
+      <BoundingOval x="0" y="0" width="96" height="96" />
       <Complication type="SHORT_TEXT">
-        <PartDraw x="0" y="0" width="64" height="64">
+        <PartDraw x="0" y="0" width="96" height="96">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Ellipse x="0.5" y="0.5" width="63" height="63">
-            <Stroke color="#2EEDE7DA" thickness="1" />
+          <Ellipse x="0.75" y="0.75" width="94.5" height="94.5">
+            <Stroke color="#2EEDE7DA" thickness="1.5" />
           </Ellipse>
         </PartDraw>
-        <PartText x="6" y="18" width="52" height="16">
+        <PartText x="9" y="27" width="78" height="24">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="21" weight="MEDIUM" color="#FFEDE7DA">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="6" y="35" width="52" height="16">
+            <PartText x="9" y="52.5" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
+              <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="35" width="52" height="16">
+            <PartText x="9" y="52.5" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">HEART RATE</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">HEART RATE</Font></Text>
             </PartText>
           </Default>
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartDraw x="0" y="0" width="64" height="64">
+        <PartDraw x="0" y="0" width="96" height="96">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Ellipse x="0.5" y="0.5" width="63" height="63">
-            <Stroke color="#2EEDE7DA" thickness="1" />
+          <Ellipse x="0.75" y="0.75" width="94.5" height="94.5">
+            <Stroke color="#2EEDE7DA" thickness="1.5" />
           </Ellipse>
         </PartDraw>
-        <PartText x="6" y="18" width="52" height="16">
+        <PartText x="9" y="27" width="78" height="24">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="21" weight="MEDIUM" color="#FFEDE7DA">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="6" y="35" width="52" height="16">
+            <PartText x="9" y="52.5" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
+              <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="35" width="52" height="16">
+            <PartText x="9" y="52.5" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">HEART RATE</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">HEART RATE</Font></Text>
             </PartText>
           </Default>
         </Condition>
@@ -197,67 +197,67 @@
     <!-- Slot 2 · right circular sub-dial (default: steps) -->
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="210" y="158" width="64" height="64">
+                      x="315" y="237" width="96" height="96">
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
-      <BoundingOval x="0" y="0" width="64" height="64" />
+      <BoundingOval x="0" y="0" width="96" height="96" />
       <Complication type="SHORT_TEXT">
-        <PartDraw x="0" y="0" width="64" height="64">
+        <PartDraw x="0" y="0" width="96" height="96">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Ellipse x="0.5" y="0.5" width="63" height="63">
-            <Stroke color="#2EEDE7DA" thickness="1" />
+          <Ellipse x="0.75" y="0.75" width="94.5" height="94.5">
+            <Stroke color="#2EEDE7DA" thickness="1.5" />
           </Ellipse>
         </PartDraw>
-        <PartText x="6" y="18" width="52" height="16">
+        <PartText x="9" y="27" width="78" height="24">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="21" weight="MEDIUM" color="#FFEDE7DA">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="6" y="35" width="52" height="16">
+            <PartText x="9" y="52.5" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
+              <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="35" width="52" height="16">
+            <PartText x="9" y="52.5" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">STEPS</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">STEPS</Font></Text>
             </PartText>
           </Default>
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartDraw x="0" y="0" width="64" height="64">
+        <PartDraw x="0" y="0" width="96" height="96">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Ellipse x="0.5" y="0.5" width="63" height="63">
-            <Stroke color="#2EEDE7DA" thickness="1" />
+          <Ellipse x="0.75" y="0.75" width="94.5" height="94.5">
+            <Stroke color="#2EEDE7DA" thickness="1.5" />
           </Ellipse>
         </PartDraw>
-        <PartText x="6" y="18" width="52" height="16">
+        <PartText x="9" y="27" width="78" height="24">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="21" weight="MEDIUM" color="#FFEDE7DA">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="6" y="35" width="52" height="16">
+            <PartText x="9" y="52.5" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
+              <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="35" width="52" height="16">
+            <PartText x="9" y="52.5" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="6.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">STEPS</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">STEPS</Font></Text>
             </PartText>
           </Default>
         </Condition>
@@ -266,9 +266,9 @@
     </ComplicationSlot>
 
     <!-- Footer -->
-    <PartText name="footer" x="0" y="274" width="300" height="10">
+    <PartText name="footer" x="0" y="411" width="450" height="15">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="7.5" weight="MEDIUM" color="#FF494638" letterSpacing="0.27">FREE-SPRUNG BALANCE</Font></Text>
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="11.25" weight="MEDIUM" color="#FF494638" letterSpacing="0.27">FREE-SPRUNG BALANCE</Font></Text>
     </PartText>
 
   </Scene>

@@ -13,7 +13,7 @@
   AOD: outline orbits + outline planets + dim time (≈5% APL), pure black.
   Pure-black toggle: hides the near-black background wash over the black scene.
 -->
-<WatchFace width="300" height="300" clipShape="CIRCLE">
+<WatchFace width="450" height="450" clipShape="CIRCLE">
   <Metadata key="CLOCK_TYPE" value="ANALOG" />
   <Metadata key="PREVIEW_TIME" value="10:08:32" />
 
@@ -29,69 +29,69 @@
   <Scene backgroundColor="#FF000000">
 
     <!-- Background wash #030309 (hidden by the pure-black toggle; scene is black) -->
-    <Group name="bg_wrap" x="0" y="0" width="300" height="300">
+    <Group name="bg_wrap" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartDraw name="bg" x="0" y="0" width="300" height="300">
+      <PartDraw name="bg" x="0" y="0" width="450" height="450">
         <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
-        <Rectangle x="0" y="0" width="300" height="300">
+        <Rectangle x="0" y="0" width="450" height="450">
           <Fill color="#FF030309" />
         </Rectangle>
       </PartDraw>
     </Group>
 
     <!-- Starfield (static bake). Hidden in AOD. -->
-    <PartImage name="stars" x="0" y="0" width="300" height="300"><Image resource="starfield" />
+    <PartImage name="stars" x="0" y="0" width="450" height="450"><Image resource="starfield" />
       <Variant mode="AMBIENT" target="alpha" value="0" />
     </PartImage>
 
     <!-- Orbit rings. In AOD the two solid rings dim slightly; dashed ring hides. -->
-    <PartDraw name="orbit_hour" x="0" y="0" width="300" height="300">
+    <PartDraw name="orbit_hour" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="204" />
-      <Ellipse x="80" y="80" width="140" height="140">
-        <Stroke color="#1AFFFFFF" thickness="1" />
+      <Ellipse x="120" y="120" width="210" height="210">
+        <Stroke color="#1AFFFFFF" thickness="1.5" />
       </Ellipse>
     </PartDraw>
-    <PartDraw name="orbit_min" x="0" y="0" width="300" height="300">
+    <PartDraw name="orbit_min" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="219" />
-      <Ellipse x="44" y="44" width="212" height="212">
-        <Stroke color="#12FFFFFF" thickness="1" />
+      <Ellipse x="66" y="66" width="318" height="318">
+        <Stroke color="#12FFFFFF" thickness="1.5" />
       </Ellipse>
     </PartDraw>
-    <PartDraw name="orbit_sec" x="0" y="0" width="300" height="300">
+    <PartDraw name="orbit_sec" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Ellipse x="18" y="18" width="264" height="264">
-        <Stroke color="#0DFFFFFF" thickness="1" dashIntervals="3 4" />
+      <Ellipse x="27" y="27" width="396" height="396">
+        <Stroke color="#0DFFFFFF" thickness="1.5" dashIntervals="4.5 6" />
       </Ellipse>
     </PartDraw>
 
     <!-- Sun: tinted sprite (interactive) / outline ring (AOD) -->
-    <PartImage name="sun" x="102" y="102" width="96" height="96"
+    <PartImage name="sun" x="153" y="153" width="144" height="144"
                tintColor="[CONFIGURATION.accent.0]"><Image resource="sun" />
       <Variant mode="AMBIENT" target="alpha" value="0" />
     </PartImage>
-    <PartImage name="sun_aod" x="140" y="140" width="20" height="20" alpha="0"><Image resource="sun_aod" />
+    <PartImage name="sun_aod" x="210" y="210" width="30" height="30" alpha="0"><Image resource="sun_aod" />
       <Variant mode="AMBIENT" target="alpha" value="255" />
     </PartImage>
 
     <!-- Planets: hands with arm art (dot at the arm tip; pivot = dial centre) -->
-    <AnalogClock x="0" y="0" width="300" height="300">
-      <HourHand resource="planet_hour" x="136" y="68" width="28" height="82"
+    <AnalogClock x="0" y="0" width="450" height="450">
+      <HourHand resource="planet_hour" x="204" y="102" width="42" height="123"
                 pivotX="0.5" pivotY="1.0">
         <Variant mode="AMBIENT" target="alpha" value="0" />
       </HourHand>
-      <HourHand resource="planet_hour_aod" x="138" y="70" width="24" height="80"
+      <HourHand resource="planet_hour_aod" x="207" y="105" width="36" height="120"
                 pivotX="0.5" pivotY="1.0" alpha="0">
         <Variant mode="AMBIENT" target="alpha" value="255" />
       </HourHand>
-      <MinuteHand resource="planet_min" x="138" y="34" width="24" height="116"
+      <MinuteHand resource="planet_min" x="207" y="51" width="36" height="174"
                   pivotX="0.5" pivotY="1.0">
         <Variant mode="AMBIENT" target="alpha" value="0" />
       </MinuteHand>
-      <MinuteHand resource="planet_min_aod" x="140" y="38" width="20" height="112"
+      <MinuteHand resource="planet_min_aod" x="210" y="57" width="30" height="168"
                   pivotX="0.5" pivotY="1.0" alpha="0">
         <Variant mode="AMBIENT" target="alpha" value="255" />
       </MinuteHand>
-      <SecondHand resource="comet" x="144" y="13" width="12" height="137"
+      <SecondHand resource="comet" x="216" y="19.5" width="18" height="205.5"
                   pivotX="0.5" pivotY="1.0">
         <Variant mode="AMBIENT" target="alpha" value="0" />
         <Sweep frequency="15" />
@@ -101,32 +101,32 @@
     <!-- Digital time, top centre. Letter-spaced mono needs a full Font element,
          so 12/24-h is handled by twin PartTexts gated on [IS_24_HOUR_MODE]
          (ambient Variant on the Group, mode gate on the children — separate nodes). -->
-    <Group name="time" x="0" y="24" width="300" height="18">
+    <Group name="time" x="0" y="36" width="450" height="27">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartText x="0" y="0" width="300" height="18">
+      <PartText x="0" y="0" width="450" height="27">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
-        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#D9F2F0EA" letterSpacing="0.154">
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="19.5" weight="MEDIUM" color="#D9F2F0EA" letterSpacing="0.154">
           <Template>%s:%s<Parameter expression="[HOUR_1_12_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
-      <PartText x="0" y="0" width="300" height="18">
+      <PartText x="0" y="0" width="450" height="27">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
-        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#D9F2F0EA" letterSpacing="0.154">
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="19.5" weight="MEDIUM" color="#D9F2F0EA" letterSpacing="0.154">
           <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
     </Group>
-    <Group name="time_aod" x="0" y="24" width="300" height="18" alpha="0">
+    <Group name="time_aod" x="0" y="36" width="450" height="27" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
-      <PartText x="0" y="0" width="300" height="18">
+      <PartText x="0" y="0" width="450" height="27">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
-        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#73F2F0EA" letterSpacing="0.154">
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="19.5" weight="MEDIUM" color="#73F2F0EA" letterSpacing="0.154">
           <Template>%s:%s<Parameter expression="[HOUR_1_12_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
-      <PartText x="0" y="0" width="300" height="18">
+      <PartText x="0" y="0" width="450" height="27">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
-        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="13" weight="MEDIUM" color="#73F2F0EA" letterSpacing="0.154">
+        <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="19.5" weight="MEDIUM" color="#73F2F0EA" letterSpacing="0.154">
           <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
@@ -135,55 +135,55 @@
     <!-- Slot 1 · lower-left readout (default: watch battery) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="58" y="226" width="84" height="34">
+                      x="87" y="339" width="126" height="51">
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
-      <BoundingBox x="0" y="0" width="84" height="34" />
+      <BoundingBox x="0" y="0" width="126" height="51" />
       <Complication type="SHORT_TEXT">
-        <PartText x="0" y="0" width="84" height="18">
+        <PartText x="0" y="0" width="126" height="27">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="21" weight="MEDIUM" color="#FFEDE7DA">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="0" y="19" width="84" height="12">
+            <PartText x="0" y="28.5" width="126" height="18">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">
+              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="19" width="84" height="12">
+            <PartText x="0" y="28.5" width="126" height="18">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">BATTERY</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">BATTERY</Font></Text>
             </PartText>
           </Default>
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartText x="0" y="0" width="84" height="18">
+        <PartText x="0" y="0" width="126" height="27">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="21" weight="MEDIUM" color="#FFEDE7DA">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="0" y="19" width="84" height="12">
+            <PartText x="0" y="28.5" width="126" height="18">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">
+              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="19" width="84" height="12">
+            <PartText x="0" y="28.5" width="126" height="18">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">BATTERY</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">BATTERY</Font></Text>
             </PartText>
           </Default>
         </Condition>
@@ -194,55 +194,55 @@
     <!-- Slot 2 · lower-right readout (default: sunrise/sunset) -->
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="158" y="226" width="84" height="34">
+                      x="237" y="339" width="126" height="51">
       <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
-      <BoundingBox x="0" y="0" width="84" height="34" />
+      <BoundingBox x="0" y="0" width="126" height="51" />
       <Complication type="SHORT_TEXT">
-        <PartText x="0" y="0" width="84" height="18">
+        <PartText x="0" y="0" width="126" height="27">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="21" weight="MEDIUM" color="#FFEDE7DA">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="0" y="19" width="84" height="12">
+            <PartText x="0" y="28.5" width="126" height="18">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">
+              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="19" width="84" height="12">
+            <PartText x="0" y="28.5" width="126" height="18">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">SUNSET</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">SUNSET</Font></Text>
             </PartText>
           </Default>
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartText x="0" y="0" width="84" height="18">
+        <PartText x="0" y="0" width="126" height="27">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="14" weight="MEDIUM" color="#FFEDE7DA">
+          <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="21" weight="MEDIUM" color="#FFEDE7DA">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="0" y="19" width="84" height="12">
+            <PartText x="0" y="28.5" width="126" height="18">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">
+              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="19" width="84" height="12">
+            <PartText x="0" y="28.5" width="126" height="18">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="7" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">SUNSET</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.21">SUNSET</Font></Text>
             </PartText>
           </Default>
         </Condition>
@@ -251,9 +251,9 @@
     </ComplicationSlot>
 
     <!-- Date line, bottom centre -->
-    <PartText name="date" x="0" y="268" width="300" height="12">
+    <PartText name="date" x="0" y="402" width="450" height="18">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="8" weight="MEDIUM" color="#FF494638" letterSpacing="0.25">
+      <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12" weight="MEDIUM" color="#FF494638" letterSpacing="0.25">
         <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
       </Font></Text>
     </PartText>

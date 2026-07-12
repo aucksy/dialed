@@ -135,7 +135,7 @@
     <!-- Slot 1 · lower-left readout (default: watch battery) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="48" y="232" width="84" height="34">
+                      x="58" y="226" width="84" height="34">
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="84" height="34" />
       <Complication type="SHORT_TEXT">
@@ -194,7 +194,7 @@
     <!-- Slot 2 · lower-right readout (default: sunrise/sunset) -->
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="168" y="232" width="84" height="34">
+                      x="158" y="226" width="84" height="34">
       <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="84" height="34" />
       <Complication type="SHORT_TEXT">

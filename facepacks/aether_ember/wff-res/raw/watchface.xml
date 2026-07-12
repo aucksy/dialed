@@ -71,7 +71,7 @@
     <!-- Slot 1 · lower-left (default heart rate; accent label) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="72" y="236" width="72" height="36">
+                      x="72" y="230" width="72" height="36">
       <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="72" height="36" />
       <Complication type="SHORT_TEXT">
@@ -131,7 +131,7 @@
          system provider — assign a calories complication to restore it) -->
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="156" y="236" width="72" height="36">
+                      x="156" y="230" width="72" height="36">
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="72" height="36" />
       <Complication type="SHORT_TEXT">

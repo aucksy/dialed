@@ -115,7 +115,7 @@
     <!-- Slot at nine (default battery) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="22" y="134" width="52" height="32">
+                      x="34" y="134" width="52" height="32">
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="52" height="32" />
       <Complication type="SHORT_TEXT">

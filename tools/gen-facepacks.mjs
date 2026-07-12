@@ -22,6 +22,18 @@ const FACEPACKS_DIR = path.join(ROOT, 'facepacks');
 const APP_DRAWABLE = path.join(ROOT, 'app', 'src', 'main', 'res', 'drawable-nodpi');
 const CATALOG_FILE = path.join(ROOT, 'app', 'src', 'main', 'java', 'com', 'dialed', 'app', 'catalog', 'FaceCatalog.kt');
 
+// The faces Dialed bundles, by submodule dir name. The fablecollection submodule also
+// hosts other collections (e.g. Collection 3: Aurum/Halo/Meridian/Terra/Vakt) that are NOT
+// part of the Dialed store; enumerating every Series-Face dir would silently pull them in.
+// Keep this list authoritative — add a dir here (and re-run) to bundle a new face.
+const BUNDLED_FACES = new Set([
+  'Aether-Ember', 'Aether-Horizon',
+  'Arclight-Pulsar', 'Arclight-Solstice',
+  'Kinetik-Escapement', 'Kinetik-Metronome', 'Kinetik-Odometer', 'Kinetik-Orrery', 'Kinetik-Turbine',
+  'Settype-Counterform', 'Settype-Halftone', 'Settype-Marquee', 'Settype-Masthead',
+  'Vespera-Aurum', 'Vespera-Meteorite', 'Vespera-Noir', 'Vespera-Opaline', 'Vespera-Salon',
+]);
+
 // Per-series presentation metadata (styleTag drives Home filters; refine per-face later).
 const SERIES_META = {
   Arclight: { tag: 'Arclight · Solar', style: 'Arclight',
@@ -125,9 +137,11 @@ function main() {
   }
 
   const dirs = fs.readdirSync(FACES_DIR)
-    .filter((d) => /^[A-Za-z]+-[A-Za-z]+$/.test(d))
+    .filter((d) => BUNDLED_FACES.has(d))
     .filter((d) => fs.existsSync(path.join(FACES_DIR, d, 'app', 'src', 'main', 'AndroidManifest.xml')))
     .sort();
+  const missing = [...BUNDLED_FACES].filter((d) => !dirs.includes(d));
+  if (missing.length) console.warn(`!! bundled faces missing from submodule: ${missing.join(', ')}`);
 
   // Clean prior output (idempotent).
   fs.rmSync(FACEPACKS_DIR, { recursive: true, force: true });

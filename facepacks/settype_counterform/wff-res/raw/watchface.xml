@@ -119,7 +119,7 @@
     <!-- Slot 1 · upper of the stacked pair, lower-left (default steps) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="30" y="152" width="80" height="30">
+                      x="34" y="152" width="80" height="30">
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="80" height="30" />
       <Complication type="SHORT_TEXT">
@@ -178,7 +178,7 @@
     <!-- Slot 2 · lower of the pair (default battery) -->
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="30" y="184" width="80" height="30">
+                      x="34" y="184" width="80" height="30">
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="80" height="30" />
       <Complication type="SHORT_TEXT">

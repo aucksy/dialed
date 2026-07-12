@@ -93,7 +93,7 @@
     <!-- Slot 1 · footer readout (default steps) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="75" y="256" width="150" height="24">
+                      x="75" y="246" width="150" height="24">
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="150" height="24" />
       <Complication type="SHORT_TEXT">

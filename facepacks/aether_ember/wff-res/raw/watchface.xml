@@ -10,7 +10,7 @@
   Heart-rate stays the hero via the default HEART_RATE complication.
   AOD: one ember dot + faint baseline gradient + dim time (~4% APL).
 -->
-<WatchFace width="450" height="450" clipShape="CIRCLE">
+<WatchFace width="480" height="480" clipShape="CIRCLE">
   <Metadata key="CLOCK_TYPE" value="DIGITAL" />
   <Metadata key="PREVIEW_TIME" value="10:08:32" />
 
@@ -26,13 +26,13 @@
   <Scene backgroundColor="#FF000000">
 
     <!-- Warm radial background (native gradient; yields to pure-black) -->
-    <Group name="bg_wrap" x="0" y="0" width="450" height="450">
+    <Group name="bg_wrap" x="0" y="0" width="480" height="480">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartDraw name="bg" x="0" y="0" width="450" height="450">
+      <PartDraw name="bg" x="0" y="0" width="480" height="480">
         <Transform target="alpha" value="[CONFIGURATION.pureBlack] ? 0 : 255" />
-        <Rectangle x="0" y="0" width="450" height="450">
+        <Rectangle x="0" y="0" width="480" height="480">
           <Fill color="#FF0A0605">
-            <RadialGradient centerX="225" centerY="396" radius="456"
+            <RadialGradient centerX="240" centerY="422" radius="486"
                           colors="#FF1C0E06 #FF0A0605 #FF060404" positions="0 0.55 1" />
           </Fill>
         </Rectangle>
@@ -40,30 +40,30 @@
     </Group>
 
     <!-- Coal-bed glow pool (accent-tinted sprite, static) -->
-    <PartImage name="glow" x="0" y="315" width="450" height="195"
+    <PartImage name="glow" x="0" y="336" width="480" height="208"
                tintColor="[CONFIGURATION.accent.0]">
       <Image resource="glow" />
       <Variant mode="AMBIENT" target="alpha" value="0" />
     </PartImage>
 
     <!-- Time (solid warm cream) + AOD twin -->
-    <DigitalClock x="0" y="126" width="450" height="102">
+    <DigitalClock x="0" y="134" width="480" height="109">
       <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
-                x="0" y="0" width="450" height="102">
+                x="0" y="0" width="480" height="109">
         <Variant mode="AMBIENT" target="alpha" value="0" />
-        <Font family="barlow_condensed_bold" size="102" weight="BOLD" color="#FFF5E6CE" />
+        <Font family="barlow_condensed_bold" size="108.8" weight="BOLD" color="#FFF5E6CE" />
       </TimeText>
       <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
-                x="0" y="27" width="450" height="84" alpha="0">
+                x="0" y="29" width="480" height="90" alpha="0">
         <Variant mode="AMBIENT" target="alpha" value="255" />
-        <Font family="barlow_condensed_medium" size="84" weight="MEDIUM" color="#73F5E6CE" />
+        <Font family="barlow_condensed_medium" size="89.6" weight="MEDIUM" color="#73F5E6CE" />
       </TimeText>
     </DigitalClock>
 
     <!-- Date -->
-    <PartText name="date" x="0" y="230" width="450" height="18">
+    <PartText name="date" x="0" y="245" width="480" height="19">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Text align="CENTER"><Font family="archivo_semibold" size="13.5" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.33">
+      <Text align="CENTER"><Font family="archivo_semibold" size="14.4" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.33">
         <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
       </Font></Text>
     </PartText>
@@ -71,55 +71,55 @@
     <!-- Slot 1 · lower-left (default heart rate; accent label) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="108" y="345" width="108" height="54">
+                      x="115" y="368" width="115" height="58">
       <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
-      <BoundingBox x="0" y="0" width="108" height="54" />
+      <BoundingBox x="0" y="0" width="115" height="58" />
       <Complication type="SHORT_TEXT">
-        <PartText x="0" y="0" width="108" height="32">
+        <PartText x="0" y="0" width="115" height="34">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="27" weight="SEMI_BOLD" color="#FFF5E6CE">
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="28.8" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="0" y="33" width="108" height="15">
+            <PartText x="0" y="35" width="115" height="16">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.21">
+              <Text align="CENTER"><Font family="archivo_semibold" size="11.2" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.21">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="33" width="108" height="15">
+            <PartText x="0" y="35" width="115" height="16">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.21">HEART RATE</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="11.2" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.21">HEART RATE</Font></Text>
             </PartText>
           </Default>
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartText x="0" y="0" width="108" height="32">
+        <PartText x="0" y="0" width="115" height="34">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="27" weight="SEMI_BOLD" color="#FFF5E6CE">
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="28.8" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="0" y="33" width="108" height="15">
+            <PartText x="0" y="35" width="115" height="16">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.21">
+              <Text align="CENTER"><Font family="archivo_semibold" size="11.2" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.21">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="33" width="108" height="15">
+            <PartText x="0" y="35" width="115" height="16">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.21">HEART RATE</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="11.2" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.21">HEART RATE</Font></Text>
             </PartText>
           </Default>
         </Condition>
@@ -131,55 +131,55 @@
          system provider — assign a calories complication to restore it) -->
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="234" y="345" width="108" height="54">
+                      x="250" y="368" width="115" height="58">
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
-      <BoundingBox x="0" y="0" width="108" height="54" />
+      <BoundingBox x="0" y="0" width="115" height="58" />
       <Complication type="SHORT_TEXT">
-        <PartText x="0" y="0" width="108" height="32">
+        <PartText x="0" y="0" width="115" height="34">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="27" weight="SEMI_BOLD" color="#FFF5E6CE">
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="28.8" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="0" y="33" width="108" height="15">
+            <PartText x="0" y="35" width="115" height="16">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.21">
+              <Text align="CENTER"><Font family="archivo_semibold" size="11.2" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.21">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="33" width="108" height="15">
+            <PartText x="0" y="35" width="115" height="16">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.21">STEPS</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="11.2" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.21">STEPS</Font></Text>
             </PartText>
           </Default>
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartText x="0" y="0" width="108" height="32">
+        <PartText x="0" y="0" width="115" height="34">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="27" weight="SEMI_BOLD" color="#FFF5E6CE">
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="28.8" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="0" y="33" width="108" height="15">
+            <PartText x="0" y="35" width="115" height="16">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.21">
+              <Text align="CENTER"><Font family="archivo_semibold" size="11.2" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.21">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
               </Font></Text>
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="33" width="108" height="15">
+            <PartText x="0" y="35" width="115" height="16">
               <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="10.5" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.21">STEPS</Font></Text>
+              <Text align="CENTER"><Font family="archivo_semibold" size="11.2" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.21">STEPS</Font></Text>
             </PartText>
           </Default>
         </Condition>
@@ -188,12 +188,12 @@
     </ComplicationSlot>
 
     <!-- ======== AOD extras: single ember + baseline gradient line ======== -->
-    <PartDraw name="aod_ember" x="0" y="0" width="450" height="450" alpha="0">
+    <PartDraw name="aod_ember" x="0" y="0" width="480" height="480" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
-      <Ellipse x="222" y="348" width="6" height="6"><Fill color="#99FF9D5C" /></Ellipse>
-      <Rectangle x="0" y="404" width="450" height="2">
+      <Ellipse x="237" y="371" width="6" height="6"><Fill color="#99FF9D5C" /></Ellipse>
+      <Rectangle x="0" y="431" width="480" height="2">
         <Fill color="#00000000">
-          <LinearGradient startX="0" startY="404" endX="450" endY="404"
+          <LinearGradient startX="0" startY="431" endX="480" endY="431"
                           colors="#00FF9D5C #40FF9D5C #00FF9D5C" positions="0 0.5 1" />
         </Fill>
       </Rectangle>

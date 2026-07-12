@@ -21,6 +21,11 @@ class MainActivity : ComponentActivity() {
     private val requestPushPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             viewModel.onPushPermissionResult(granted)
+            // Ask for the one-shot set-active permission UPFRONT (right after push is granted) so the
+            // FIRST pushed face applies automatically. SET_PUSHED_WATCH_FACE_AS_ACTIVE is a runtime
+            // permission (grantable once) — without it granted before the first install, that install
+            // lands as INSTALLED_NEEDS_ACTIVATION and requires a manual "Set as my face" tap (issue #2).
+            if (granted) requestSetActivePermission.launch(WearConstants.PERMISSION_SET_ACTIVE)
         }
 
     private val requestSetActivePermission =

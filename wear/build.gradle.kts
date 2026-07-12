@@ -17,9 +17,20 @@ android {
         applicationId = "com.dialed.app"
         minSdk = 33          // WFP itself needs API 36; gated at runtime via isSupported().
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.9.0"
+        versionCode = 10
+        versionName = "0.10.0"
         vectorDrawables { useSupportLibrary = true }
+    }
+
+    // Same stable committed key as :app (see :app build.gradle.kts) — pins the signature across
+    // builds so upgrades install in place, and keeps phone+wear on one cert so they pair.
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("$rootDir/dialed-app-debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {

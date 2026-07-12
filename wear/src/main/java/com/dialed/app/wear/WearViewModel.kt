@@ -10,7 +10,9 @@ import com.dialed.app.wear.wfp.FacePreviewExtractor
 import com.dialed.app.wear.wfp.ReceiveState
 import com.dialed.app.wear.wfp.TransferSession
 import com.dialed.app.wear.wfp.WatchFacePushRepository
+import com.dialed.app.wear.common.WearConstants
 import com.dialed.app.wear.wfp.WfpStateStore
+import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -43,6 +45,13 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
     private val link = MutableStateFlow(WatchLink.CONNECTING)
     private val homeFace = MutableStateFlow(HomeFace(null, null))
 
+    private val capabilityClient by lazy { Wearable.getCapabilityClient(getApplication<Application>()) }
+    // Live "is the phone app there?" — re-query reachability whenever the Data Layer reports the
+    // Dialed phone-app capability appearing/disappearing (install/uninstall/connect/disconnect).
+    private val phoneCapListener = CapabilityClient.OnCapabilityChangedListener {
+        viewModelScope.launch { updateLink() }
+    }
+
     val uiState: StateFlow<WearUiState> =
         combine(pushGranted, pushDenied, link, TransferSession.state, homeFace) { granted, denied, l, receive, home ->
             WearUiState(
@@ -61,7 +70,13 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
         )
 
     init {
+        capabilityClient.addListener(phoneCapListener, WearConstants.CAPABILITY_PHONE)
         refresh()
+    }
+
+    override fun onCleared() {
+        capabilityClient.removeListener(phoneCapListener)
+        super.onCleared()
     }
 
     /** Re-read permission + connection + last-face state (call from Activity onResume). */
@@ -109,10 +124,18 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
         )
     }
 
+    /**
+     * "Connected" means the Dialed PHONE APP is reachable — a node that advertises
+     * [WearConstants.CAPABILITY_PHONE] — NOT merely that some phone is paired. Otherwise the watch
+     * says "Connected" with no phone app to push from (issue #4). A reachable node with the
+     * capability => CONNECTED; a paired-but-appless (or absent) phone => UNREACHABLE.
+     */
     private suspend fun updateLink() {
         link.value = try {
-            val nodes = Wearable.getNodeClient(getApplication()).connectedNodes.await()
-            if (nodes.isNotEmpty()) WatchLink.CONNECTED else WatchLink.UNREACHABLE
+            val reachable = capabilityClient
+                .getCapability(WearConstants.CAPABILITY_PHONE, CapabilityClient.FILTER_REACHABLE)
+                .await().nodes
+            if (reachable.isNotEmpty()) WatchLink.CONNECTED else WatchLink.UNREACHABLE
         } catch (e: Exception) {
             WatchLink.UNREACHABLE
         }

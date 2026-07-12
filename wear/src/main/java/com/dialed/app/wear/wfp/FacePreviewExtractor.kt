@@ -27,10 +27,22 @@ object FacePreviewExtractor {
             appInfo.publicSourceDir = apkPath
             val res = pm.getResourcesForApplication(appInfo)
             val id = res.getIdentifier("preview", "drawable", info.packageName)
-            if (id == 0) null else ResourcesCompat.getDrawable(res, id, null)?.toBitmap()
+            if (id == 0) null else ResourcesCompat.getDrawable(res, id, null)?.toBitmap()?.centerSquare()
         }
     } catch (e: Exception) {
         null
+    }
+
+    /**
+     * Center-crop to a square so the circular [FaceDial] never letterboxes/stretches a non-square
+     * source (defensive — the bundled previews are already square). Dialed's own surfaces are thus
+     * always a clean circle; any oval the user sees during apply is the platform's system
+     * "applying watch face" thumbnail, which Dialed cannot reshape.
+     */
+    private fun Bitmap.centerSquare(): Bitmap {
+        if (width == height) return this
+        val side = minOf(width, height)
+        return Bitmap.createBitmap(this, (width - side) / 2, (height - side) / 2, side, side)
     }
 
     fun cache(context: Context, bitmap: Bitmap) {

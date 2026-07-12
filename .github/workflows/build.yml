@@ -69,8 +69,9 @@ jobs:
       - name: Build storefront (:app) with bundled faces
         run: gradle :app:assembleDebug --no-daemon --stacktrace
 
-      # Wear companion: WFP bridge. Same debug keystore as :app in this one run, so the two
-      # share a signing cert + applicationId (com.dialed.app) and the Data Layer pairs them.
+      # Wear companion: WFP bridge. Both :app and :wear sign with the committed STABLE key
+      # (dialed-app-debug.keystore), so every release shares one cert + applicationId
+      # (com.dialed.app) — upgrades install in place and the Data Layer pairs the two APKs.
       - name: Build wear companion (:wear)
         run: gradle :wear:assembleDebug --no-daemon --stacktrace
 

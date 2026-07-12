@@ -13,9 +13,24 @@ android {
         applicationId = "com.dialed.app"
         minSdk = 30
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.9.0"
+        versionCode = 10
+        versionName = "0.10.0"
         vectorDrawables { useSupportLibrary = true }
+    }
+
+    // STABLE signing key (committed, throwaway) — NOT the ephemeral per-CI-run debug keystore.
+    // A regenerated debug key each build gave every release a different signature, so an
+    // in-place upgrade was rejected ("app not compatible / can't install"). This pins one key so
+    // upgrades install over each other forever. Distinct from dialed-faces.keystore (WFP rule:
+    // face APKs must be signed with a different key than the marketplace app). :app and :wear
+    // share this key so the Data Layer still pairs the two APKs.
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("$rootDir/dialed-app-debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {

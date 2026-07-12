@@ -15,9 +15,10 @@ import com.dialed.app.wear.ui.components.DialedScreen
 import com.dialed.app.wear.ui.theme.DialedWearColors
 
 /**
- * The rationale before the system permission dialog. The one-shot set-active permission is NOT
- * asked here — it's spent at the first install (concierge). Once push permission is granted the
- * app routes straight to Home, so there's no separate "granted" step.
+ * The rationale before the system permission dialogs. "Allow" requests the install permission and
+ * then, immediately, the one-shot set-active permission (granted upfront so the FIRST pushed face
+ * applies automatically instead of needing a manual "Set as my face" tap — issue #2). Once push
+ * permission is granted the app routes straight to Home.
  */
 @Composable
 fun FirstRunScreen(
@@ -59,7 +60,7 @@ fun FirstRunScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "Allow Dialed to receive and install the faces you push from your phone.",
+                "Allow Dialed to install the faces you push from your phone and set them as your watch face.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = DialedWearColors.onSurfaceVariant,
                 textAlign = TextAlign.Center,

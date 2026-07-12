@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Capability the PHONE app advertises so the WATCH can tell the Dialed phone app is actually
+     installed + reachable (not just any paired phone). Must match WearConstants.CAPABILITY_PHONE.
+     The Data Layer advertises this automatically once the app is installed. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@array/android_wear_capabilities">
+    <string-array name="android_wear_capabilities">
+        <item>dialed_phone_app</item>
+    </string-array>
+</resources>

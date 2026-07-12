@@ -78,7 +78,10 @@ fun FaceDetailScreen(
                     isInstalled -> DialStatus.INSTALLED
                     else -> DialStatus.NONE
                 },
-                ticking = true, // F1 living gallery — the hero dial is alive
+                // A generic gold seconds hand misrepresents each face (owner feedback): removed.
+                // The REAL per-face second-hand animation lands in a follow-up (only 7/18 faces
+                // are analog; the rest are digital/sprite/arc and stay static).
+                ticking = false,
             )
             Spacer(Modifier.height(28.dp))
             Text(face.displayName, style = MaterialTheme.typography.headlineLarge, color = c.onSurface)

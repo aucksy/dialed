@@ -27,6 +27,14 @@ object WearConstants {
     /** CapabilityClient capability the WATCH advertises when WFP is supported (res/values/wear.xml). */
     const val CAPABILITY_WEAR = "dialed_wfp_install"
 
+    /**
+     * CapabilityClient capability the PHONE app advertises (phone res/values/wear.xml). The watch
+     * checks for THIS to know the Dialed phone app is actually installed + reachable — a paired
+     * phone alone (getConnectedNodes) is NOT enough, or the watch reads "Connected" with no phone
+     * app to push from.
+     */
+    const val CAPABILITY_PHONE = "dialed_phone_app"
+
     /** Runtime permission required to programmatically set the pushed face active (one-shot). */
     const val PERMISSION_SET_ACTIVE = "com.google.wear.permission.SET_PUSHED_WATCH_FACE_AS_ACTIVE"
 

@@ -1,5 +1,10 @@
 package com.dialed.app.wear.ui.screens
 
+import android.provider.Settings
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,8 +16,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -26,6 +38,9 @@ import com.dialed.app.wear.ui.components.FaceDial
 import com.dialed.app.wear.ui.theme.DialedWearColors
 import com.dialed.app.wear.wfp.ReceiveState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.math.PI
+import kotlin.math.sin
 
 /** Activation concierge: one tap when we can, else teach the gesture (spec D, motion W2/W3). */
 @Composable
@@ -47,12 +62,25 @@ fun ConciergeScreen(
     }
 }
 
-/** 1l — the face lands, "Dialed in.", Confirm haptic, auto-exit to the live face. */
+/**
+ * 1l / motion W2 — the branded apply landing that covers the platform's (distorted) apply moment:
+ * the face lands in a perfect circle, a gold conic sheen sweeps the ring once, "Dialed in." rises,
+ * Confirm haptic, auto-exit. Reduced motion → static (sheen/rise snap to rest).
+ */
 @Composable
 private fun Celebration(state: ReceiveState.Success, onDismiss: () -> Unit) {
     val haptic = LocalHapticFeedback.current
+    val reduced = isReducedMotionWear()
+    val sweep = remember { Animatable(0f) }  // 0..1 sheen travel around the ring
+    val rise = remember { Animatable(0f) }   // 0..1 "Dialed in." rise + fade
     LaunchedEffect(Unit) {
         haptic.performHapticFeedback(HapticFeedbackType.Confirm)
+        if (reduced) {
+            sweep.snapTo(1f); rise.snapTo(1f)
+        } else {
+            launch { sweep.animateTo(1f, tween(700, easing = FastOutSlowInEasing)) }
+            rise.animateTo(1f, tween(250))
+        }
         // Linger long enough to actually register on the wrist (this returns to Dialed's Home, not
         // the live face, so vanishing too fast reads as "no confirmation").
         delay(2600)
@@ -65,6 +93,23 @@ private fun Celebration(state: ReceiveState.Success, onDismiss: () -> Unit) {
                     .size(112.dp)
                     .border(2.dp, DialedWearColors.primary.copy(alpha = 0.5f), CircleShape),
             )
+            // W2 gold conic sheen: a bright arc travels once around the ring, brightest mid-sweep.
+            val sheenGold = DialedWearColors.primary
+            Canvas(Modifier.size(112.dp)) {
+                val stroke = 2.5.dp.toPx()
+                val alpha = 0.6f * sin(PI * sweep.value).toFloat().coerceAtLeast(0f)
+                if (alpha > 0.01f) {
+                    drawArc(
+                        color = sheenGold.copy(alpha = alpha),
+                        startAngle = -90f + sweep.value * 360f - 50f,
+                        sweepAngle = 50f,
+                        useCenter = false,
+                        topLeft = Offset(stroke / 2f, stroke / 2f),
+                        size = Size(size.width - stroke, size.height - stroke),
+                        style = Stroke(width = stroke, cap = StrokeCap.Round),
+                    )
+                }
+            }
             FaceDial(preview = state.preview, size = 97.dp, faceName = state.faceName)
         }
         Spacer(Modifier.height(16.dp))
@@ -72,7 +117,20 @@ private fun Celebration(state: ReceiveState.Success, onDismiss: () -> Unit) {
             "Dialed in.",
             style = MaterialTheme.typography.displaySmall,
             color = DialedWearColors.onPrimaryContainer,
+            modifier = Modifier.graphicsLayer {
+                translationY = (1f - rise.value) * 12.dp.toPx()
+                alpha = rise.value
+            },
         )
+    }
+}
+
+/** Reduced motion = animator duration scale 0 (settings/accessibility). Haptics still fire. */
+@Composable
+private fun isReducedMotionWear(): Boolean {
+    val resolver = LocalContext.current.contentResolver
+    return remember {
+        Settings.Global.getFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
     }
 }
 

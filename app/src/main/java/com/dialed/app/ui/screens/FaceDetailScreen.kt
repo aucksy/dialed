@@ -78,6 +78,7 @@ fun FaceDetailScreen(
                     isInstalled -> DialStatus.INSTALLED
                     else -> DialStatus.NONE
                 },
+                ticking = true, // F1 living gallery — the hero dial is alive
             )
             Spacer(Modifier.height(28.dp))
             Text(face.displayName, style = MaterialTheme.typography.headlineLarge, color = c.onSurface)

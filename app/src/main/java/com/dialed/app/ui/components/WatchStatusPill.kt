@@ -1,5 +1,7 @@
 package com.dialed.app.ui.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
@@ -9,10 +11,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.dialed.app.model.WatchConnection
 import com.dialed.app.model.WatchStatus
@@ -39,8 +44,20 @@ fun WatchStatusPill(status: WatchStatus, modifier: Modifier = Modifier) {
         )
     }
 
+    // F5: pulse once when the watch connects (scale 1→1.06→1). Skipped under reduced motion.
+    val reduced = isReducedMotion()
+    val pulse = remember { Animatable(1f) }
+    LaunchedEffect(status.connection) {
+        if (status.connection == WatchConnection.CONNECTED && !reduced) {
+            pulse.snapTo(1f)
+            pulse.animateTo(1.06f, tween(300))
+            pulse.animateTo(1f, tween(300))
+        }
+    }
+
     Row(
         modifier = modifier
+            .graphicsLayer { scaleX = pulse.value; scaleY = pulse.value }
             .clip(CircleShape)
             .background(bg)
             .border(1.dp, border, CircleShape)

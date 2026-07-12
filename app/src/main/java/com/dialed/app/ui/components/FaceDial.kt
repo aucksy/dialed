@@ -1,5 +1,6 @@
 package com.dialed.app.ui.components
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,7 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -42,7 +46,7 @@ fun FaceDial(
     modifier: Modifier = Modifier,
     locked: Boolean = false,
     status: DialStatus = DialStatus.NONE,
-    @Suppress("UNUSED_PARAMETER") ticking: Boolean = false,
+    ticking: Boolean = false,
 ) {
     val c = dialedColors
     val ringColor = when (status) {
@@ -74,6 +78,27 @@ fun FaceDial(
                 .clip(CircleShape)
                 .border(if (status == DialStatus.NONE) 1.dp else 2.dp, ringColor, CircleShape),
         )
+        if (ticking) {
+            // F1 living gallery: a thin gold seconds hand sweeping once/min over the preview,
+            // driven by one lifecycle-aware frame loop (transform only). Reduced motion freezes it.
+            val angle = rememberSecondsAngle(enabled = true)
+            val gold = c.primary
+            Canvas(Modifier.fillMaxSize().clip(CircleShape)) {
+                val r = this.size.minDimension / 2f
+                val center = Offset(this.size.width / 2f, this.size.height / 2f)
+                rotate(degrees = angle.value, pivot = center) {
+                    drawLine(
+                        color = gold.copy(alpha = 0.9f),
+                        start = Offset(center.x, center.y + r * 0.13f),
+                        end = Offset(center.x, center.y - r * 0.84f),
+                        strokeWidth = r * 0.022f,
+                        cap = StrokeCap.Round,
+                    )
+                }
+                drawCircle(color = gold, radius = r * 0.035f, center = center)
+                drawCircle(color = Color(0xFF0A0A0C), radius = r * 0.014f, center = center)
+            }
+        }
         if (locked) {
             LockBadge(size = size, modifier = Modifier.align(Alignment.BottomEnd))
         } else if (status != DialStatus.NONE) {

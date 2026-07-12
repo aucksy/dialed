@@ -57,38 +57,38 @@
       <Variant mode="AMBIENT" target="alpha" value="0" />
 
       <!-- Peek row ABOVE = previous value pair (dim). Hours: 4 wrap/mode cases. -->
-      <PartText x="52.5" y="36" width="162" height="126" alpha="0">
+      <PartText x="53" y="36" width="162" height="126" alpha="0">
         <Transform target="alpha" value="((![IS_24_HOUR_MODE]) &amp;&amp; ([HOUR_1_12] &gt;= 2)) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="#FFF2E9D8">
           <Template>%02d<Parameter expression="[HOUR_1_12] - 1" /></Template>
         </BitmapFont></Text>
       </PartText>
-      <PartText x="52.5" y="36" width="162" height="126" alpha="0">
+      <PartText x="53" y="36" width="162" height="126" alpha="0">
         <Transform target="alpha" value="((![IS_24_HOUR_MODE]) &amp;&amp; ([HOUR_1_12] == 1)) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="#FFF2E9D8">
           <Template>%d<Parameter expression="12" /></Template>
         </BitmapFont></Text>
       </PartText>
-      <PartText x="52.5" y="36" width="162" height="126" alpha="0">
+      <PartText x="53" y="36" width="162" height="126" alpha="0">
         <Transform target="alpha" value="([IS_24_HOUR_MODE] &amp;&amp; ([HOUR_0_23] &gt;= 1)) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="#FFF2E9D8">
           <Template>%02d<Parameter expression="[HOUR_0_23] - 1" /></Template>
         </BitmapFont></Text>
       </PartText>
-      <PartText x="52.5" y="36" width="162" height="126" alpha="0">
+      <PartText x="53" y="36" width="162" height="126" alpha="0">
         <Transform target="alpha" value="([IS_24_HOUR_MODE] &amp;&amp; ([HOUR_0_23] == 0)) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="#FFF2E9D8">
           <Template>%d<Parameter expression="23" /></Template>
         </BitmapFont></Text>
       </PartText>
       <!-- minutes above -->
-      <PartText x="235.5" y="36" width="162" height="126" alpha="0">
+      <PartText x="236" y="36" width="162" height="126" alpha="0">
         <Transform target="alpha" value="([MINUTE] &gt;= 1) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="[CONFIGURATION.accent.0]">
           <Template>%02d<Parameter expression="[MINUTE] - 1" /></Template>
         </BitmapFont></Text>
       </PartText>
-      <PartText x="235.5" y="36" width="162" height="126" alpha="0">
+      <PartText x="236" y="36" width="162" height="126" alpha="0">
         <Transform target="alpha" value="([MINUTE] == 0) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="[CONFIGURATION.accent.0]">
           <Template>%d<Parameter expression="59" /></Template>
@@ -96,38 +96,38 @@
       </PartText>
 
       <!-- Peek row BELOW = next value pair (dim) -->
-      <PartText x="52.5" y="288" width="162" height="126" alpha="0">
+      <PartText x="53" y="288" width="162" height="126" alpha="0">
         <Transform target="alpha" value="((![IS_24_HOUR_MODE]) &amp;&amp; ([HOUR_1_12] &lt;= 11)) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="#FFF2E9D8">
           <Template>%02d<Parameter expression="[HOUR_1_12] + 1" /></Template>
         </BitmapFont></Text>
       </PartText>
-      <PartText x="52.5" y="288" width="162" height="126" alpha="0">
+      <PartText x="53" y="288" width="162" height="126" alpha="0">
         <Transform target="alpha" value="((![IS_24_HOUR_MODE]) &amp;&amp; ([HOUR_1_12] == 12)) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="#FFF2E9D8">
           <Template>%02d<Parameter expression="1" /></Template>
         </BitmapFont></Text>
       </PartText>
-      <PartText x="52.5" y="288" width="162" height="126" alpha="0">
+      <PartText x="53" y="288" width="162" height="126" alpha="0">
         <Transform target="alpha" value="([IS_24_HOUR_MODE] &amp;&amp; ([HOUR_0_23] &lt;= 22)) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="#FFF2E9D8">
           <Template>%02d<Parameter expression="[HOUR_0_23] + 1" /></Template>
         </BitmapFont></Text>
       </PartText>
-      <PartText x="52.5" y="288" width="162" height="126" alpha="0">
+      <PartText x="53" y="288" width="162" height="126" alpha="0">
         <Transform target="alpha" value="([IS_24_HOUR_MODE] &amp;&amp; ([HOUR_0_23] == 23)) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="#FFF2E9D8">
           <Template>%02d<Parameter expression="0" /></Template>
         </BitmapFont></Text>
       </PartText>
       <!-- minutes below -->
-      <PartText x="235.5" y="288" width="162" height="126" alpha="0">
+      <PartText x="236" y="288" width="162" height="126" alpha="0">
         <Transform target="alpha" value="([MINUTE] &lt;= 58) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="[CONFIGURATION.accent.0]">
           <Template>%02d<Parameter expression="[MINUTE] + 1" /></Template>
         </BitmapFont></Text>
       </PartText>
-      <PartText x="235.5" y="288" width="162" height="126" alpha="0">
+      <PartText x="236" y="288" width="162" height="126" alpha="0">
         <Transform target="alpha" value="([MINUTE] == 59) ? 56 : 0" />
         <Text align="CENTER"><BitmapFont family="drum" size="126" color="[CONFIGURATION.accent.0]">
           <Template>%02d<Parameter expression="0" /></Template>
@@ -135,12 +135,12 @@
       </PartText>
 
       <!-- Active row -->
-      <DigitalClock x="52.5" y="162" width="162" height="126">
+      <DigitalClock x="53" y="162" width="162" height="126">
         <TimeText format="hh" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="0" width="162" height="126">
           <BitmapFont family="drum" size="126" color="#FFF2E9D8" />
         </TimeText>
       </DigitalClock>
-      <DigitalClock x="235.5" y="162" width="162" height="126">
+      <DigitalClock x="236" y="162" width="162" height="126">
         <TimeText format="mm" align="CENTER" x="0" y="0" width="162" height="126">
           <BitmapFont family="drum" size="126" color="[CONFIGURATION.accent.0]" />
         </TimeText>
@@ -185,19 +185,19 @@
     <!-- Colon dots -->
     <PartDraw name="colon" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Ellipse x="220.5" y="208.5" width="9" height="9"><Fill color="[CONFIGURATION.accent.0]" /></Ellipse>
-      <Ellipse x="220.5" y="232.5" width="9" height="9"><Fill color="[CONFIGURATION.accent.0]" /></Ellipse>
+      <Ellipse x="221" y="209" width="9" height="9"><Fill color="[CONFIGURATION.accent.0]" /></Ellipse>
+      <Ellipse x="221" y="233" width="9" height="9"><Fill color="[CONFIGURATION.accent.0]" /></Ellipse>
     </PartDraw>
 
     <!-- Aperture brackets -->
     <PartDraw name="brackets" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Rectangle x="60" y="177" width="1.5" height="96"><Fill color="#40F2E9D8" /></Rectangle>
-      <Rectangle x="60" y="177" width="15" height="1.5"><Fill color="#40F2E9D8" /></Rectangle>
-      <Rectangle x="60" y="271.5" width="15" height="1.5"><Fill color="#40F2E9D8" /></Rectangle>
-      <Rectangle x="388.5" y="177" width="1.5" height="96"><Fill color="#40F2E9D8" /></Rectangle>
-      <Rectangle x="375" y="177" width="15" height="1.5"><Fill color="#40F2E9D8" /></Rectangle>
-      <Rectangle x="375" y="271.5" width="15" height="1.5"><Fill color="#40F2E9D8" /></Rectangle>
+      <Rectangle x="60" y="177" width="2" height="96"><Fill color="#40F2E9D8" /></Rectangle>
+      <Rectangle x="60" y="177" width="15" height="2"><Fill color="#40F2E9D8" /></Rectangle>
+      <Rectangle x="60" y="272" width="15" height="2"><Fill color="#40F2E9D8" /></Rectangle>
+      <Rectangle x="389" y="177" width="2" height="96"><Fill color="#40F2E9D8" /></Rectangle>
+      <Rectangle x="375" y="177" width="15" height="2"><Fill color="#40F2E9D8" /></Rectangle>
+      <Rectangle x="375" y="272" width="15" height="2"><Fill color="#40F2E9D8" /></Rectangle>
     </PartDraw>
 
     <!-- Date · AM/PM (12-h) / date only (24-h) -->
@@ -226,9 +226,9 @@
       <Complication type="SHORT_TEXT">
         <PartDraw x="0" y="0" width="117" height="48">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Rectangle x="0.75" y="0.75" width="115.5" height="46.5"><Stroke color="#29F2E9D8" thickness="1.5" /></Rectangle>
+          <Rectangle x="1" y="1" width="116" height="47"><Stroke color="#29F2E9D8" thickness="1.5" /></Rectangle>
         </PartDraw>
-        <PartText x="3" y="6" width="111" height="22.5">
+        <PartText x="3" y="6" width="111" height="23">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="19.5" weight="MEDIUM" color="#FFF2E9D8">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -237,7 +237,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="3" y="30" width="111" height="13.5">
+            <PartText x="3" y="30" width="111" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -245,7 +245,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="3" y="30" width="111" height="13.5">
+            <PartText x="3" y="30" width="111" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.23">STEPS</Font></Text>
             </PartText>
@@ -255,9 +255,9 @@
       <Complication type="RANGED_VALUE">
         <PartDraw x="0" y="0" width="117" height="48">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Rectangle x="0.75" y="0.75" width="115.5" height="46.5"><Stroke color="#29F2E9D8" thickness="1.5" /></Rectangle>
+          <Rectangle x="1" y="1" width="116" height="47"><Stroke color="#29F2E9D8" thickness="1.5" /></Rectangle>
         </PartDraw>
-        <PartText x="3" y="6" width="111" height="22.5">
+        <PartText x="3" y="6" width="111" height="23">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="19.5" weight="MEDIUM" color="#FFF2E9D8">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -266,7 +266,7 @@
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="3" y="30" width="111" height="13.5">
+            <PartText x="3" y="30" width="111" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -274,7 +274,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="3" y="30" width="111" height="13.5">
+            <PartText x="3" y="30" width="111" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.23">STEPS</Font></Text>
             </PartText>
@@ -293,9 +293,9 @@
       <Complication type="SHORT_TEXT">
         <PartDraw x="0" y="0" width="117" height="48">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Rectangle x="0.75" y="0.75" width="115.5" height="46.5"><Stroke color="#29F2E9D8" thickness="1.5" /></Rectangle>
+          <Rectangle x="1" y="1" width="116" height="47"><Stroke color="#29F2E9D8" thickness="1.5" /></Rectangle>
         </PartDraw>
-        <PartText x="3" y="6" width="111" height="22.5">
+        <PartText x="3" y="6" width="111" height="23">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="19.5" weight="MEDIUM" color="#FFF2E9D8">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -304,7 +304,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="3" y="30" width="111" height="13.5">
+            <PartText x="3" y="30" width="111" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -312,7 +312,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="3" y="30" width="111" height="13.5">
+            <PartText x="3" y="30" width="111" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.23">BATTERY</Font></Text>
             </PartText>
@@ -322,9 +322,9 @@
       <Complication type="RANGED_VALUE">
         <PartDraw x="0" y="0" width="117" height="48">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Rectangle x="0.75" y="0.75" width="115.5" height="46.5"><Stroke color="#29F2E9D8" thickness="1.5" /></Rectangle>
+          <Rectangle x="1" y="1" width="116" height="47"><Stroke color="#29F2E9D8" thickness="1.5" /></Rectangle>
         </PartDraw>
-        <PartText x="3" y="6" width="111" height="22.5">
+        <PartText x="3" y="6" width="111" height="23">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="19.5" weight="MEDIUM" color="#FFF2E9D8">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -333,7 +333,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="3" y="30" width="111" height="13.5">
+            <PartText x="3" y="30" width="111" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -341,7 +341,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="3" y="30" width="111" height="13.5">
+            <PartText x="3" y="30" width="111" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.23">BATTERY</Font></Text>
             </PartText>
@@ -357,24 +357,24 @@
       <PartText x="0" y="6" width="450" height="105">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
         <Text align="CENTER"><Font family="barlow_condensed_bold" size="102" weight="BOLD" color="#00F2E9D8" letterSpacing="0.059">
-          <Outline width="1.5" color="#8CF2E9D8" />
+          <Outline width="2" color="#8CF2E9D8" />
           <Template>%s:%s<Parameter expression="[HOUR_1_12_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
       <PartText x="0" y="6" width="450" height="105">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
         <Text align="CENTER"><Font family="barlow_condensed_bold" size="102" weight="BOLD" color="#00F2E9D8" letterSpacing="0.059">
-          <Outline width="1.5" color="#8CF2E9D8" />
+          <Outline width="2" color="#8CF2E9D8" />
           <Template>%s:%s<Parameter expression="[HOUR_0_23_Z]" /><Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
       <PartDraw x="0" y="0" width="450" height="114">
-        <Rectangle x="84" y="0" width="1.5" height="114"><Fill color="#33F2E9D8" /></Rectangle>
-        <Rectangle x="84" y="0" width="15" height="1.5"><Fill color="#33F2E9D8" /></Rectangle>
-        <Rectangle x="84" y="112.5" width="15" height="1.5"><Fill color="#33F2E9D8" /></Rectangle>
-        <Rectangle x="364.5" y="0" width="1.5" height="114"><Fill color="#33F2E9D8" /></Rectangle>
-        <Rectangle x="351" y="0" width="15" height="1.5"><Fill color="#33F2E9D8" /></Rectangle>
-        <Rectangle x="351" y="112.5" width="15" height="1.5"><Fill color="#33F2E9D8" /></Rectangle>
+        <Rectangle x="84" y="0" width="2" height="114"><Fill color="#33F2E9D8" /></Rectangle>
+        <Rectangle x="84" y="0" width="15" height="2"><Fill color="#33F2E9D8" /></Rectangle>
+        <Rectangle x="84" y="113" width="15" height="2"><Fill color="#33F2E9D8" /></Rectangle>
+        <Rectangle x="365" y="0" width="2" height="114"><Fill color="#33F2E9D8" /></Rectangle>
+        <Rectangle x="351" y="0" width="15" height="2"><Fill color="#33F2E9D8" /></Rectangle>
+        <Rectangle x="351" y="113" width="15" height="2"><Fill color="#33F2E9D8" /></Rectangle>
       </PartDraw>
     </Group>
 

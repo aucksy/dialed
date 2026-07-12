@@ -85,14 +85,14 @@
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <Arc centerX="225" centerY="285" width="336" height="336"
            startAngle="-90" endAngle="90" direction="CLOCKWISE">
-        <Stroke color="#38FFFFFF" thickness="1.5" dashIntervals="3 7.5" cap="BUTT" />
+        <Stroke color="#38FFFFFF" thickness="1.5" dashIntervals="3 8" cap="BUTT" />
       </Arc>
     </PartDraw>
     <PartDraw name="arc_aod" x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
       <Arc centerX="225" centerY="285" width="336" height="336"
            startAngle="-90" endAngle="90" direction="CLOCKWISE">
-        <Stroke color="#24FFFFFF" thickness="1.5" dashIntervals="3 7.5" cap="BUTT" />
+        <Stroke color="#24FFFFFF" thickness="1.5" dashIntervals="3 8" cap="BUTT" />
       </Arc>
     </PartDraw>
 
@@ -170,15 +170,15 @@
     <!-- Horizon line (interactive 30% full width / AOD 18% inset) -->
     <PartDraw name="horizon" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Rectangle x="0" y="306" width="450" height="1.5"><Fill color="#4DFFFFFF" /></Rectangle>
+      <Rectangle x="0" y="306" width="450" height="2"><Fill color="#4DFFFFFF" /></Rectangle>
     </PartDraw>
     <PartDraw name="horizon_aod" x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
-      <Rectangle x="51" y="306" width="348" height="1.5"><Fill color="#2EFFFFFF" /></Rectangle>
+      <Rectangle x="51" y="306" width="348" height="2"><Fill color="#2EFFFFFF" /></Rectangle>
     </PartDraw>
 
     <!-- Time (accent-tinted) + date, above the ground band bottom-centre -->
-    <DigitalClock x="0" y="301.5" width="450" height="84">
+    <DigitalClock x="0" y="302" width="450" height="84">
       <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
                 x="0" y="0" width="450" height="84">
         <Variant mode="AMBIENT" target="alpha" value="0" />
@@ -190,7 +190,7 @@
         <Font family="barlow_condensed_medium" size="72" weight="MEDIUM" color="#80F2F0EA" />
       </TimeText>
     </DigitalClock>
-    <PartText name="date" x="0" y="391.5" width="450" height="18">
+    <PartText name="date" x="0" y="392" width="450" height="18">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <Text align="CENTER"><Font family="archivo_semibold" size="13.5" weight="SEMI_BOLD" color="#80FFFFFF" letterSpacing="0.33">
         <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
@@ -201,7 +201,7 @@
          design's temperature) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="112.5" y="45" width="225" height="54">
+                      x="113" y="45" width="225" height="54">
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="225" height="54" />
       <Complication type="SHORT_TEXT">
@@ -214,7 +214,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="0" y="37.5" width="225" height="15">
+            <PartText x="0" y="38" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="11.25" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -222,7 +222,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="37.5" width="225" height="15">
+            <PartText x="0" y="38" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="11.25" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">STEPS</Font></Text>
             </PartText>
@@ -239,7 +239,7 @@
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="0" y="37.5" width="225" height="15">
+            <PartText x="0" y="38" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="11.25" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -247,7 +247,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="37.5" width="225" height="15">
+            <PartText x="0" y="38" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="11.25" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">STEPS</Font></Text>
             </PartText>

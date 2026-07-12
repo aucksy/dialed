@@ -48,21 +48,21 @@
     <!-- Indices: double bar at 12 (accent), single bars 3/6/9 (accent 40%) -->
     <PartDraw name="indices" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Rectangle x="216" y="21" width="3.75" height="18"><Fill color="[CONFIGURATION.accent.0]" /></Rectangle>
-      <Rectangle x="225.75" y="21" width="3.75" height="18"><Fill color="[CONFIGURATION.accent.0]" /></Rectangle>
-      <Rectangle x="223.125" y="411" width="3.75" height="18"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
-      <Rectangle x="24" y="223.125" width="18" height="3.75"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
-      <Rectangle x="408" y="223.125" width="18" height="3.75"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
+      <Rectangle x="216" y="21" width="4" height="18"><Fill color="[CONFIGURATION.accent.0]" /></Rectangle>
+      <Rectangle x="226" y="21" width="4" height="18"><Fill color="[CONFIGURATION.accent.0]" /></Rectangle>
+      <Rectangle x="223" y="411" width="4" height="18"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
+      <Rectangle x="24" y="223" width="18" height="4"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
+      <Rectangle x="408" y="223" width="18" height="4"><Fill color="[CONFIGURATION.accent.1]" /></Rectangle>
     </PartDraw>
     <!-- AOD: 12 + 6 markers only -->
     <PartDraw name="indices_aod" x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
-      <Rectangle x="223.5" y="24" width="3" height="15"><Fill color="#66C9CDD4" /></Rectangle>
-      <Rectangle x="223.5" y="411" width="3" height="15"><Fill color="#4DC9CDD4" /></Rectangle>
+      <Rectangle x="224" y="24" width="3" height="15"><Fill color="#66C9CDD4" /></Rectangle>
+      <Rectangle x="224" y="411" width="3" height="15"><Fill color="#4DC9CDD4" /></Rectangle>
     </PartDraw>
 
     <!-- Moonphase at six: 8 plates gated on MOON_PHASE_TYPE -->
-    <Group name="moon" x="190.5" y="297" width="69" height="69">
+    <Group name="moon" x="191" y="297" width="69" height="69">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <PartImage x="0" y="0" width="69" height="69" alpha="0">
         <Transform target="alpha" value="([MOON_PHASE_TYPE] == 0) ? 255 : 0" />
@@ -101,11 +101,11 @@
     <!-- Date window at three -->
     <PartDraw name="datebox" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Rectangle x="378.75" y="212.25" width="37.5" height="25.5">
+      <Rectangle x="379" y="212" width="38" height="26">
         <Stroke color="#40C9CDD4" thickness="1.5" />
       </Rectangle>
     </PartDraw>
-    <PartText name="datenum" x="378" y="214.5" width="39" height="21">
+    <PartText name="datenum" x="378" y="215" width="39" height="21">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="16.5" weight="MEDIUM" color="#FFC9CDD4">
         <Template>%s<Parameter expression="[DAY_Z]" /></Template>
@@ -128,7 +128,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="0" y="25.5" width="78" height="13.5">
+            <PartText x="0" y="26" width="78" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -136,7 +136,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="25.5" width="78" height="13.5">
+            <PartText x="0" y="26" width="78" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">BATTERY</Font></Text>
             </PartText>
@@ -153,7 +153,7 @@
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="0" y="25.5" width="78" height="13.5">
+            <PartText x="0" y="26" width="78" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -161,7 +161,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="25.5" width="78" height="13.5">
+            <PartText x="0" y="26" width="78" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">BATTERY</Font></Text>
             </PartText>
@@ -173,19 +173,19 @@
 
     <!-- Silver baton hands (no seconds) -->
     <AnalogClock x="0" y="0" width="450" height="450">
-      <HourHand resource="hour" x="217.5" y="120" width="15" height="105"
+      <HourHand resource="hour" x="218" y="120" width="15" height="105"
                 pivotX="0.5" pivotY="1.0">
         <Variant mode="AMBIENT" target="alpha" value="0" />
       </HourHand>
-      <HourHand resource="hour_aod" x="217.5" y="120" width="15" height="105"
+      <HourHand resource="hour_aod" x="218" y="120" width="15" height="105"
                 pivotX="0.5" pivotY="1.0" alpha="0">
         <Variant mode="AMBIENT" target="alpha" value="255" />
       </HourHand>
-      <MinuteHand resource="minute" x="217.5" y="69" width="15" height="156"
+      <MinuteHand resource="minute" x="218" y="69" width="15" height="156"
                   pivotX="0.5" pivotY="1.0">
         <Variant mode="AMBIENT" target="alpha" value="0" />
       </MinuteHand>
-      <MinuteHand resource="minute_aod" x="217.5" y="69" width="15" height="156"
+      <MinuteHand resource="minute_aod" x="218" y="69" width="15" height="156"
                   pivotX="0.5" pivotY="1.0" alpha="0">
         <Variant mode="AMBIENT" target="alpha" value="255" />
       </MinuteHand>
@@ -194,13 +194,13 @@
     <!-- Cap -->
     <PartDraw name="cap" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Ellipse x="219.75" y="219.75" width="10.5" height="10.5">
+      <Ellipse x="220" y="220" width="11" height="11">
         <Fill color="#FFE9EBEF" />
       </Ellipse>
     </PartDraw>
     <PartDraw name="cap_aod" x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
-      <Ellipse x="220.5" y="220.5" width="9" height="9">
+      <Ellipse x="221" y="221" width="9" height="9">
         <Stroke color="#80C9CDD4" thickness="1.5" />
       </Ellipse>
     </PartDraw>

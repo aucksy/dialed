@@ -61,7 +61,7 @@
     </DigitalClock>
 
     <!-- Date -->
-    <PartText name="date" x="0" y="229.5" width="450" height="18">
+    <PartText name="date" x="0" y="230" width="450" height="18">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <Text align="CENTER"><Font family="archivo_semibold" size="13.5" weight="SEMI_BOLD" color="#66F5E6CE" letterSpacing="0.33">
         <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
@@ -75,7 +75,7 @@
       <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="108" height="54" />
       <Complication type="SHORT_TEXT">
-        <PartText x="0" y="0" width="108" height="31.5">
+        <PartText x="0" y="0" width="108" height="32">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="barlow_condensed_semibold" size="27" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -100,7 +100,7 @@
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartText x="0" y="0" width="108" height="31.5">
+        <PartText x="0" y="0" width="108" height="32">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="barlow_condensed_semibold" size="27" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -135,7 +135,7 @@
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="108" height="54" />
       <Complication type="SHORT_TEXT">
-        <PartText x="0" y="0" width="108" height="31.5">
+        <PartText x="0" y="0" width="108" height="32">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="barlow_condensed_semibold" size="27" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -160,7 +160,7 @@
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartText x="0" y="0" width="108" height="31.5">
+        <PartText x="0" y="0" width="108" height="32">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="barlow_condensed_semibold" size="27" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -191,9 +191,9 @@
     <PartDraw name="aod_ember" x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
       <Ellipse x="222" y="348" width="6" height="6"><Fill color="#99FF9D5C" /></Ellipse>
-      <Rectangle x="0" y="403.5" width="450" height="1.5">
+      <Rectangle x="0" y="404" width="450" height="2">
         <Fill color="#00000000">
-          <LinearGradient startX="0" startY="403.5" endX="450" endY="403.5"
+          <LinearGradient startX="0" startY="404" endX="450" endY="404"
                           colors="#00FF9D5C #40FF9D5C #00FF9D5C" positions="0 0.5 1" />
         </Fill>
       </Rectangle>

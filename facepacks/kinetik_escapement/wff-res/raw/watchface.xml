@@ -96,16 +96,16 @@
     <Group name="balance" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <PartDraw x="0" y="0" width="450" height="450">
-        <Ellipse x="172.5" y="238.5" width="105" height="105">
+        <Ellipse x="173" y="239" width="105" height="105">
           <Stroke color="[CONFIGURATION.accent.0]" thickness="3" />
         </Ellipse>
-        <Rectangle x="223.5" y="234" width="3" height="114">
+        <Rectangle x="224" y="234" width="3" height="114">
           <Fill color="[CONFIGURATION.accent.0]" />
         </Rectangle>
-        <Rectangle x="183" y="290.25" width="84" height="1.5">
+        <Rectangle x="183" y="290" width="84" height="2">
           <Fill color="[CONFIGURATION.accent.1]" />
         </Rectangle>
-        <Ellipse x="219.75" y="285.75" width="10.5" height="10.5">
+        <Ellipse x="220" y="286" width="11" height="11">
           <Fill color="#FFEDE7DA" />
         </Ellipse>
       </PartDraw>
@@ -117,7 +117,7 @@
         <Ellipse x="177" y="252" width="96" height="96">
           <Stroke color="#59C9A96A" thickness="1.5" />
         </Ellipse>
-        <Rectangle x="224.25" y="252" width="1.5" height="96">
+        <Rectangle x="224" y="252" width="2" height="96">
           <Fill color="#59C9A96A" />
         </Rectangle>
       </PartDraw>
@@ -132,7 +132,7 @@
       <Complication type="SHORT_TEXT">
         <PartDraw x="0" y="0" width="96" height="96">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Ellipse x="0.75" y="0.75" width="94.5" height="94.5">
+          <Ellipse x="1" y="1" width="95" height="95">
             <Stroke color="#2EEDE7DA" thickness="1.5" />
           </Ellipse>
         </PartDraw>
@@ -145,7 +145,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="9" y="52.5" width="78" height="24">
+            <PartText x="9" y="53" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -153,7 +153,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="9" y="52.5" width="78" height="24">
+            <PartText x="9" y="53" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">HEART RATE</Font></Text>
             </PartText>
@@ -163,7 +163,7 @@
       <Complication type="RANGED_VALUE">
         <PartDraw x="0" y="0" width="96" height="96">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Ellipse x="0.75" y="0.75" width="94.5" height="94.5">
+          <Ellipse x="1" y="1" width="95" height="95">
             <Stroke color="#2EEDE7DA" thickness="1.5" />
           </Ellipse>
         </PartDraw>
@@ -176,7 +176,7 @@
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="9" y="52.5" width="78" height="24">
+            <PartText x="9" y="53" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -184,7 +184,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="9" y="52.5" width="78" height="24">
+            <PartText x="9" y="53" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">HEART RATE</Font></Text>
             </PartText>
@@ -203,7 +203,7 @@
       <Complication type="SHORT_TEXT">
         <PartDraw x="0" y="0" width="96" height="96">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Ellipse x="0.75" y="0.75" width="94.5" height="94.5">
+          <Ellipse x="1" y="1" width="95" height="95">
             <Stroke color="#2EEDE7DA" thickness="1.5" />
           </Ellipse>
         </PartDraw>
@@ -216,7 +216,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="9" y="52.5" width="78" height="24">
+            <PartText x="9" y="53" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -224,7 +224,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="9" y="52.5" width="78" height="24">
+            <PartText x="9" y="53" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">STEPS</Font></Text>
             </PartText>
@@ -234,7 +234,7 @@
       <Complication type="RANGED_VALUE">
         <PartDraw x="0" y="0" width="96" height="96">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Ellipse x="0.75" y="0.75" width="94.5" height="94.5">
+          <Ellipse x="1" y="1" width="95" height="95">
             <Stroke color="#2EEDE7DA" thickness="1.5" />
           </Ellipse>
         </PartDraw>
@@ -247,7 +247,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="9" y="52.5" width="78" height="24">
+            <PartText x="9" y="53" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER" maxLines="2"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -255,7 +255,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="9" y="52.5" width="78" height="24">
+            <PartText x="9" y="53" width="78" height="24">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF6B6858" letterSpacing="0.15">STEPS</Font></Text>
             </PartText>

@@ -69,14 +69,14 @@
       <PartText x="0" y="0" width="345" height="300">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
         <Text align="START"><Font family="archivo_black" size="292.5" weight="BLACK" color="#00ECE9E2" letterSpacing="-0.051">
-          <Outline width="1.5" color="#73ECE9E2" />
+          <Outline width="2" color="#73ECE9E2" />
           <Template>%s<Parameter expression="[HOUR_1_12_Z]" /></Template>
         </Font></Text>
       </PartText>
       <PartText x="0" y="0" width="345" height="300">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
         <Text align="START"><Font family="archivo_black" size="292.5" weight="BLACK" color="#00ECE9E2" letterSpacing="-0.051">
-          <Outline width="1.5" color="#73ECE9E2" />
+          <Outline width="2" color="#73ECE9E2" />
           <Template>%s<Parameter expression="[HOUR_0_23_Z]" /></Template>
         </Font></Text>
       </PartText>
@@ -85,7 +85,7 @@
       <Variant mode="AMBIENT" target="alpha" value="255" />
       <PartText x="0" y="0" width="345" height="300">
         <Text align="END"><Font family="archivo_black" size="292.5" weight="BLACK" color="#00ECE9E2" letterSpacing="-0.051">
-          <Outline width="1.5" color="#4DECE9E2" />
+          <Outline width="2" color="#4DECE9E2" />
           <Template>%s<Parameter expression="[MINUTE_Z]" /></Template>
         </Font></Text>
       </PartText>
@@ -123,7 +123,7 @@
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="120" height="45" />
       <Complication type="SHORT_TEXT">
-        <PartText x="6" y="3" width="114" height="25.5">
+        <PartText x="6" y="3" width="114" height="26">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="START"><Font family="barlow_condensed_semibold" size="22.5" weight="SEMI_BOLD" color="#FFECE9E2">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -132,7 +132,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="6" y="28.5" width="114" height="13.5">
+            <PartText x="6" y="29" width="114" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -140,7 +140,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="28.5" width="114" height="13.5">
+            <PartText x="6" y="29" width="114" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">STEPS</Font></Text>
             </PartText>
@@ -148,7 +148,7 @@
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartText x="6" y="3" width="114" height="25.5">
+        <PartText x="6" y="3" width="114" height="26">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="START"><Font family="barlow_condensed_semibold" size="22.5" weight="SEMI_BOLD" color="#FFECE9E2">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -157,7 +157,7 @@
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="6" y="28.5" width="114" height="13.5">
+            <PartText x="6" y="29" width="114" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -165,7 +165,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="28.5" width="114" height="13.5">
+            <PartText x="6" y="29" width="114" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">STEPS</Font></Text>
             </PartText>
@@ -182,7 +182,7 @@
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="120" height="45" />
       <Complication type="SHORT_TEXT">
-        <PartText x="6" y="3" width="114" height="25.5">
+        <PartText x="6" y="3" width="114" height="26">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="START"><Font family="barlow_condensed_semibold" size="22.5" weight="SEMI_BOLD" color="#FFECE9E2">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -191,7 +191,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="6" y="28.5" width="114" height="13.5">
+            <PartText x="6" y="29" width="114" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -199,7 +199,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="28.5" width="114" height="13.5">
+            <PartText x="6" y="29" width="114" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">BATTERY</Font></Text>
             </PartText>
@@ -207,7 +207,7 @@
         </Condition>
       </Complication>
       <Complication type="RANGED_VALUE">
-        <PartText x="6" y="3" width="114" height="25.5">
+        <PartText x="6" y="3" width="114" height="26">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="START"><Font family="barlow_condensed_semibold" size="22.5" weight="SEMI_BOLD" color="#FFECE9E2">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
@@ -216,7 +216,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="6" y="28.5" width="114" height="13.5">
+            <PartText x="6" y="29" width="114" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -224,7 +224,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="28.5" width="114" height="13.5">
+            <PartText x="6" y="29" width="114" height="14">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#66ECE9E2" letterSpacing="0.23">BATTERY</Font></Text>
             </PartText>

@@ -46,9 +46,9 @@
     <PartDraw name="rule_top" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <Rectangle x="84" y="96" width="282" height="3"><Fill color="[CONFIGURATION.accent.0]" /></Rectangle>
-      <Rectangle x="114" y="129" width="222" height="1.5"><Fill color="#4D171512" /></Rectangle>
+      <Rectangle x="114" y="129" width="222" height="2"><Fill color="#4D171512" /></Rectangle>
     </PartDraw>
-    <PartText name="headline" x="0" y="102" width="450" height="19.5">
+    <PartText name="headline" x="0" y="102" width="450" height="20">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <Text align="CENTER"><Font family="archivo_semibold" size="15" weight="SEMI_BOLD" color="[CONFIGURATION.accent.0]" letterSpacing="0.4">THE PRESENT HOUR</Font></Text>
     </PartText>
@@ -63,15 +63,15 @@
     </DigitalClock>
 
     <!-- Byline (italic serif; AM/PM only meaningful in 12-h — 24-h drops it) -->
-    <Group name="byline" x="0" y="273" width="450" height="22.5">
+    <Group name="byline" x="0" y="273" width="450" height="23">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <PartText x="0" y="0" width="450" height="22.5">
+      <PartText x="0" y="0" width="450" height="23">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
         <Text align="CENTER"><Font family="cormorant_garamond_medium_italic" size="18" weight="MEDIUM" slant="ITALIC" color="#FF5E5648">
           <Template>— as of this very %s —<Parameter expression="[AMPM_STRING]" /></Template>
         </Font></Text>
       </PartText>
-      <PartText x="0" y="0" width="450" height="22.5">
+      <PartText x="0" y="0" width="450" height="23">
         <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 255 : 0" />
         <Text align="CENTER"><Font family="cormorant_garamond_medium_italic" size="18" weight="MEDIUM" slant="ITALIC" color="#FF5E5648">— as of this very hour —</Font></Text>
       </PartText>
@@ -79,8 +79,8 @@
 
     <PartDraw name="rule_mid" x="0" y="0" width="450" height="450">
       <Variant mode="AMBIENT" target="alpha" value="0" />
-      <Rectangle x="96" y="309" width="258" height="1.5"><Fill color="#40171512" /></Rectangle>
-      <Rectangle x="225" y="324" width="1.5" height="21"><Fill color="#33171512" /></Rectangle>
+      <Rectangle x="96" y="309" width="258" height="2"><Fill color="#40171512" /></Rectangle>
+      <Rectangle x="225" y="324" width="2" height="21"><Fill color="#33171512" /></Rectangle>
     </PartDraw>
 
     <!-- Slot 1 · classified left (label · serif value); default steps -->
@@ -93,7 +93,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="0" y="12" width="93" height="16.5">
+            <PartText x="0" y="12" width="93" height="17">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#FF8A8578" letterSpacing="0.19">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -101,7 +101,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="12" width="93" height="16.5">
+            <PartText x="0" y="12" width="93" height="17">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#FF8A8578" letterSpacing="0.19">STEPS</Font></Text>
             </PartText>
@@ -118,7 +118,7 @@
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="0" y="12" width="93" height="16.5">
+            <PartText x="0" y="12" width="93" height="17">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#FF8A8578" letterSpacing="0.19">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -126,7 +126,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="12" width="93" height="16.5">
+            <PartText x="0" y="12" width="93" height="17">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="END"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#FF8A8578" letterSpacing="0.19">STEPS</Font></Text>
             </PartText>
@@ -152,7 +152,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="6" y="12" width="93" height="16.5">
+            <PartText x="6" y="12" width="93" height="17">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#FF8A8578" letterSpacing="0.19">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -160,7 +160,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="12" width="93" height="16.5">
+            <PartText x="6" y="12" width="93" height="17">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#FF8A8578" letterSpacing="0.19">NEXT EVENT</Font></Text>
             </PartText>
@@ -177,7 +177,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="6" y="12" width="93" height="16.5">
+            <PartText x="6" y="12" width="93" height="17">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#FF8A8578" letterSpacing="0.19">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -185,7 +185,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="6" y="12" width="93" height="16.5">
+            <PartText x="6" y="12" width="93" height="17">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="START"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#FF8A8578" letterSpacing="0.19">NEXT EVENT</Font></Text>
             </PartText>
@@ -202,7 +202,7 @@
     </ComplicationSlot>
 
     <!-- Footer -->
-    <PartText name="footer" x="0" y="387" width="450" height="16.5">
+    <PartText name="footer" x="0" y="387" width="450" height="17">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="12" weight="MEDIUM" color="#FF8A8578">
         <Template>VOL. XXVI · No. %s<Parameter expression="[DAY_Z]" /></Template>
@@ -213,8 +213,8 @@
     <Group name="aod" x="0" y="0" width="450" height="450" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" />
       <PartDraw x="0" y="0" width="450" height="450">
-        <Rectangle x="114" y="144" width="222" height="1.5"><Fill color="#40EFE9DC" /></Rectangle>
-        <Rectangle x="144" y="282" width="162" height="1.5"><Fill color="#40EFE9DC" /></Rectangle>
+        <Rectangle x="114" y="144" width="222" height="2"><Fill color="#40EFE9DC" /></Rectangle>
+        <Rectangle x="144" y="282" width="162" height="2"><Fill color="#40EFE9DC" /></Rectangle>
       </PartDraw>
       <DigitalClock x="0" y="156" width="450" height="105">
         <TimeText format="h:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
@@ -222,7 +222,7 @@
           <Font family="cormorant_garamond_medium" size="99" weight="MEDIUM" color="#8CEFE9DC" />
         </TimeText>
       </DigitalClock>
-      <PartText x="0" y="294" width="450" height="16.5">
+      <PartText x="0" y="294" width="450" height="17">
         <Text align="CENTER"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#59EFE9DC" letterSpacing="0.33">
           <Upper><Template>%s %s<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY_Z]" /></Template></Upper>
         </Font></Text>

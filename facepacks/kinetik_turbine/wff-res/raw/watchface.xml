@@ -91,7 +91,7 @@
     <!-- Slot 1 · top-centre readout (accent value; default steps) -->
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="112.5" y="45" width="225" height="51">
+                      x="113" y="45" width="225" height="51">
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="225" height="51" />
       <Complication type="SHORT_TEXT">
@@ -104,7 +104,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle">
-            <PartText x="0" y="31.5" width="225" height="15">
+            <PartText x="0" y="32" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF7C786D" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -112,7 +112,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="31.5" width="225" height="15">
+            <PartText x="0" y="32" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF7C786D" letterSpacing="0.23">STEPS</Font></Text>
             </PartText>
@@ -129,7 +129,7 @@
         <Condition>
           <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitleR">
-            <PartText x="0" y="31.5" width="225" height="15">
+            <PartText x="0" y="32" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF7C786D" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -137,7 +137,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="31.5" width="225" height="15">
+            <PartText x="0" y="32" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF7C786D" letterSpacing="0.23">STEPS</Font></Text>
             </PartText>
@@ -150,7 +150,7 @@
     <!-- Slot 2 · bottom-centre readout (default battery) -->
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
-                      x="112.5" y="354" width="225" height="51">
+                      x="113" y="354" width="225" height="51">
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="225" height="51" />
       <Complication type="SHORT_TEXT">
@@ -163,7 +163,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2">
-            <PartText x="0" y="31.5" width="225" height="15">
+            <PartText x="0" y="32" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF7C786D" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -171,7 +171,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="31.5" width="225" height="15">
+            <PartText x="0" y="32" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF7C786D" letterSpacing="0.23">BATTERY</Font></Text>
             </PartText>
@@ -188,7 +188,7 @@
         <Condition>
           <Expressions><Expression name="hasTitle2R"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
           <Compare expression="hasTitle2R">
-            <PartText x="0" y="31.5" width="225" height="15">
+            <PartText x="0" y="32" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF7C786D" letterSpacing="0.23">
                 <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
@@ -196,7 +196,7 @@
             </PartText>
           </Compare>
           <Default>
-            <PartText x="0" y="31.5" width="225" height="15">
+            <PartText x="0" y="32" width="225" height="15">
               <Variant mode="AMBIENT" target="alpha" value="0" />
               <Text align="CENTER"><Font family="archivo_semibold" size="9.75" weight="SEMI_BOLD" color="#FF7C786D" letterSpacing="0.23">BATTERY</Font></Text>
             </PartText>

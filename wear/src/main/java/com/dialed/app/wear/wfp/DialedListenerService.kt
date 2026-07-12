@@ -9,6 +9,7 @@ import android.util.Log
 import com.dialed.app.wear.MainActivity
 import com.dialed.app.wear.common.WatchFaceActivationStrategy
 import com.dialed.app.wear.common.WatchFaceInstallResult
+import com.dialed.app.wear.common.WatchFaceUninstallResult
 import com.dialed.app.wear.common.WearConstants
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -57,8 +58,28 @@ class DialedListenerService : WearableListenerService() {
         super.onDestroy()
     }
 
-    /** Phone asks "may I send a face?". Reply a single byte: proceed (1) or busy (0). */
+    /**
+     * Phone RPCs. Initiate = "may I send a face?" (reply proceed/busy byte). Query/uninstall are
+     * standalone request/reply RPCs answered here on the binder thread (mirroring the initiate path's
+     * [runBlocking] on the suspend repo); a [withTimeoutOrNull] guards against a wedged WFP service so
+     * the binder thread always replies before the phone's own [WearConstants.QUERY_STATE_TIMEOUT_MS].
+     */
     override fun onRequest(nodeId: String, path: String, data: ByteArray): Task<ByteArray?>? {
+        when (path) {
+            WearConstants.PATH_QUERY_STATE ->
+                return Tasks.forResult(runBlocking {
+                    val s = withTimeoutOrNull(QUERY_OP_TIMEOUT_MS) { repo.installedState() }
+                        ?: InstalledState(emptyList(), null)
+                    WearConstants.encodeQueryState(s.activePackage, s.installedPackages)
+                })
+            WearConstants.PATH_UNINSTALL ->
+                return Tasks.forResult(runBlocking {
+                    val target = WearConstants.decodeUninstallRequest(data)
+                    val result = withTimeoutOrNull(QUERY_OP_TIMEOUT_MS) { repo.removeByPackage(target) }
+                        ?: WatchFaceUninstallResult.FAILED
+                    WearConstants.encodeUninstallResult(result)
+                })
+        }
         if (!path.startsWith(WearConstants.PATH_INITIATE_TRANSFER)) {
             return Tasks.forResult(null)
         }
@@ -243,6 +264,10 @@ class DialedListenerService : WearableListenerService() {
         const val TAG = "DialedListener"
         const val WAKELOCK_TAG = "dialed:wear"
         const val WAKELOCK_TIMEOUT_MS = 1000L
+
+        /** Watch-side budget for a query/uninstall op; kept below the phone's QUERY_STATE_TIMEOUT_MS
+         *  so the binder thread never blocks past the phone's own wait. */
+        const val QUERY_OP_TIMEOUT_MS = 10_000L
 
         /**
          * Process-scoped (NOT bound to this service's lifecycle): GMS may unbind + destroy an idle

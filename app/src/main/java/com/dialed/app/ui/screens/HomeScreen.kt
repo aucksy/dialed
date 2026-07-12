@@ -36,8 +36,10 @@ import androidx.compose.ui.unit.dp
 import com.dialed.app.R
 import com.dialed.app.catalog.Face
 import com.dialed.app.model.WatchStatus
+import com.dialed.app.ui.components.DialStatus
 import com.dialed.app.ui.components.FaceDial
 import com.dialed.app.ui.components.FilterChip
+import com.dialed.app.ui.components.UninstallButton
 import com.dialed.app.ui.components.UnlockBanner
 import com.dialed.app.ui.components.WatchStatusPill
 import com.dialed.app.ui.theme.DialedSpacing
@@ -49,7 +51,11 @@ fun HomeScreen(
     faces: List<Face>,
     entitled: Boolean,
     watchStatus: WatchStatus,
+    installedFaceIds: Set<String>,
+    activeFaceId: String?,
+    uninstallingFaceId: String?,
     onFaceClick: (Face) -> Unit,
+    onUninstall: (Face) -> Unit,
     onUnlock: () -> Unit,
     onSettings: () -> Unit,
     price: String = "$11.99",
@@ -102,17 +108,43 @@ fun HomeScreen(
         }
 
         items(shown, key = { it.id }) { face ->
+            val installed = face.id in installedFaceIds
+            val active = face.id == activeFaceId
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.clickable { onFaceClick(face) },
             ) {
-                FaceDial(face = face, size = FaceSize.grid, locked = !entitled)
+                FaceDial(
+                    face = face,
+                    size = FaceSize.grid,
+                    locked = !entitled,
+                    status = when {
+                        active -> DialStatus.ACTIVE
+                        installed -> DialStatus.INSTALLED
+                        else -> DialStatus.NONE
+                    },
+                )
                 Spacer(Modifier.height(DialedSpacing.sm))
                 Text(face.displayName, style = MaterialTheme.typography.titleMedium, color = c.onSurface)
                 Text(
                     face.tag, style = MaterialTheme.typography.labelSmall,
                     color = c.onSurfaceVariant, textAlign = TextAlign.Center,
                 )
+                if (installed) {
+                    Spacer(Modifier.height(DialedSpacing.sm))
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = if (active) "Active" else "On watch",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (active) c.success else c.onSurfaceVariant,
+                        )
+                        UninstallButton(
+                            onClick = { onUninstall(face) },
+                            loading = uninstallingFaceId == face.id,
+                            compact = true,
+                        )
+                    }
+                }
             }
         }
     }

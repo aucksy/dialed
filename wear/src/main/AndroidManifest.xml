@@ -42,13 +42,17 @@
             </intent-filter>
         </activity>
 
-        <!-- Receives the phone's Data-Layer push: onRequest (setup) + onChannelOpened (APK). -->
+        <!-- Receives the phone's Data-Layer push: onRequest (setup / query / uninstall) +
+             onChannelOpened (APK). Every sendRequest path the phone uses MUST be declared here or
+             the RPC is never delivered to onRequest (a <data> per path; OR-matched within a filter). -->
         <service
             android:name=".wfp.DialedListenerService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.REQUEST_RECEIVED" />
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/dialed/initiate_transfer" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/dialed/query_state" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/dialed/uninstall" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />

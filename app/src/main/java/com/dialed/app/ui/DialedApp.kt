@@ -15,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dialed.app.MainViewModel
 import com.dialed.app.ui.components.PushToWatchSheet
@@ -52,6 +54,13 @@ fun DialedApp(viewModel: MainViewModel) {
 
         val pushingFace by viewModel.pushingFace.collectAsStateWithLifecycle()
         val pushStatus by viewModel.pushStatus.collectAsStateWithLifecycle()
+        val installedFaceIds by viewModel.installedFaceIds.collectAsStateWithLifecycle()
+        val activeFaceId by viewModel.activeFaceId.collectAsStateWithLifecycle()
+        val uninstallingFaceId by viewModel.uninstallingFaceId.collectAsStateWithLifecycle()
+
+        // Re-read the watch's installed/active snapshot whenever the app returns to the foreground —
+        // the user may have switched or removed the face on the watch while we were backgrounded.
+        LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshInstalledState() }
 
         var screen: Screen by rememberSaveable(
             stateSaver = ScreenSaver,
@@ -72,7 +81,11 @@ fun DialedApp(viewModel: MainViewModel) {
                     faces = viewModel.faces,
                     entitled = entitled,
                     watchStatus = watchStatus,
+                    installedFaceIds = installedFaceIds,
+                    activeFaceId = activeFaceId,
+                    uninstallingFaceId = uninstallingFaceId,
                     onFaceClick = { screen = Screen.Detail(it.id) },
+                    onUninstall = viewModel::uninstallFace,
                     onUnlock = { screen = Screen.Paywall },
                     onSettings = { screen = Screen.Settings },
                 )
@@ -82,9 +95,14 @@ fun DialedApp(viewModel: MainViewModel) {
                         face = face,
                         entitled = entitled,
                         watchStatus = watchStatus,
+                        isInstalled = face.id in installedFaceIds,
+                        isActive = face.id == activeFaceId,
+                        slotOccupied = installedFaceIds.isNotEmpty() && face.id !in installedFaceIds,
+                        uninstalling = uninstallingFaceId == face.id,
                         onBack = { screen = Screen.Home },
                         onUnlock = { screen = Screen.Paywall },
                         onInstall = { viewModel.startPush(face) },
+                        onUninstall = { viewModel.uninstallFace(face) },
                     )
                 }
                 is Screen.Paywall -> PaywallScreen(

@@ -130,7 +130,7 @@ Highest user-facing value and largely independent of the faces work.
 | Phase | Ver | State | Notes |
 |---|---|---|---|
 | 0 Research spike | — | ✅ **COMPLETE** 2026-07-12 | 5 docs + index in `docs/research/` (multi-agent workflow, primary-source-verified by an accuracy critic). Findings below rewrote 3 of the 4 root-cause reads. |
-| 1 Installed-state + Uninstall | v0.3.0 | 🟢 **READY** (recommended next) | R5-A query protocol SOLID + R4 slot-count=1 SOLID; unblocked, no screenshot dependency. |
+| 1 Installed-state + Uninstall | v0.3.0 | ✅ **SHIPPED** 2026-07-12 (`dialed-v0.3.0`) | R5-A wire protocol (`PATH_QUERY_STATE`/`PATH_UNINSTALL` + codecs) + `installedState()`/`removeByPackage()` + 2 onRequest branches + **manifest intent-filters for the 2 new RPC paths** (was the load-bearing catch) + phone Installed/Active badge + single-icon Uninstall + "Replace on watch". Adversarially reviewed (no compile blockers, feature wired e2e). **Owner e2e: push A→badge, push B→badge moves, uninstall clears, survives restart.** |
 | 2 Resolution + distortion | v0.4.0 | ⬜ | **#5 distortion = platform UI, NOT an app bug (closed).** #1 resolution still needs a worn-face screenshot ± the R1 300→450 twin test. |
 | 3 Complication alignment | v0.5.0 | ⬜ | R2 SOLID: it's round-display **corner clipping** on the 300 canvas, deterministic geometry fix. |
 | 4 Smooth animations | v0.6.0 | ⬜ | R3 SOLID: Metronome (12fps sprite) / Pulsar (per-sec tick) / Turbine+Escapement (Sweep=5). Metronome true fix = sprite regen (owner design call). |

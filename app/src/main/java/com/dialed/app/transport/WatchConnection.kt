@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.dialed.app.catalog.Face
+import com.dialed.app.wear.common.QueryStateResult
 import com.dialed.app.wear.common.WatchFaceInstallResult
+import com.dialed.app.wear.common.WatchFaceUninstallResult
 import com.dialed.app.wear.common.WearConstants
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.AvailabilityException
@@ -104,18 +106,50 @@ class WatchBridge(context: Context) {
     private fun select(nodes: Set<Node>): ConnectedWatch? =
         nodes.firstOrNull()?.let { ConnectedWatch(it.id, it.displayName) }
 
+    /** The reachable Dialed-capable watch's nodeId, or null if none is reachable / API unavailable. */
+    private suspend fun reachableNodeId(): String? = runCatching {
+        capabilityClient
+            .getCapability(WearConstants.CAPABILITY_WEAR, CapabilityClient.FILTER_REACHABLE)
+            .await().nodes.firstOrNull()?.id
+    }.getOrNull()
+
+    /**
+     * Ask the watch which Dialed face is installed + which is active (slot = 1, so 0..1 installed).
+     * Returns null when the watch is unreachable or gives no reply — callers keep their prior state.
+     */
+    suspend fun queryInstalledState(): QueryStateResult? {
+        val nodeId = reachableNodeId() ?: return null
+        return runCatching {
+            val reply = withTimeout(WearConstants.QUERY_STATE_TIMEOUT_MS) {
+                messageClient.sendRequest(nodeId, WearConstants.PATH_QUERY_STATE, ByteArray(0)).await()
+            }
+            WearConstants.decodeQueryState(reply)
+        }.onFailure { Log.w(TAG, "queryInstalledState failed", it) }.getOrNull()
+    }
+
+    /** Ask the watch to uninstall [face]. Returns the watch's result (FAILED if unreachable). */
+    suspend fun uninstallFace(face: Face): WatchFaceUninstallResult {
+        val nodeId = reachableNodeId() ?: return WatchFaceUninstallResult.FAILED
+        return runCatching {
+            val reply = withTimeout(WearConstants.QUERY_STATE_TIMEOUT_MS) {
+                messageClient.sendRequest(
+                    nodeId,
+                    WearConstants.PATH_UNINSTALL,
+                    WearConstants.encodeUninstallRequest(face.packageName),
+                ).await()
+            }
+            WearConstants.decodeUninstallResult(reply)
+        }.onFailure { Log.w(TAG, "uninstallFace failed", it) }
+            .getOrDefault(WatchFaceUninstallResult.FAILED)
+    }
+
     /**
      * Pushes [face] to the reachable watch. Emits [PushStatus] as it progresses. The APK travels
      * over a ChannelClient file transfer (no byte-level progress from the platform), so Sending is
      * indeterminate until the watch's finalize message arrives.
      */
     suspend fun pushFace(face: Face, emit: (PushStatus) -> Unit) {
-        val nodeId = runCatching {
-            capabilityClient
-                .getCapability(WearConstants.CAPABILITY_WEAR, CapabilityClient.FILTER_REACHABLE)
-                .await().nodes.firstOrNull()?.id
-        }.getOrNull()
-
+        val nodeId = reachableNodeId()
         if (nodeId == null) {
             emit(PushStatus.NoWatch)
             return

@@ -27,6 +27,9 @@ import com.dialed.app.ui.theme.dialedColors
 sealed interface InstallState {
     data object Locked : InstallState
     data object Ready : InstallState
+
+    /** Slot = 1: another Dialed face occupies the watch, so installing this one replaces it. */
+    data object Replace : InstallState
     data class Installing(val progress: Float? = null) : InstallState
     data object InstalledActive : InstallState
     data class Error(val message: String) : InstallState
@@ -39,13 +42,14 @@ fun InstallButton(
     modifier: Modifier = Modifier,
 ) {
     val c = dialedColors
-    val clickable = state is InstallState.Locked || state is InstallState.Ready || state is InstallState.Error
+    val clickable = state is InstallState.Locked || state is InstallState.Ready ||
+        state is InstallState.Replace || state is InstallState.Error
 
     val bg: Color
     val content: Color
     var borderColor: Color? = null
     when (state) {
-        is InstallState.Locked, is InstallState.Ready -> { bg = c.ctaContainer; content = c.onCta }
+        is InstallState.Locked, is InstallState.Ready, is InstallState.Replace -> { bg = c.ctaContainer; content = c.onCta }
         is InstallState.Installing -> {
             bg = c.primaryContainer; content = c.onPrimaryContainer
             borderColor = c.ctaContainer.copy(alpha = 0.5f)
@@ -74,7 +78,7 @@ fun InstallButton(
         when (state) {
             is InstallState.Locked ->
                 Icon(painterResource(R.drawable.ic_lock), null, tint = content, modifier = Modifier.size(18.dp))
-            is InstallState.Ready ->
+            is InstallState.Ready, is InstallState.Replace ->
                 Icon(painterResource(R.drawable.ic_watch), null, tint = content, modifier = Modifier.size(19.dp))
             is InstallState.Installing ->
                 CircularProgressIndicator(color = content, strokeWidth = 2.dp, modifier = Modifier.size(18.dp))
@@ -86,6 +90,7 @@ fun InstallButton(
             text = when (state) {
                 is InstallState.Locked -> "Unlock the collection"
                 is InstallState.Ready -> "Install to watch"
+                is InstallState.Replace -> "Replace on watch"
                 is InstallState.Installing ->
                     state.progress?.let { "Installing… ${(it * 100).toInt()}%" } ?: "Installing…"
                 is InstallState.InstalledActive -> "On your watch · Active"
@@ -94,5 +99,45 @@ fun InstallButton(
             color = content,
             style = MaterialTheme.typography.labelLarge,
         )
+    }
+}
+
+/**
+ * Destructive single-tap uninstall (issue #3). Error-tinted; shows a spinner while [loading].
+ * Used on FaceDetail (full-width) and — compact via [compact] — on the Home grid tile.
+ */
+@Composable
+fun UninstallButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    loading: Boolean = false,
+    compact: Boolean = false,
+) {
+    val c = dialedColors
+    Row(
+        modifier = modifier
+            .then(if (compact) Modifier.size(38.dp) else Modifier.fillMaxWidth().height(56.dp))
+            .clip(CircleShape)
+            .background(c.error.copy(alpha = 0.10f))
+            .border(1.dp, c.error.copy(alpha = 0.35f), CircleShape)
+            .clickable(enabled = !loading, onClick = onClick),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (loading) {
+            CircularProgressIndicator(color = c.error, strokeWidth = 2.dp, modifier = Modifier.size(16.dp))
+        } else {
+            Icon(
+                painterResource(R.drawable.ic_trash), contentDescription = "Uninstall from watch",
+                tint = c.error, modifier = Modifier.size(if (compact) 16.dp else 18.dp),
+            )
+        }
+        if (!compact) {
+            Text(
+                text = if (loading) "Removing…" else "Remove from watch",
+                color = c.error,
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
     }
 }

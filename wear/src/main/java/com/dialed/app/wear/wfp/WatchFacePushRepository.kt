@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.wear.watchfacepush.WatchFacePushManager
 import androidx.wear.watchfacepush.WatchFacePushManagerFactory
 import com.dialed.app.wear.common.WatchFaceActivationStrategy
+import com.dialed.app.wear.common.WatchFaceUninstallResult
 import com.dialed.app.wear.common.WearConstants
 import kotlinx.coroutines.flow.first
 
@@ -84,6 +85,51 @@ class WatchFacePushRepository(private val context: Context) {
         false
     }
 
+    /**
+     * Slot-1 marketplace snapshot for the phone: the installed Dialed package(s) (0..1 on Wear OS 6)
+     * plus the active package (the installed one iff it is currently the live face, else null).
+     * Guarded — a WFP/cold-bind failure returns an empty snapshot, never throws.
+     */
+    suspend fun installedState(): InstalledState = try {
+        val wfp = manager()
+        val details = wfp.listWatchFaces().installedWatchFaceDetails
+        val installed = details.map { it.packageName }
+        val active = details.firstOrNull { wfp.isWatchFaceActive(it.packageName) }?.packageName
+        InstalledState(installed, active)
+    } catch (e: Exception) {
+        Log.w(TAG, "installedState unexpected ${e.javaClass.simpleName}: ${e.message}", e)
+        InstalledState(emptyList(), null)
+    }
+
+    /** Remove the watch face in [slotId] (uninstalls it). Returns true on success; never throws. */
+    suspend fun removeWatchFace(slotId: String): Boolean = try {
+        manager().removeWatchFace(slotId)
+        true
+    } catch (e: WatchFacePushManager.RemoveWatchFaceException) {
+        Log.w(TAG, "removeWatchFace failed: ${e.message}", e)
+        false
+    } catch (e: Exception) {
+        Log.w(TAG, "removeWatchFace unexpected ${e.javaClass.simpleName}: ${e.message}", e)
+        false
+    }
+
+    /**
+     * Uninstall by package name. The phone knows the target package (from its catalog) but NOT the
+     * volatile slotId, so we re-query slotId at call time (slot ids are never persisted) and remove.
+     */
+    suspend fun removeByPackage(packageName: String): WatchFaceUninstallResult {
+        return try {
+            val details = manager().listWatchFaces().installedWatchFaceDetails
+            val slot = details.firstOrNull { it.packageName == packageName }
+                ?: return WatchFaceUninstallResult.NOT_FOUND
+            if (removeWatchFace(slot.slotId)) WatchFaceUninstallResult.REMOVED
+            else WatchFaceUninstallResult.FAILED
+        } catch (e: Exception) {
+            Log.w(TAG, "removeByPackage unexpected ${e.javaClass.simpleName}: ${e.message}", e)
+            WatchFaceUninstallResult.FAILED
+        }
+    }
+
     fun hasPushPermission(): Boolean =
         ContextCompat.checkSelfPermission(context, WearConstants.PERMISSION_PUSH) ==
             PackageManager.PERMISSION_GRANTED
@@ -108,3 +154,9 @@ class WatchFacePushRepository(private val context: Context) {
         const val TAG = "DialedWfpRepo"
     }
 }
+
+/** Slot-1 marketplace snapshot: which Dialed face(s) are installed + which (if any) is the live face. */
+data class InstalledState(
+    val installedPackages: List<String>,   // 0..1 on Wear OS 6 (slot limit = 1)
+    val activePackage: String?,            // the installed pkg iff it is the active face, else null
+)

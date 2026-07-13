@@ -125,23 +125,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <Condition>
-          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
-          <Compare expression="hasTitle">
-            <PartText x="0" y="28" width="83" height="15">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">
-                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
-              </Font></Text>
-            </PartText>
-          </Compare>
-          <Default>
-            <PartText x="0" y="28" width="83" height="15">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">BATTERY</Font></Text>
-            </PartText>
-          </Default>
-        </Condition>
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="30" y="24" width="24" height="24" tintColor="#E6C9CDD4">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="RANGED_VALUE">
         <PartText x="0" y="3" width="83" height="22">
@@ -150,23 +138,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <Condition>
-          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
-          <Compare expression="hasTitleR">
-            <PartText x="0" y="28" width="83" height="15">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">
-                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
-              </Font></Text>
-            </PartText>
-          </Compare>
-          <Default>
-            <PartText x="0" y="28" width="83" height="15">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="#66C9CDD4" letterSpacing="0.17">BATTERY</Font></Text>
-            </PartText>
-          </Default>
-        </Condition>
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="30" y="24" width="24" height="24" tintColor="#E6C9CDD4">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="EMPTY" />
     </ComplicationSlot>

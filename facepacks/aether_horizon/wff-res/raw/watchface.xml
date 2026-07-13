@@ -211,23 +211,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <Condition>
-          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
-          <Compare expression="hasTitle">
-            <PartText x="0" y="41" width="240" height="16">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">
-                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
-              </Font></Text>
-            </PartText>
-          </Compare>
-          <Default>
-            <PartText x="0" y="41" width="240" height="16">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">STEPS</Font></Text>
-            </PartText>
-          </Default>
-        </Condition>
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="108" y="37" width="24" height="24" tintColor="#E6FFFFFF">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="RANGED_VALUE">
         <PartText x="0" y="0" width="240" height="38">
@@ -236,23 +224,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <Condition>
-          <Expressions><Expression name="hasTitleR"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
-          <Compare expression="hasTitleR">
-            <PartText x="0" y="41" width="240" height="16">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">
-                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
-              </Font></Text>
-            </PartText>
-          </Compare>
-          <Default>
-            <PartText x="0" y="41" width="240" height="16">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="12" weight="SEMI_BOLD" color="#8CFFFFFF" letterSpacing="0.27">STEPS</Font></Text>
-            </PartText>
-          </Default>
-        </Condition>
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="108" y="37" width="24" height="24" tintColor="#E6FFFFFF">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="EMPTY" />
     </ComplicationSlot>

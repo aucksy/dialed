@@ -110,10 +110,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <PartText x="6" y="54" width="83" height="15">
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="36" y="52" width="24" height="24" tintColor="[CONFIGURATION.metal.1]">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">STEPS</Font></Text>
-        </PartText>
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="GOAL_PROGRESS">
         <PartDraw x="0" y="0" width="96" height="96">
@@ -131,10 +132,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <PartText x="6" y="54" width="83" height="15">
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="36" y="52" width="24" height="24" tintColor="[CONFIGURATION.metal.1]">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">STEPS</Font></Text>
-        </PartText>
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="SHORT_TEXT">
         <PartDraw x="0" y="0" width="96" height="96">
@@ -148,23 +150,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <Condition>
-          <Expressions><Expression name="hasTitle"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
-          <Compare expression="hasTitle">
-            <PartText x="6" y="54" width="83" height="15">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">
-                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
-              </Font></Text>
-            </PartText>
-          </Compare>
-          <Default>
-            <PartText x="6" y="54" width="83" height="15">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">DATA</Font></Text>
-            </PartText>
-          </Default>
-        </Condition>
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="36" y="52" width="24" height="24" tintColor="[CONFIGURATION.metal.1]">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="EMPTY" />
     </ComplicationSlot>
@@ -191,10 +181,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <PartText x="6" y="54" width="83" height="15">
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="36" y="52" width="24" height="24" tintColor="[CONFIGURATION.metal.1]">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">HEART RATE</Font></Text>
-        </PartText>
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="GOAL_PROGRESS">
         <PartDraw x="0" y="0" width="96" height="96">
@@ -212,10 +203,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <PartText x="6" y="54" width="83" height="15">
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="36" y="52" width="24" height="24" tintColor="[CONFIGURATION.metal.1]">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">HEART RATE</Font></Text>
-        </PartText>
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="SHORT_TEXT">
         <PartDraw x="0" y="0" width="96" height="96">
@@ -229,23 +221,11 @@
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
-        <Condition>
-          <Expressions><Expression name="hasTitle2"><![CDATA[[COMPLICATION.TITLE] != null]]></Expression></Expressions>
-          <Compare expression="hasTitle2">
-            <PartText x="6" y="54" width="83" height="15">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">
-                <Upper><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Upper>
-              </Font></Text>
-            </PartText>
-          </Compare>
-          <Default>
-            <PartText x="6" y="54" width="83" height="15">
-              <Variant mode="AMBIENT" target="alpha" value="0" />
-              <Text align="CENTER"><Font family="archivo_semibold" size="9.6" weight="SEMI_BOLD" color="[CONFIGURATION.metal.1]" letterSpacing="0.17">HEART RATE</Font></Text>
-            </PartText>
-          </Default>
-        </Condition>
+        <!-- Provider icon: swaps with every provider (Steps→Compass→Gemini), no hardcoded label. -->
+        <PartImage x="36" y="52" width="24" height="24" tintColor="[CONFIGURATION.metal.1]">
+          <Variant mode="AMBIENT" target="alpha" value="0" />
+          <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+        </PartImage>
       </Complication>
       <Complication type="EMPTY" />
     </ComplicationSlot>

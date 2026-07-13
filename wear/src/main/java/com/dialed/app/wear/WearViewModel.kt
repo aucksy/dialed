@@ -13,7 +13,9 @@ import com.dialed.app.wear.wfp.WatchFacePushRepository
 import com.dialed.app.wear.common.WearConstants
 import com.dialed.app.wear.wfp.WfpStateStore
 import com.google.android.gms.wearable.CapabilityClient
+import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -72,6 +74,15 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
     init {
         capabilityClient.addListener(phoneCapListener, WearConstants.CAPABILITY_PHONE)
         refresh()
+        // Self-heal a stale link: FILTER_REACHABLE is a transient snapshot and the capability
+        // listener does not always fire on a silent transport blip, so re-check on a gentle cadence
+        // while the ViewModel is alive (the reported "Connected" flapping / stuck not-reachable).
+        viewModelScope.launch {
+            while (true) {
+                delay(LINK_RECHECK_MS)
+                updateLink()
+            }
+        }
     }
 
     override fun onCleared() {
@@ -131,15 +142,32 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
      * capability => CONNECTED; a paired-but-appless (or absent) phone => UNREACHABLE.
      */
     private suspend fun updateLink() {
-        link.value = try {
-            val reachable = capabilityClient
-                .getCapability(WearConstants.CAPABILITY_PHONE, CapabilityClient.FILTER_REACHABLE)
-                .await().nodes
-            if (reachable.isNotEmpty()) WatchLink.CONNECTED else WatchLink.UNREACHABLE
-        } catch (e: Exception) {
-            WatchLink.UNREACHABLE
+        // FILTER_REACHABLE is a transient snapshot that also races the Data Layer's initial
+        // capability sync right after launch, so a single empty result must NOT immediately flap the
+        // badge to "not reachable". Retry a few times before concluding UNREACHABLE; a reachable node
+        // settles to CONNECTED instantly. While retrying the badge holds its value (starts CONNECTING).
+        repeat(REACH_ATTEMPTS) { attempt ->
+            val reachable = try {
+                capabilityClient
+                    .getCapability(WearConstants.CAPABILITY_PHONE, CapabilityClient.FILTER_REACHABLE)
+                    .await().nodes
+            } catch (e: Exception) {
+                emptySet<Node>()
+            }
+            if (reachable.isNotEmpty()) {
+                link.value = WatchLink.CONNECTED
+                return
+            }
+            if (attempt < REACH_ATTEMPTS - 1) delay(REACH_RETRY_MS)
         }
+        link.value = WatchLink.UNREACHABLE
     }
 
     private data class HomeFace(val name: String?, val preview: Bitmap?)
+
+    private companion object {
+        const val REACH_ATTEMPTS = 3       // reachability probes before declaring UNREACHABLE
+        const val REACH_RETRY_MS = 1200L   // wait between probes (rides out a transport blip)
+        const val LINK_RECHECK_MS = 12_000L // periodic self-heal cadence while alive
+    }
 }

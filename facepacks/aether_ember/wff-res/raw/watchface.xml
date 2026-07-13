@@ -77,7 +77,7 @@
       <Complication type="SHORT_TEXT">
         <PartText x="0" y="0" width="115" height="34">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER" isAutoSize="TRUE"><Font family="barlow_condensed_semibold" size="30" weight="SEMI_BOLD" color="#FFF5E6CE">
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="28.8" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
@@ -90,7 +90,7 @@
       <Complication type="RANGED_VALUE">
         <PartText x="0" y="0" width="115" height="34">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER" isAutoSize="TRUE"><Font family="barlow_condensed_semibold" size="30" weight="SEMI_BOLD" color="#FFF5E6CE">
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="28.8" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
@@ -112,7 +112,7 @@
       <Complication type="SHORT_TEXT">
         <PartText x="0" y="0" width="115" height="34">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER" isAutoSize="TRUE"><Font family="barlow_condensed_semibold" size="30" weight="SEMI_BOLD" color="#FFF5E6CE">
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="28.8" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>
@@ -124,7 +124,7 @@
       <Complication type="RANGED_VALUE">
         <PartText x="0" y="0" width="115" height="34">
           <Variant mode="AMBIENT" target="alpha" value="0" />
-          <Text align="CENTER" isAutoSize="TRUE"><Font family="barlow_condensed_semibold" size="30" weight="SEMI_BOLD" color="#FFF5E6CE">
+          <Text align="CENTER"><Font family="barlow_condensed_semibold" size="28.8" weight="SEMI_BOLD" color="#FFF5E6CE">
             <Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template>
           </Font></Text>
         </PartText>

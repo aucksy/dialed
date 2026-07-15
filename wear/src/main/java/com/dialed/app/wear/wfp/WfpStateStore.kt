@@ -20,7 +20,9 @@ private val Context.wfpDataStore: DataStore<Preferences> by preferencesDataStore
  *   least once. It no longer GATES the activation decision — the platform's own
  *   ERROR_MAXIMUM_ATTEMPTS is the authority (a local latch could forfeit an activation the platform
  *   would still grant), so we always attempt and record the outcome here.
- * Plus [lastFaceName] so Home can show the face that was last pushed.
+ * Plus [lastFaceName] / [lastFacePackage] so Home can put a friendly name + cached preview on the
+ * face WFP reports as installed — but ONLY when the stored package matches the actually-installed
+ * one (else Home derives the name from the package and shows a placeholder; never a stale face).
  */
 class WfpStateStore(private val context: Context) {
 
@@ -33,18 +35,27 @@ class WfpStateStore(private val context: Context) {
     val lastFaceName: Flow<String?> =
         context.wfpDataStore.data.map { it[KEY_LAST_FACE] }
 
+    /** Package of the last face we installed — Home only trusts [lastFaceName]/cache when this
+     *  matches the package WFP currently reports installed. */
+    val lastFacePackage: Flow<String?> =
+        context.wfpDataStore.data.map { it[KEY_LAST_PACKAGE] }
+
     suspend fun setActiveApiUsed(value: Boolean) =
         context.wfpDataStore.edit { it[KEY_ACTIVE_USED] = value }.let {}
 
     suspend fun setPermissionDenied(value: Boolean) =
         context.wfpDataStore.edit { it[KEY_PERM_DENIED] = value }.let {}
 
-    suspend fun setLastFaceName(value: String) =
-        context.wfpDataStore.edit { it[KEY_LAST_FACE] = value }.let {}
+    suspend fun setLastFace(name: String, packageName: String?) =
+        context.wfpDataStore.edit {
+            it[KEY_LAST_FACE] = name
+            if (packageName != null) it[KEY_LAST_PACKAGE] = packageName
+        }.let {}
 
     private companion object {
         val KEY_ACTIVE_USED = booleanPreferencesKey("setActiveUsed")
         val KEY_PERM_DENIED = booleanPreferencesKey("permissionDenied")
         val KEY_LAST_FACE = stringPreferencesKey("lastFaceName")
+        val KEY_LAST_PACKAGE = stringPreferencesKey("lastFacePackage")
     }
 }

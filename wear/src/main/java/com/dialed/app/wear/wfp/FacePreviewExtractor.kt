@@ -16,6 +16,14 @@ import java.io.File
 object FacePreviewExtractor {
     private const val CACHE_FILE = "last_face_preview.png"
 
+    /** The package name declared by a received (not-yet-installed) face APK. Used so Home can match
+     *  the last-installed package against what WFP currently reports installed. Best-effort. */
+    fun packageOf(context: Context, apkPath: String): String? = try {
+        context.packageManager.getPackageArchiveInfo(apkPath, 0)?.packageName
+    } catch (e: Exception) {
+        null
+    }
+
     fun extract(context: Context, apkPath: String): Bitmap? = try {
         val pm = context.packageManager
         val info = pm.getPackageArchiveInfo(apkPath, 0)

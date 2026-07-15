@@ -148,6 +148,7 @@ class DialedListenerService : WearableListenerService() {
                 }
                 TransferSession.update(ReceiveState.Installing(request.faceName))
                 val preview = FacePreviewExtractor.extract(this@DialedListenerService, tempFile.absolutePath)
+                val facePackage = FacePreviewExtractor.packageOf(this@DialedListenerService, tempFile.absolutePath)
 
                 val installed = FileInputStream(tempFile).use { stream ->
                     repo.installOrUpdate(ParcelFileDescriptor.dup(stream.fd), request.token)
@@ -188,7 +189,7 @@ class DialedListenerService : WearableListenerService() {
                 // preview-cache hiccup can never flip a real install to Failed.
                 TransferSession.update(ReceiveState.Success(request.faceName, uiStrategy, preview))
                 runCatching {
-                    store.setLastFaceName(request.faceName)
+                    store.setLastFace(request.faceName, facePackage)
                     preview?.let { FacePreviewExtractor.cache(this@DialedListenerService, it) }
                 }.onFailure { Log.w(TAG, "post-install side-effect failed (install already ok) t=${request.transferId}", it) }
             } catch (e: Exception) {

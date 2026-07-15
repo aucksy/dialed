@@ -25,14 +25,22 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
+/** The GENUINE Watch-Face-Push slot state, as Home must convey it (never the stale last-pushed cache). */
+sealed interface HomeFaceState {
+    /** No Dialed face is installed on the watch. */
+    data object None : HomeFaceState
+    /** A Dialed face is installed; [active] = it is the live watch face right now. */
+    data class Installed(val name: String, val preview: Bitmap?, val active: Boolean) : HomeFaceState
+}
+
 /** Everything the watch UI needs to pick a screen and render it. */
 data class WearUiState(
     val supported: Boolean = true,
     val pushGranted: Boolean = false,
     val pushPermanentlyDenied: Boolean = false,
     val link: WatchLink = WatchLink.CONNECTING,
-    val homeFaceName: String? = null,
-    val homePreview: Bitmap? = null,
+    val home: HomeFaceState = HomeFaceState.None,
+    val setByHandHint: Boolean = false, // an in-app set-active attempt was refused → teach long-press
     val receive: ReceiveState = ReceiveState.Idle,
 )
 
@@ -45,7 +53,8 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
     private val pushGranted = MutableStateFlow(repo.hasPushPermission())
     private val pushDenied = MutableStateFlow(false)
     private val link = MutableStateFlow(WatchLink.CONNECTING)
-    private val homeFace = MutableStateFlow(HomeFace(null, null))
+    private val homeFace = MutableStateFlow<HomeFaceState>(HomeFaceState.None)
+    private val setByHandHint = MutableStateFlow(false)
 
     private val capabilityClient by lazy { Wearable.getCapabilityClient(getApplication<Application>()) }
     // Live "is the phone app there?" — re-query reachability whenever the Data Layer reports the
@@ -55,14 +64,18 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     val uiState: StateFlow<WearUiState> =
-        combine(pushGranted, pushDenied, link, TransferSession.state, homeFace) { granted, denied, l, receive, home ->
+        combine(
+            pushGranted, pushDenied, link, TransferSession.state,
+            // Fold the two Home-related flows into one so the outer combine stays at 5 typed args.
+            combine(homeFace, setByHandHint) { face, hint -> face to hint },
+        ) { granted, denied, l, receive, home ->
             WearUiState(
                 supported = supported,
                 pushGranted = granted,
                 pushPermanentlyDenied = denied,
                 link = l,
-                homeFaceName = home.name,
-                homePreview = home.preview,
+                home = home.first,
+                setByHandHint = home.second,
                 receive = receive,
             )
         }.stateIn(
@@ -90,11 +103,27 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
         super.onCleared()
     }
 
-    /** Re-read permission + connection + last-face state (call from Activity onResume). */
+    /** Re-read permission + connection + the GENUINE installed/active face state (call from onResume). */
     fun refresh() {
         pushGranted.value = repo.hasPushPermission()
+        setByHandHint.value = false // a fresh glance shouldn't carry a stale "set it by hand" hint
         viewModelScope.launch { updateLink() }
         viewModelScope.launch { loadHome() }
+    }
+
+    /**
+     * Home "Set as your face" for an installed-but-inactive face: attempt the unattended set-active.
+     * On success Home flips to ACTIVE; if the platform refuses (budget spent / permission missing) we
+     * surface the manual long-press hint instead of leaving a dead button. Setting active is a LOCAL
+     * watch op, so this works even when the phone is unreachable.
+     */
+    fun setInstalledFaceActive() {
+        viewModelScope.launch {
+            val ok = repo.setActive()
+            if (ok) store.setActiveApiUsed(true)
+            loadHome()                 // refresh installed/active state first...
+            setByHandHint.value = !ok  // ...then set the hint so loadHome can't clear it
+        }
     }
 
     fun onPushPermissionResult(granted: Boolean) {
@@ -128,12 +157,28 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
         refresh()
     }
 
+    /**
+     * Reflect the GENUINE WFP slot state, not the last-pushed cache: none installed / installed-active
+     * / installed-inactive. A friendly name + cached preview are used ONLY when the stored package
+     * matches the package WFP currently reports installed; otherwise the name is derived from the
+     * package and the preview falls back to the dial mark — so Home never claims a face that isn't there.
+     */
     private suspend fun loadHome() {
-        homeFace.value = HomeFace(
-            name = store.lastFaceName.first(),
-            preview = FacePreviewExtractor.loadCached(getApplication()),
-        )
+        val snapshot = repo.installedState()
+        val installedPkg = snapshot.installedPackages.firstOrNull()
+        homeFace.value = if (installedPkg == null) {
+            HomeFaceState.None
+        } else {
+            val matchesCache = store.lastFacePackage.first() == installedPkg
+            val name = (if (matchesCache) store.lastFaceName.first() else null) ?: deriveFaceName(installedPkg)
+            val preview = if (matchesCache) FacePreviewExtractor.loadCached(getApplication()) else null
+            HomeFaceState.Installed(name = name, preview = preview, active = snapshot.activePackage == installedPkg)
+        }
     }
+
+    /** Fallback display name from a WFP package (com.dialed.app.watchfacepush.<series>.<face>). */
+    private fun deriveFaceName(pkg: String): String =
+        pkg.substringAfterLast('.').replaceFirstChar { it.uppercase() }
 
     /**
      * "Connected" means the Dialed PHONE APP is reachable — a node that advertises
@@ -162,8 +207,6 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
         }
         link.value = WatchLink.UNREACHABLE
     }
-
-    private data class HomeFace(val name: String?, val preview: Bitmap?)
 
     private companion object {
         const val REACH_ATTEMPTS = 3       // reachability probes before declaring UNREACHABLE

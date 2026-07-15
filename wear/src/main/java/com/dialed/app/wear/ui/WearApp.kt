@@ -47,7 +47,7 @@ fun WearApp(
                     onOpenSettings = onOpenSettings,
                 )
 
-            else -> HomeScreen(state)
+            else -> HomeScreen(state, onSetActive = viewModel::setInstalledFaceActive)
         }
     }
 }

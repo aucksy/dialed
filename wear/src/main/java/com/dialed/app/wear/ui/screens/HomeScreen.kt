@@ -1,5 +1,9 @@
 package com.dialed.app.wear.ui.screens
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,13 +14,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.OpenOnPhoneDialog
 import androidx.wear.compose.material3.Text
+import androidx.wear.remote.interactions.RemoteActivityHelper
 import com.dialed.app.wear.HomeFaceState
 import com.dialed.app.wear.WearUiState
+import com.dialed.app.wear.common.WearConstants
 import com.dialed.app.wear.ui.components.ConnectionStatus
 import com.dialed.app.wear.ui.components.DialMark
 import com.dialed.app.wear.ui.components.DialedEdgeButton
@@ -41,9 +49,16 @@ import com.dialed.app.wear.ui.theme.DialedWearColors
  */
 @Composable
 fun HomeScreen(state: WearUiState, onSetActive: () -> Unit) {
+    val context = LocalContext.current
+    val remoteHelper = remember { RemoteActivityHelper(context) }
     var showOpenOnPhone by remember { mutableStateOf(false) }
     val home = state.home
     val reachable = state.link != WatchLink.UNREACHABLE
+    // Actually launch the phone app; drop the "check your phone" confirmation only on a real failure.
+    val openOnPhone: () -> Unit = {
+        showOpenOnPhone = true
+        openDialedOnPhone(context, remoteHelper) { ok -> if (!ok) showOpenOnPhone = false }
+    }
     // One EdgeButton per screen. An installed-but-inactive face makes SETTING it the primary action
     // (local, works offline); otherwise the edge points back to the phone, and only when reachable.
     val inactiveFace = home is HomeFaceState.Installed && !home.active
@@ -54,7 +69,7 @@ fun HomeScreen(state: WearUiState, onSetActive: () -> Unit) {
                 inactiveFace -> DialedEdgeButton(text = "Set as your face", onClick = onSetActive, filled = true)
                 reachable -> DialedEdgeButton(
                     text = if (home is HomeFaceState.Installed) "Browse on phone" else "Open on phone",
-                    onClick = { showOpenOnPhone = true },
+                    onClick = openOnPhone,
                     filled = false,
                 )
                 // Unreachable + no local action → no edge button (reconnection is automatic).
@@ -137,3 +152,40 @@ fun HomeScreen(state: WearUiState, onSetActive: () -> Unit) {
         curvedText = null,
     )
 }
+
+private const val OPEN_ON_PHONE_TAG = "DialedWearHome"
+
+/**
+ * Actually open the Dialed app on the phone. RemoteActivityHelper hands a VIEW intent to the Wear
+ * companion, which IS privileged to launch it on the phone — a plain Data-Layer message + startActivity
+ * is blocked by background-activity-launch rules, so this is the only reliable path. The phone's
+ * MainActivity resolves [WearConstants.PHONE_DEEP_LINK] (its VIEW/BROWSABLE intent-filter). [onResult]
+ * reports false only on a genuine dispatch failure, so the caller can drop a false "check your phone".
+ */
+private fun openDialedOnPhone(
+    context: Context,
+    remoteHelper: RemoteActivityHelper,
+    onResult: (Boolean) -> Unit,
+) {
+    val intent = Intent(Intent.ACTION_VIEW)
+        .addCategory(Intent.CATEGORY_BROWSABLE)
+        .setData(Uri.parse(WearConstants.PHONE_DEEP_LINK))
+    val future = try {
+        remoteHelper.startRemoteActivity(intent, null)
+    } catch (e: Exception) {
+        Log.w(OPEN_ON_PHONE_TAG, "startRemoteActivity threw", e)
+        onResult(false)
+        return
+    }
+    future.addListener({
+        val ok = try {
+            future.get()
+            true
+        } catch (e: Exception) {
+            Log.w(OPEN_ON_PHONE_TAG, "open-on-phone failed", e)
+            false
+        }
+        onResult(ok)
+    }, ContextCompat.getMainExecutor(context))
+}
+

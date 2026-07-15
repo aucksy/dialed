@@ -17,6 +17,8 @@ playServicesWearable = "18.2.0"
 coroutinesPlayServices = "1.9.0"
 wearComposeMaterial3 = "1.6.1"
 wearCompose = "1.6.1"
+# 1.2.0 routes startRemoteActivity through the Wear 6 platform API (our target).
+wearRemoteInteractions = "1.2.0"
 watchfacePush = "1.0.0"
 # validator-push CLI used only in CI (not a Gradle dep). Pin in .github/workflows/build.yml.
 # validatorPushCli = "1.0.0-alpha10"
@@ -45,6 +47,7 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 wear-compose-material3 = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "wearComposeMaterial3" }
 wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "wearCompose" }
 wear-compose-ui-tooling = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "wearCompose" }
+wear-remote-interactions = { group = "androidx.wear", name = "wear-remote-interactions", version.ref = "wearRemoteInteractions" }
 watchface-push = { group = "androidx.wear.watchfacepush", name = "watchfacepush", version.ref = "watchfacePush" }
 
 [plugins]

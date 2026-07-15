@@ -21,6 +21,15 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Deep link so the Wear app's "Open on phone" (RemoteActivityHelper) can bring Dialed
+                 to the foreground. The watch sends VIEW dialed://open; this filter makes MainActivity
+                 resolve it. Contract mirrored in :wear (WearConstants.PHONE_DEEP_LINK). -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="dialed" android:host="open" />
+            </intent-filter>
         </activity>
     </application>
 </manifest>

@@ -41,6 +41,14 @@ object WearConstants {
     /** Install permission required to push faces at all. */
     const val PERMISSION_PUSH = "com.google.wear.permission.PUSH_WATCH_FACES"
 
+    /**
+     * Deep link the watch's "Open on phone" fires via RemoteActivityHelper to bring the Dialed PHONE
+     * app to the foreground. MUST match the phone MainActivity's VIEW intent-filter (app manifest:
+     * scheme="dialed" host="open"). RemoteActivityHelper is the only BAL-safe way to launch on the
+     * phone — a Data-Layer message + startActivity is blocked by background-activity-launch rules.
+     */
+    const val PHONE_DEEP_LINK = "dialed://open"
+
     const val SETUP_TIMEOUT_MS = 60_000L
     const val TRANSFER_TIMEOUT_MS = 60_000L
 

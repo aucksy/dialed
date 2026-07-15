@@ -17,8 +17,8 @@ android {
         applicationId = "com.dialed.app"
         minSdk = 33          // WFP itself needs API 36; gated at runtime via isSupported().
         targetSdk = 36
-        versionCode = 18
-        versionName = "0.17.0"
+        versionCode = 19
+        versionName = "0.18.0"
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.watchface.push)
     implementation(libs.play.services.wearable)
     implementation(libs.coroutines.play.services)
+    implementation(libs.wear.remote.interactions) // RemoteActivityHelper: actually open the phone app
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.wear.compose.ui.tooling)

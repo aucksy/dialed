@@ -10,7 +10,9 @@ import androidx.wear.watchfacepush.WatchFacePushManagerFactory
 import com.dialed.app.wear.common.WatchFaceActivationStrategy
 import com.dialed.app.wear.common.WatchFaceUninstallResult
 import com.dialed.app.wear.common.WearConstants
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * Thin wrapper over androidx.wear.watchfacepush 1.0.0 (the Kotlin suspend API — NOT the
@@ -33,21 +35,31 @@ class WatchFacePushRepository(private val context: Context) {
      * exception that escapes to the listener service and surfaces as a false "Interrupted".
      */
     suspend fun installOrUpdate(apkFd: ParcelFileDescriptor, token: String): Boolean = try {
-        val wfp = manager()
-        val response = wfp.listWatchFaces()
-        if (response.remainingSlotCount > 0) {
-            wfp.addWatchFace(apkFd, token)
-        } else {
-            val slotId = response.installedWatchFaceDetails.first().slotId
-            wfp.updateWatchFace(slotId, apkFd, token)
+        withTimeoutOrNull(INSTALL_TIMEOUT_MS) {
+            val wfp = manager()
+            val response = wfp.listWatchFaces()
+            if (response.remainingSlotCount > 0) {
+                wfp.addWatchFace(apkFd, token)
+            } else {
+                val slotId = response.installedWatchFaceDetails.first().slotId
+                wfp.updateWatchFace(slotId, apkFd, token)
+            }
+            true
+        } ?: run {
+            // A wedged Watch-Face-Push service must not hang the receive coroutine forever (that
+            // leaks the single-transfer lock -> every later push replies BUSY). Time out to a clean
+            // false so the listener finalizes FAILED and releases the lock.
+            Log.w(TAG, "installOrUpdate timed out after ${INSTALL_TIMEOUT_MS}ms")
+            false
         }
-        true
     } catch (e: WatchFacePushManager.AddWatchFaceException) {
         Log.w(TAG, "addWatchFace failed: ${e.message}", e)
         false
     } catch (e: WatchFacePushManager.UpdateWatchFaceException) {
         Log.w(TAG, "updateWatchFace failed: ${e.message}", e)
         false
+    } catch (e: CancellationException) {
+        throw e // never swallow structured-concurrency / timeout cancellation
     } catch (e: Exception) {
         // ReceiverConnectionException (cold bind), NoSuchElementException, unsupported-factory, etc.
         Log.w(TAG, "installOrUpdate unexpected ${e.javaClass.simpleName}: ${e.message}", e)
@@ -61,13 +73,18 @@ class WatchFacePushRepository(private val context: Context) {
      * expected "first of the day" refusal. Returns true only on a real switch; never throws.
      */
     suspend fun setActive(): Boolean = try {
-        val wfp = manager()
-        val slotId = wfp.listWatchFaces().installedWatchFaceDetails.firstOrNull()?.slotId
-        if (slotId == null) {
+        withTimeoutOrNull(SET_ACTIVE_TIMEOUT_MS) {
+            val wfp = manager()
+            val slotId = wfp.listWatchFaces().installedWatchFaceDetails.firstOrNull()?.slotId
+            if (slotId == null) {
+                false
+            } else {
+                wfp.setWatchFaceAsActive(slotId)
+                true
+            }
+        } ?: run {
+            Log.w(TAG, "setActive timed out after ${SET_ACTIVE_TIMEOUT_MS}ms")
             false
-        } else {
-            wfp.setWatchFaceAsActive(slotId)
-            true
         }
     } catch (e: WatchFacePushManager.SetWatchFaceAsActiveException) {
         // Expected when the platform's unattended budget is exhausted (e.g. re-seizing from a foreign
@@ -75,14 +92,20 @@ class WatchFacePushRepository(private val context: Context) {
         // whether the budget ever resets. The caller falls back to teaching the manual gesture.
         Log.w(TAG, "setWatchFaceAsActive refused (unattended budget?): ${e.message}", e)
         false
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         Log.w(TAG, "setActive unexpected ${e.javaClass.simpleName}: ${e.message}", e)
         false
     }
 
     suspend fun hasActiveWatchFace(): Boolean = try {
-        val wfp = manager()
-        wfp.listWatchFaces().installedWatchFaceDetails.any { wfp.isWatchFaceActive(it.packageName) }
+        withTimeoutOrNull(QUERY_TIMEOUT_MS) {
+            val wfp = manager()
+            wfp.listWatchFaces().installedWatchFaceDetails.any { wfp.isWatchFaceActive(it.packageName) }
+        } ?: false // cold/wedged service -> assume not-owned (never block the pre-install strategy)
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         false
     }
@@ -99,11 +122,15 @@ class WatchFacePushRepository(private val context: Context) {
      * Guarded — a WFP/cold-bind failure returns an empty snapshot, never throws.
      */
     suspend fun installedState(): InstalledState = try {
-        val wfp = manager()
-        val details = wfp.listWatchFaces().installedWatchFaceDetails
-        val installed = details.map { it.packageName }
-        val active = details.firstOrNull { wfp.isWatchFaceActive(it.packageName) }?.packageName
-        InstalledState(installed, active)
+        withTimeoutOrNull(QUERY_TIMEOUT_MS) {
+            val wfp = manager()
+            val details = wfp.listWatchFaces().installedWatchFaceDetails
+            val installed = details.map { it.packageName }
+            val active = details.firstOrNull { wfp.isWatchFaceActive(it.packageName) }?.packageName
+            InstalledState(installed, active)
+        } ?: InstalledState(emptyList(), null)
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         Log.w(TAG, "installedState unexpected ${e.javaClass.simpleName}: ${e.message}", e)
         InstalledState(emptyList(), null)
@@ -159,6 +186,15 @@ class WatchFacePushRepository(private val context: Context) {
 
     private companion object {
         const val TAG = "DialedWfpRepo"
+
+        // Hard backstops on every WFP binder call. A cold/wedged Watch-Face-Push service must never
+        // hang the receive coroutine, because that leaks the single-transfer lock and every later
+        // push then replies BUSY ("your watch is busy") until the app is force-stopped. Normal ops
+        // finish in well under a second; these only fire on a stuck service. Kept below the phone's
+        // PHONE_FINALIZE_TIMEOUT (120s) so the phone still gets a finalize even in the worst case.
+        const val INSTALL_TIMEOUT_MS = 30_000L
+        const val SET_ACTIVE_TIMEOUT_MS = 12_000L
+        const val QUERY_TIMEOUT_MS = 8_000L
     }
 }
 

@@ -87,10 +87,10 @@ private fun Celebration(state: ReceiveState.Success, onExit: () -> Unit) {
             launch { sweep.animateTo(1f, tween(700, easing = FastOutSlowInEasing)) }
             rise.animateTo(1f, tween(250))
         }
-        // The face is genuinely active now. Linger just long enough for the sheen + "Dialed in." to
-        // register, then leave Dialed entirely — the newly-applied face IS the confirmation (spec W2
-        // "auto-exit"). We no longer return to Dialed's own Home.
-        delay(1500)
+        // The face is genuinely active now. Hold long enough for "Dialed in." to clearly read as the
+        // completed-install confirmation, then leave Dialed entirely so the wrist lands on the newly-
+        // applied face (spec W2 "auto-exit"). We no longer return to Dialed's own Home.
+        delay(2000)
         onExit()
     }
     DialedScreen(showTimeText = false) {

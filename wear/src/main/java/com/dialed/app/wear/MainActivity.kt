@@ -53,11 +53,12 @@ class MainActivity : ComponentActivity() {
                     onSetActive = { requestSetActivePermission.launch(WearConstants.PERMISSION_SET_ACTIVE) },
                     onOpenSettings = ::openAppSettings,
                     onExit = ::finish,
-                    // Concierge is done → clear the finished transfer (so it can't re-show) and leave
-                    // Dialed, so the wrist lands on the watch face (the just-applied one after a success).
+                    // Concierge is done → leave Dialed so the wrist lands on the watch face (the
+                    // just-applied one after a success). finishAndRemoveTask() returns straight to the
+                    // face; clearing the transfer AFTER teardown starts avoids a stale Home flash.
                     onExitToWatchFace = {
-                        viewModel.dismissReceive()
-                        finish()
+                        finishAndRemoveTask()
+                        TransferSession.clear()
                     },
                 )
             }

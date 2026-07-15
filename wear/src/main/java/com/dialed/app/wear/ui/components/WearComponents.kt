@@ -6,6 +6,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -77,6 +79,32 @@ private fun DialedScreenBody(
         verticalArrangement = Arrangement.Center,
         content = content,
     )
+}
+
+/**
+ * Hero-screen shell for the absolute/fractional layouts in the design spec (Home 1a/1b/1c). Unlike
+ * [DialedScreen] this gives a FULL-SCREEN [BoxWithConstraints] — no centered Column, and it does NOT
+ * apply the scaffold's content-padding. The EdgeButton overlays the bottom bezel (design: bottom:-18px,
+ * reserves no content space), and children anchor to fractions of `maxHeight` (status .14 · face .245 ·
+ * caption .656 …) so the face reads as the star and nothing clips. TimeText sits at the very top (~5%),
+ * above the .14 status. Same one-EdgeButton rule.
+ */
+@Composable
+fun DialedHeroScreen(
+    edgeButton: (@Composable BoxScope.() -> Unit)? = null,
+    content: @Composable BoxWithConstraintsScope.() -> Unit,
+) {
+    val scrollState = rememberScrollState()
+    if (edgeButton != null) {
+        ScreenScaffold(
+            scrollInfoProvider = ScrollInfoProvider(scrollState),
+            edgeButton = edgeButton,
+        ) { _ -> BoxWithConstraints(Modifier.fillMaxSize(), content = content) }
+    } else {
+        ScreenScaffold(
+            scrollInfoProvider = ScrollInfoProvider(scrollState),
+        ) { _ -> BoxWithConstraints(Modifier.fillMaxSize(), content = content) }
+    }
 }
 
 /** One filled (gold) or tonal EdgeButton — the single edge action per screen. */

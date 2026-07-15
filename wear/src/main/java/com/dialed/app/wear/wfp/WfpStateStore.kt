@@ -13,9 +13,13 @@ import kotlinx.coroutines.flow.map
 private val Context.wfpDataStore: DataStore<Preferences> by preferencesDataStore(name = "dialed_wfp")
 
 /**
- * Durable Watch-Face-Push state. Two flags MUST survive process death:
- * - [setActiveApiUsed]: the set-active call is one-shot; re-calling risks ERROR_MAXIMUM_ATTEMPTS.
- * - [permissionDenied]: SET_PUSHED_WATCH_FACE_AS_ACTIVE can only be requested once.
+ * Durable Watch-Face-Push state that survives process death:
+ * - [permissionDenied]: SET_PUSHED_WATCH_FACE_AS_ACTIVE can only be requested once — after a denial
+ *   we must route to Settings instead of re-prompting.
+ * - [setActiveApiUsed]: a DIAGNOSTIC record that the unattended set-active has been exercised at
+ *   least once. It no longer GATES the activation decision — the platform's own
+ *   ERROR_MAXIMUM_ATTEMPTS is the authority (a local latch could forfeit an activation the platform
+ *   would still grant), so we always attempt and record the outcome here.
  * Plus [lastFaceName] so Home can show the face that was last pushed.
  */
 class WfpStateStore(private val context: Context) {

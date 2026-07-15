@@ -54,7 +54,12 @@ class WatchFacePushRepository(private val context: Context) {
         false
     }
 
-    /** Set the pushed face active with no user action (permission-gated, one-shot). Never throws. */
+    /**
+     * Set the pushed face active with no user action. The unattended set-active allowance is a
+     * PLATFORM budget — this throws [WatchFacePushManager.SetWatchFaceAsActiveException]
+     * (ERROR_MAXIMUM_ATTEMPTS) once it's spent and the live face is another app's, which is the
+     * expected "first of the day" refusal. Returns true only on a real switch; never throws.
+     */
     suspend fun setActive(): Boolean = try {
         val wfp = manager()
         val slotId = wfp.listWatchFaces().installedWatchFaceDetails.firstOrNull()?.slotId
@@ -65,7 +70,10 @@ class WatchFacePushRepository(private val context: Context) {
             true
         }
     } catch (e: WatchFacePushManager.SetWatchFaceAsActiveException) {
-        Log.w(TAG, "setWatchFaceAsActive failed: ${e.message}", e)
+        // Expected when the platform's unattended budget is exhausted (e.g. re-seizing from a foreign
+        // active face). Logged verbatim so an on-wrist test can read the exact code and confirm
+        // whether the budget ever resets. The caller falls back to teaching the manual gesture.
+        Log.w(TAG, "setWatchFaceAsActive refused (unattended budget?): ${e.message}", e)
         false
     } catch (e: Exception) {
         Log.w(TAG, "setActive unexpected ${e.javaClass.simpleName}: ${e.message}", e)
@@ -147,7 +155,6 @@ class WatchFacePushRepository(private val context: Context) {
             hasActiveWatchFace = hasActiveWatchFace(),
             hasGrantedSetActivePermission = hasSetActivePermission(),
             canRequestSetActivePermission = !store.permissionDenied.first(),
-            hasUsedSetActiveApi = store.setActiveApiUsed.first(),
         )
 
     private companion object {

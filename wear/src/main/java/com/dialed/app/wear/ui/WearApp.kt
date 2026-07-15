@@ -23,6 +23,7 @@ fun WearApp(
     onSetActive: () -> Unit,
     onOpenSettings: () -> Unit,
     onExit: () -> Unit,
+    onExitToWatchFace: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val receive = state.receive
@@ -37,7 +38,7 @@ fun WearApp(
                 ReceiveScreen(receive, onDismiss = viewModel::dismissReceive)
 
             receive is ReceiveState.Success ->
-                ConciergeScreen(receive, onSetActive = onSetActive, onDismiss = viewModel::dismissReceive)
+                ConciergeScreen(receive, onSetActive = onSetActive, onExitToWatchFace = onExitToWatchFace)
 
             !state.pushGranted ->
                 FirstRunScreen(

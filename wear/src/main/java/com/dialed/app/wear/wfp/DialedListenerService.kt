@@ -164,13 +164,21 @@ class DialedListenerService : WearableListenerService() {
                 if (pending.strategy == WatchFaceActivationStrategy.CALL_SET_ACTIVE_NO_USER_ACTION) {
                     runCatching {
                         if (repo.setActive()) {
-                            store.setActiveApiUsed(true)
+                            store.setActiveApiUsed(true) // diagnostic record; no longer gates the decision
                             nowActive = true
                         }
                     }.onFailure { Log.w(TAG, "setActive threw (install already ok) t=${request.transferId}", it) }
                 }
 
-                val uiStrategy = if (nowActive) WatchFaceActivationStrategy.NO_ACTION_NEEDED else pending.strategy
+                // Map to the UI the user actually earned. Only a genuinely-active face shows the
+                // "Dialed in." celebration; an attempted-but-REFUSED unattended set (platform budget
+                // spent) must degrade to the manual-gesture coach, never a false "applied".
+                val uiStrategy = when {
+                    nowActive -> WatchFaceActivationStrategy.NO_ACTION_NEEDED
+                    pending.strategy == WatchFaceActivationStrategy.CALL_SET_ACTIVE_NO_USER_ACTION ->
+                        WatchFaceActivationStrategy.LONG_PRESS_TO_SET
+                    else -> pending.strategy
+                }
                 finalResult = if (nowActive) {
                     WatchFaceInstallResult.INSTALLED_ACTIVE
                 } else {

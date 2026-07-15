@@ -42,33 +42,39 @@ import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.sin
 
-/** Activation concierge: one tap when we can, else teach the gesture (spec D, motion W2/W3). */
+/**
+ * Activation concierge: one tap when we can, else teach the gesture (spec D, motion W2/W3).
+ * Every terminal state exits Dialed to the watch face ([onExitToWatchFace]) — after a successful
+ * apply the wrist lands on the freshly-applied face; after coaching it lands where the user
+ * long-presses to pick it. Only a genuinely-active face ([NO_ACTION_NEEDED]) shows the celebration.
+ */
 @Composable
 fun ConciergeScreen(
     state: ReceiveState.Success,
     onSetActive: () -> Unit,
-    onDismiss: () -> Unit,
+    onExitToWatchFace: () -> Unit,
 ) {
     when (state.strategy) {
-        WatchFaceActivationStrategy.NO_ACTION_NEEDED,
-        WatchFaceActivationStrategy.CALL_SET_ACTIVE_NO_USER_ACTION,
-        -> Celebration(state, onDismiss)
+        WatchFaceActivationStrategy.NO_ACTION_NEEDED -> Celebration(state, onExitToWatchFace)
 
-        WatchFaceActivationStrategy.FOLLOW_PROMPT_ON_WATCH -> OneTapApply(state, onSetActive)
+        WatchFaceActivationStrategy.CALL_SET_ACTIVE_NO_USER_ACTION,
+        WatchFaceActivationStrategy.FOLLOW_PROMPT_ON_WATCH,
+        -> OneTapApply(state, onSetActive)
 
         WatchFaceActivationStrategy.LONG_PRESS_TO_SET,
         WatchFaceActivationStrategy.GO_TO_WATCH_SETTINGS,
-        -> GestureCoaching(onDismiss)
+        -> GestureCoaching(onExitToWatchFace)
     }
 }
 
 /**
  * 1l / motion W2 — the branded apply landing that covers the platform's (distorted) apply moment:
  * the face lands in a perfect circle, a gold conic sheen sweeps the ring once, "Dialed in." rises,
- * Confirm haptic, auto-exit. Reduced motion → static (sheen/rise snap to rest).
+ * Confirm haptic, then auto-EXIT Dialed so the wrist lands on the freshly-applied watch face.
+ * Reduced motion → static (sheen/rise snap to rest).
  */
 @Composable
-private fun Celebration(state: ReceiveState.Success, onDismiss: () -> Unit) {
+private fun Celebration(state: ReceiveState.Success, onExit: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     val reduced = isReducedMotionWear()
     val sweep = remember { Animatable(0f) }  // 0..1 sheen travel around the ring
@@ -81,10 +87,11 @@ private fun Celebration(state: ReceiveState.Success, onDismiss: () -> Unit) {
             launch { sweep.animateTo(1f, tween(700, easing = FastOutSlowInEasing)) }
             rise.animateTo(1f, tween(250))
         }
-        // Linger long enough to actually register on the wrist (this returns to Dialed's Home, not
-        // the live face, so vanishing too fast reads as "no confirmation").
-        delay(2600)
-        onDismiss()
+        // The face is genuinely active now. Linger just long enough for the sheen + "Dialed in." to
+        // register, then leave Dialed entirely — the newly-applied face IS the confirmation (spec W2
+        // "auto-exit"). We no longer return to Dialed's own Home.
+        delay(1500)
+        onExit()
     }
     DialedScreen(showTimeText = false) {
         Box(contentAlignment = Alignment.Center) {
@@ -152,11 +159,12 @@ private fun OneTapApply(state: ReceiveState.Success, onSetActive: () -> Unit) {
     }
 }
 
-/** 1m — a wink, not a manual (reduced-motion 3-step form; spec W3 fallback). */
+/** 1m — a wink, not a manual (reduced-motion 3-step form; spec W3 fallback). "Got it" leaves Dialed
+ *  for the watch face, which is exactly where the long-press gesture is performed. */
 @Composable
-private fun GestureCoaching(onDismiss: () -> Unit) {
+private fun GestureCoaching(onExit: () -> Unit) {
     DialedScreen(
-        edgeButton = { DialedEdgeButton("Got it", onDismiss, filled = false) },
+        edgeButton = { DialedEdgeButton("Got it", onExit, filled = false) },
     ) {
         Text(
             "Or set it by hand",

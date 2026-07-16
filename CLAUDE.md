@@ -114,9 +114,19 @@ Edit → compile-review → **adversarial logic review** → fix → commit → 
   (no wrap, no scroll) and the series count went 5 → 10 (11 chips ≈ 900dp against ~312dp usable), so half the
   store would have been unfilterable. Made horizontally scrollable as a stopgap; **Phase 2D's collection cards
   replace this surface entirely.**
-- **Size:** family B is ~6× heavier per face than family A (5 baked themes of full-canvas art). It dominates the
-  phone APK — CI now prints `assets/faces` and both APK sizes to the job summary. If this needs to come down,
-  the lever is re-baking family B's PNGs, not dropping faces.
+- **Size — and the delivery model.** Family B is ~6× heavier per face than family A (5 baked themes of
+  full-canvas art), so 43 faces = **~35 MB of assets → a ~70 MB phone APK**. CI prints both to the job summary.
+  ⚠ **The ceiling is Play's 200 MB compressed AAB base-module limit, NOT 100 MB** — 100 MB is the legacy raw-APK
+  limit and does not apply, because Play requires an AAB for new apps (the Phase 4 lane). So **70 MB ≈ 35% of the
+  real ceiling: nothing forces a delivery change now.** The trigger is scale — the reserve pool is 149 more designs
+  (see docs/CATALOG-AUDIT.md §13), and the whole 192 would breach 200 MB.
+  **When it does bite, the answer is Play Asset Delivery / Feature Delivery (per-collection packs — which is the
+  billing model anyway), or a CDN — NOT a backend database.** Faces are static files; the catalog is already a
+  static JSON (plan D3). ⭐ **The codebase is already shaped for this:** `FaceAssetProvider` (WatchConnection.kt:60)
+  is the ONLY thing that touches `assets/` — it hands the push path `stageApk() -> File` + `readToken() -> String`,
+  and everything downstream (PFD, Data-Layer channel, watch-side WFP install) consumes a file + a token and cannot
+  tell where they came from. Swapping bundled → downloaded is a reimplementation of those two methods plus a cache;
+  the hard-won wear bridge is untouched. Keep that seam intact.
 
 ## Known deviations / TODO
 - **Billing is a debug-only stub.** `EntitlementStore` is one boolean; debug builds default UNLOCKED; the paywall/restore buttons are `BuildConfig.DEBUG`-gated no-ops in release. Real per-collection Play Billing = plan Phase 3; the entitlement schema becomes a per-collection set in Phase 2.

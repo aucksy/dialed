@@ -144,16 +144,19 @@ jobs:
             echo "| ${NAME}-wear.apk | $(du -h "out/${NAME}-wear.apk" | cut -f1) |"
           } >> "$GITHUB_STEP_SUMMARY"
 
-          # Play's APK ceiling is 100 MB. At 43 faces the bundled art already dominates this APK, and
-          # plan Phase 2F/7 adds more — warn (don't fail: sideloaded debug builds have no such limit)
-          # so the ceiling is visible in the run that crosses it, not discovered at store submission.
+          # The real ceiling is Play's **200 MB** compressed download limit for an AAB's base module
+          # (support.google.com/googleplay/android-developer/answer/9859372). 100 MB is the LEGACY raw-APK
+          # limit and does NOT apply — Play requires an AAB for new apps, which is the Phase 4 lane. This
+          # debug APK is the closest proxy CI has for that base module, so track it against 200, not 100.
+          # Above 200 MB the fix is Play Asset/Feature Delivery (per-collection packs — which is the
+          # billing model anyway), not a backend. Warn only: a sideloaded debug APK has no limit at all.
           bytes=$(stat -c%s "out/${NAME}-phone.apk")
           mb=$((bytes / 1024 / 1024))
-          echo "phone APK = ${mb} MB (Play APK ceiling 100 MB)"
-          if [ "$mb" -ge 85 ]; then
-            echo "::warning::phone APK is ${mb} MB — approaching Play's 100 MB APK limit. Shrinking the Collection-3 art or moving to per-collection on-demand delivery is now a store blocker, not a nice-to-have."
+          echo "phone APK = ${mb} MB (Play AAB base-module ceiling 200 MB; 43 faces ~= 70 MB)"
+          if [ "$mb" -ge 170 ]; then
+            echo "::warning::phone APK is ${mb} MB — approaching Play's 200 MB AAB base-module limit. Move the collections to Play Asset Delivery packs before adding more faces."
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "> ⚠️ phone APK ${mb} MB — approaching Play's 100 MB APK ceiling." >> "$GITHUB_STEP_SUMMARY"
+            echo "> ⚠️ phone APK ${mb} MB — approaching Play's 200 MB AAB base-module ceiling." >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - uses: actions/upload-artifact@v4

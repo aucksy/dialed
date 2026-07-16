@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meridian Sector</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Blueprint</string>
+    <string name="theme_1">Ink Sector</string>
+    <string name="theme_2">Sepia Chart</string>
+    <string name="theme_3">Nord</string>
+    <string name="theme_4">Racing Green</string>
+    <string name="slot_1">Lower sector text</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

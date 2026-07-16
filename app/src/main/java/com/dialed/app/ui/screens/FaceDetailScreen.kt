@@ -81,8 +81,8 @@ fun FaceDetailScreen(
                     else -> DialStatus.NONE
                 },
                 // A generic gold seconds hand misrepresents each face (owner feedback): removed.
-                // The REAL per-face second-hand animation lands in a follow-up (only 7/18 faces
-                // are analog; the rest are digital/sprite/arc and stay static).
+                // The REAL per-face second-hand animation lands in a follow-up (plan Phase 2E) —
+                // only some faces are analog; the rest are digital/sprite/arc and stay static.
                 ticking = false,
             )
             Spacer(Modifier.height(28.dp))

@@ -35,7 +35,7 @@ table records what each of those tags shipped.
 
 ## Architecture
 - **`:app`** — phone storefront (Compose) + Data-Layer sender (`transport/WatchConnection.kt` = `WatchBridge`). CI bundles face APKs → `assets/faces/<key>.apk` + tokens → `assets/tokens/<key>.token` (gitignored, built fresh each run). Billing is still a **debug-only stub** — real Play Billing is plan Phase 3.
-- **`faces/`** — git submodule → github.com/aucksy/fablecollection (the 18-face library, one source of truth). ⚠ fablecollection also hosts Collection 3 (25 faces) — `tools/gen-facepacks.mjs` has an explicit `BUNDLED_FACES` allowlist so a submodule bump can't silently balloon the store 18→43.
+- **`faces/`** — git submodule → github.com/aucksy/fablecollection (the 43-face library, one source of truth). Two families: **A** = the original 18 (WFF v2 @ 480 canvas, colour swatch); **B** = Collection 3's 25 (WFF v1 @ 450, five baked themes, ~2.1 MB of art each vs family A's ~0.36 MB). `tools/gen-facepacks.mjs` keeps an explicit `BUNDLED_FACES` allowlist so a submodule bump can't silently change the store; CI re-runs the generator and fails on any drift from the committed output.
 - **`facepacks/<key>/`** — GENERATED per-face WFP packaging modules. `wff-res/` = a COPY of the submodule's res with `watchface.xml` patched to **bare resource names**; `build.gradle.kts` overrides applicationId. Regenerate with `node tools/gen-facepacks.mjs "<ABSOLUTE-REPO-ROOT>"` — **pass the root explicitly**, the space in "Dialed App" breaks the script's own path resolution.
 - **`:wear-common`** — shared phone↔watch protocol (`WearConstants`, dependency-free) + `WatchFaceActivationStrategy`. Wire enums/bytes are **ordinal/value-stable: append only**.
 - **`:wear`** — the WFP bridge + concierge UI (`wfp/` = repository, `DialedListenerService`, `TransferSession`, `WfpStateStore`, `FacePreviewExtractor`). **`:watchface`** (bundled default face) = plan Phase 5.
@@ -46,6 +46,15 @@ Google's validator rejected all 18 for two reasons; both fixed in `tools/gen-fac
 1. **`@drawable/` prefix** → memory-footprint "asset @drawable/X not found" (known bug google/watchface#52: `WatchFaceResourceCollector` looks up the literal `resource` attr against a map keyed by bare name). Fix: the generator copies each face's res into `facepacks/<key>/wff-res` and strips `@drawable/` → bare `resource="X"` (canonical WFF, renders identically).
 2. **stub `classes.dex`** → "files not allowed". Fix: facepack `isMinifyEnabled=true` (strips dex; KEEPS arsc resource names — path-shortening res/0I.png is harmless since the validator resolves by NAME) + packaging `excludes += "kotlin/**"` (AGP 9 built-in Kotlin bundles kotlin-stdlib metadata, also disallowed).
 Dead-ends ruled out: NOT density (nodpi is fine), NOT PNG-decode (ImageIO reads them).
+
+3. **Bare `displayName="theme_label"`** (v0.21.0) → the WATCH's face-customisation editor renders the
+   literal resource KEY ("theme_label", "slot_1") instead of the human label. Every Collection-3 face
+   writes bare names while defining the proper strings in `values/strings.xml`; family A correctly writes
+   `@string/cfg_theme`. Fix (`patchDisplayNames` in the generator): rewrite `displayName="x"` →
+   `@string/x` whenever the face defines string `x` — in the facepack COPY, never the submodule, exactly
+   like the `@drawable/` strip. ⚠ Note the asymmetry that makes this easy to get backwards: for
+   **`resource=`** (images) the bare name is canonical and `@drawable/` is the bug; for **`displayName=`**
+   (strings) the `@string/` reference is canonical and the bare name is the bug. Opposite directions.
 
 ## Local WFP validation loop (rebuild each session — scratchpad is temporary)
 1. Portable JDK17/JRE17: `curl -sL "https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jre/hotspot/normal/eclipse?project=jdk" -o jre17.zip` (JDK variant for `jshell`). Extract with PowerShell `Expand-Archive`. (Machine's default java is 8 = too old; validator needs class v61.)
@@ -81,14 +90,40 @@ Edit → compile-review → **adversarial logic review** → fix → commit → 
 - ✅ **Wear bridge + transport** — shipped and hardened on-wrist across v0.2.1 → v0.18.0: push-reporting, installed-state + uninstall, auto-apply reliability + exit-to-face (v0.15), WFP call timeouts / transfer-lock leak (v0.16), genuine Home state (v0.17), working "Open on phone" (v0.18).
 - ✅ **Face quality** — complication alignment (v0.4.0), smooth motion (v0.5.0/v0.6.0), canvas → 480 fleet-max (v0.8.0/v0.9.0), icon complication labels across 17 faces (v0.11–v0.12).
 - ✅ **v0.19.0 hygiene** (plan Phase 1) — release paywall can no longer grant a free unlock; push-job race + cancellation hygiene; uninstall errors surfaced; honest unsupported-watch path (`RESPONSE_UNSUPPORTED` + query sentinel); restored-detail crash guard; `singleTask`; 48dp targets; dead code/controls removed.
-- ⏭️ **Next: plan Phase 2** — collections IA + `config/catalog.json` + free faces. Then Billing (3), store (4), default face (5), living gallery (6), Collection 3 (7), wear polish (8).
+- ✅ **v0.21.0 = plan Phase 2C** — store 18 → **43** faces (Collection 3 bundled). M2 fixed: detail chips now derived from each face's real `<ComplicationSlot>`s. Home's filter row made scrollable (see below). CI gained a generator-drift gate, a 43/43 count gate, and asset/APK size logging.
+- ⏭️ **Next: plan Phase 2D** — collections IA + `config/catalog.json` + free faces + coming-soon tiles. (2B, colour parity, is still open and keeps the `v0.20.0` slot.) Then Billing (3), store (4), default face (5), living gallery (6), gap builds (2F), wear polish (8).
+
+## ⚠ Phase 2C findings that contradict the plan (read before re-attempting them)
+- **The "icon-label rollout to the 25" is a NO-OP — do not redo it.** 2C step 1 assumed the 25 needed the
+  v0.12.0 transform that replaced hardcoded `<Default>` labels with `[COMPLICATION.MONOCHROMATIC_IMAGE]`.
+  Verified against every file: the 18 icon-less faces have **no hardcoded label of any kind** — no `<Default>`,
+  no `[COMPLICATION.TITLE]`, no literal text inside *or* outside a `<Complication>` block, and no baked
+  `lbl_*` sprites (only Vakt-One has `ic_*`, and it already uses provider icons). They render `[COMPLICATION.TEXT]`
+  only, so they are **already swap-safe** — the "still says Steps" bug cannot occur. *Adding* icons would be a
+  redesign, not a transform: the slots are 34×26 – 64×26 (no room beside the value), and each would need a
+  tinted `PartImage` inserted into all five baked theme groups plus the dark group, per slot — against 450-canvas
+  art we'd also have to re-lay out. Audit §4 says leave the 25 alone; this agrees.
+- **The two Terra renames are SKIPPED — three independent sources say the current names are right.** The audit's
+  §6/§11-q6 silkscreen check *failed*: `TERRA SOLSTICE` and `TERRA / MERIDIAN LINE` are painted into the dial art
+  of every theme. The handoff spec (`faces/collection3-tools/spec/cat-c.js`) names them "Terra Solstice" /
+  "Terra Meridian Line", and each face's own on-watch label (`app_name`) says the same. Renaming them in the
+  storefront would contradict the watch on the wrist. Revisit only if the art is re-baked from spec.
+- **Terra-Compass still has the leaked design note** `COMPASS · ROSE IS STATIC` baked into its dial art
+  (`spec/cat-c.js:187`). Audit §11-q5, still an open owner call — it is a one-line spec edit + re-bake, not a hand edit.
+- **Home's filter row was already overflowing** and 2C would have made it unreachable: it was a plain `Row`
+  (no wrap, no scroll) and the series count went 5 → 10 (11 chips ≈ 900dp against ~312dp usable), so half the
+  store would have been unfilterable. Made horizontally scrollable as a stopgap; **Phase 2D's collection cards
+  replace this surface entirely.**
+- **Size:** family B is ~6× heavier per face than family A (5 baked themes of full-canvas art). It dominates the
+  phone APK — CI now prints `assets/faces` and both APK sizes to the job summary. If this needs to come down,
+  the lever is re-baking family B's PNGs, not dropping faces.
 
 ## Known deviations / TODO
 - **Billing is a debug-only stub.** `EntitlementStore` is one boolean; debug builds default UNLOCKED; the paywall/restore buttons are `BuildConfig.DEBUG`-gated no-ops in release. Real per-collection Play Billing = plan Phase 3; the entitlement schema becomes a per-collection set in Phase 2.
 - **Store readiness has not started** — CI ships debug-signed APKs only (no upload key, no AAB, no privacy policy, no listing). Plan Phase 4. ⚠ verify `com.dialed.app` is still free on Play FIRST: a collision forces a new applicationId, which re-mints every face token.
 - Instrument Sans not wired (metrics match; typeface pending — `ui-text-google-fonts` + certs); wear side uses the default typeface too.
 - `FaceDial` renders the real `preview.png` (static). The `ticking`/`rememberSecondsAngle` hook exists but is **currently unused** — it's the landing point for the real per-face animation (plan Phase 6 / `docs/research/R7`).
-- Detail "feature" chips are **series-level guesses** from `gen-facepacks.mjs` `SERIES_META`, not each face's real complication slots (plan Phase 2 fixes this at the generator).
+- ~~Detail "feature" chips are series-level guesses~~ — **fixed in v0.21.0 (M2)**: `gen-facepacks.mjs` `deriveFeatures()` reads each face's real `<ComplicationSlot>`s (default provider → chip, + slot count, + a derived Always-on). Note it counts **slots**, not `<Complication>` blocks — a slot carries one block per supported type (Arclight-Solstice = 5 slots / 10 blocks), so counting blocks would inflate every chip.
 - Watch receive progress is **indeterminate** (the Data Layer file transfer exposes no byte progress); the design's determinate % is not literally reproducible. The receive screen also shows a placeholder, not the incoming face (plan Phase 8).
 - Phone F2 shared-element / F3 transfer beats / F4 unlock sheen / F6 logo sweep are not built (plain crossfade + indeterminate bar today).
 - `DEFAULT_WATCHFACE_VALIDATION_TOKEN` meta-data intentionally omitted until the default face exists (plan Phase 5) — the placeholder comment sits in `wear/src/main/AndroidManifest.xml`.

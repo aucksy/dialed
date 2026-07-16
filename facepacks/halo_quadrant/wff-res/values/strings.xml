@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Halo Quadrant</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Broadsheet</string>
+    <string name="theme_1">Late Edition</string>
+    <string name="theme_2">Financial</string>
+    <string name="theme_3">Deep Field</string>
+    <string name="theme_4">Moss Ledger</string>
+    <string name="slot_1">Date zone</string>
+    <string name="slot_2">Figure - left</string>
+    <string name="slot_3">Figure - right</string>
+    <string name="cfg_gauges">Data gauges</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

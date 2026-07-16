@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meridian Calendrier</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Paper</string>
+    <string name="theme_1">Ledger Black</string>
+    <string name="theme_2">Archive Green</string>
+    <string name="theme_3">Dove</string>
+    <string name="theme_4">Tabac</string>
+    <string name="slot_1">Event line at 6</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

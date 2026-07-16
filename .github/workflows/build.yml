@@ -24,6 +24,29 @@ jobs:
         with:
           gradle-version: '9.4.1'
 
+      # facepacks/ and FaceCatalog.kt are GENERATED but committed (so the build itself needs no
+      # node). That means they can silently drift from BUNDLED_FACES if someone edits the list and
+      # forgets to re-run the generator — the build would happily ship the stale set. Re-run it and
+      # fail on any diff, so "43/43" is enforced rather than assumed. Verification only: no build
+      # step depends on node.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify generated facepacks + catalog are in sync
+        run: |
+          set -e
+          node tools/gen-facepacks.mjs "$PWD"
+          # --porcelain, not `git diff`: a face added to BUNDLED_FACES but never regenerated shows
+          # up as an UNTRACKED facepack dir + preview, which `git diff` does not report at all.
+          PATHS="facepacks app/src/main/java/com/dialed/app/catalog/FaceCatalog.kt app/src/main/res/drawable-nodpi"
+          drift=$(git status --porcelain -- $PATHS)
+          if [ -n "$drift" ]; then
+            echo "::error::generated files are stale — run: node tools/gen-facepacks.mjs \"<repo-root>\" and commit the result"
+            printf '%s\n' "$drift"
+            exit 1
+          fi
+          echo "generated output matches the committed tree ($(ls -d facepacks/*/ | wc -l) facepacks)"
+
       # Phase 0 — repackage every face to the WFP naming, signed with the faces key.
       # release + minify strips the (empty) classes.dex WFP forbids; res names stay intact.
       - name: Build all facepacks
@@ -63,8 +86,37 @@ jobs:
               fail=1
             fi
           done
-          echo "bundled $(ls "$FACES" 2>/dev/null | wc -l) faces + $(ls "$TOKENS" 2>/dev/null | wc -l) tokens"
           [ "$fail" -eq 0 ] || { echo "::error::one or more faces failed WFP validation"; exit 1; }
+
+          # Every facepack must have produced exactly one bundled apk + one token. Without this,
+          # a face that silently vanished from facepacks/ would ship as a smaller store, green.
+          # NB: `want` is only trustworthy because gen-facepacks.mjs hard-fails unless it emits one
+          # facepack per BUNDLED_FACES entry — otherwise this would be comparing facepacks/ to itself.
+          # Cross-check the catalog too, so the store, the modules and the assets must all agree.
+          want=$(ls -d facepacks/*/ | wc -l)
+          got_apk=$(ls "$FACES" | wc -l)
+          got_tok=$(ls "$TOKENS" | wc -l)
+          # `|| echo 0`: grep -c exits 1 on zero matches, which under set -e would abort here with a
+          # bare exit code instead of the explicit mismatch error below.
+          in_catalog=$(grep -c '^        Face(' app/src/main/java/com/dialed/app/catalog/FaceCatalog.kt || echo 0)
+          echo "bundled ${got_apk}/${want} faces + ${got_tok}/${want} tokens; catalog lists ${in_catalog}"
+          if [ "$got_apk" -ne "$want" ] || [ "$got_tok" -ne "$want" ] || [ "$in_catalog" -ne "$want" ]; then
+            echo "::error::mismatch — facepacks=${want} apks=${got_apk} tokens=${got_tok} catalog=${in_catalog}"
+            exit 1
+          fi
+
+          # Phase 2C: 43 face APKs are bundled as assets. Watch this — it is the dominant term in
+          # the phone APK size and the reason to care about a 43-face store.
+          echo "### Bundled faces: ${got_apk}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| what | size |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---:|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| face APKs (assets/faces) | $(du -sh "$FACES" | cut -f1) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| tokens (assets/tokens) | $(du -sh "$TOKENS" | cut -f1) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| previews (res/drawable-nodpi) | $(du -sh app/src/main/res/drawable-nodpi | cut -f1) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "assets/faces  = $(du -sh "$FACES" | cut -f1)"
+          echo "assets/tokens = $(du -sh "$TOKENS" | cut -f1)"
+          du -sh app/src/main/res/drawable-nodpi
 
       - name: Build storefront (:app) with bundled faces
         run: gradle :app:assembleDebug --no-daemon --stacktrace
@@ -82,6 +134,27 @@ jobs:
           cp app/build/outputs/apk/debug/app-debug.apk "out/${NAME}-phone.apk"
           cp wear/build/outputs/apk/debug/wear-debug.apk "out/${NAME}-wear.apk"
           ls -la out
+          {
+            echo ""
+            echo "### Shipped APKs"
+            echo ""
+            echo "| apk | size |"
+            echo "|---|---:|"
+            echo "| ${NAME}-phone.apk | $(du -h "out/${NAME}-phone.apk" | cut -f1) |"
+            echo "| ${NAME}-wear.apk | $(du -h "out/${NAME}-wear.apk" | cut -f1) |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          # Play's APK ceiling is 100 MB. At 43 faces the bundled art already dominates this APK, and
+          # plan Phase 2F/7 adds more — warn (don't fail: sideloaded debug builds have no such limit)
+          # so the ceiling is visible in the run that crosses it, not discovered at store submission.
+          bytes=$(stat -c%s "out/${NAME}-phone.apk")
+          mb=$((bytes / 1024 / 1024))
+          echo "phone APK = ${mb} MB (Play APK ceiling 100 MB)"
+          if [ "$mb" -ge 85 ]; then
+            echo "::warning::phone APK is ${mb} MB — approaching Play's 100 MB APK limit. Shrinking the Collection-3 art or moving to per-collection on-demand delivery is now a store blocker, not a nice-to-have."
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "> ⚠️ phone APK ${mb} MB — approaching Play's 100 MB APK ceiling." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - uses: actions/upload-artifact@v4
         with:

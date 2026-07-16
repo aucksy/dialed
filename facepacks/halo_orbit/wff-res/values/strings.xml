@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Halo Orbit</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Bearing Steel</string>
+    <string name="theme_1">Gun Oil</string>
+    <string name="theme_2">Turbine</string>
+    <string name="theme_3">Redline</string>
+    <string name="theme_4">Verde Corsa</string>
+    <string name="slot_1">Ring II override</string>
+    <string name="slot_2">Ring III override</string>
+    <string name="slot_3">Well footer</string>
+    <string name="cfg_secring">Seconds arc</string>
+    <string name="cfg_gauges">Data gauges</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

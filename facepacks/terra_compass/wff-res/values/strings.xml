@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Terra Compass</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Topo Bone</string>
+    <string name="theme_1">Ranger Black</string>
+    <string name="theme_2">Tundra</string>
+    <string name="theme_3">Night March</string>
+    <string name="theme_4">Canyon</string>
+    <string name="slot_1">Date plaque</string>
+    <string name="slot_2">North gauge (steps)</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

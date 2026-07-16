@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aurum Squelette</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Ivoire Ajouré</string>
+    <string name="theme_1">Noir Ajouré</string>
+    <string name="theme_2">Anthracite Ajouré</string>
+    <string name="theme_3">Marine Ajouré</string>
+    <string name="theme_4">Champagne Ajouré</string>
+    <string name="slot_1">Jewel window (date)</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_date">Date display</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

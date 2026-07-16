@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Terra Altimeter</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Panel Ivory</string>
+    <string name="theme_1">Cockpit Black</string>
+    <string name="theme_2">Gauge Green</string>
+    <string name="theme_3">Night Flight</string>
+    <string name="theme_4">Bare Metal</string>
+    <string name="slot_1">Altimeter register</string>
+    <string name="slot_2">Fuel gauge</string>
+    <string name="slot_3">Placard (date)</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

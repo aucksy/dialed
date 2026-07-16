@@ -21,16 +21,16 @@
   <Metadata key="PREVIEW_TIME" value="10:08:32" />
 
   <UserConfigurations>
-    <ColorConfiguration id="themeColor" displayName="theme_label" defaultValue="0">
-      <ColorOption id="0" displayName="theme_first_light"  colors="#FF9D6F #FFD77A #F5EEE2 #9D94A8 #171528" />
-      <ColorOption id="1" displayName="theme_alpenglow"    colors="#C98BFF #FF8FB1 #F0ECF7 #968FAE #1B1730" />
-      <ColorOption id="2" displayName="theme_midnight_sun" colors="#C2A05C #F4E3B2 #EFE6D2 #8A8064 #0A0806" />
-      <ColorOption id="3" displayName="theme_paper_dawn"   colors="#E0713F #F2B23E #2D2418 #8D7F68 #F4EFE4" />
-      <ColorOption id="4" displayName="theme_pacific"      colors="#2FD4C2 #A7F0D3 #E2F4EF #6E988F #062229" />
+    <ColorConfiguration id="themeColor" displayName="@string/theme_label" defaultValue="0">
+      <ColorOption id="0" displayName="@string/theme_first_light"  colors="#FF9D6F #FFD77A #F5EEE2 #9D94A8 #171528" />
+      <ColorOption id="1" displayName="@string/theme_alpenglow"    colors="#C98BFF #FF8FB1 #F0ECF7 #968FAE #1B1730" />
+      <ColorOption id="2" displayName="@string/theme_midnight_sun" colors="#C2A05C #F4E3B2 #EFE6D2 #8A8064 #0A0806" />
+      <ColorOption id="3" displayName="@string/theme_paper_dawn"   colors="#E0713F #F2B23E #2D2418 #8D7F68 #F4EFE4" />
+      <ColorOption id="4" displayName="@string/theme_pacific"      colors="#2FD4C2 #A7F0D3 #E2F4EF #6E988F #062229" />
     </ColorConfiguration>
-    <BooleanConfiguration id="secondsOrbit" displayName="cfg_seconds_orbit" defaultValue="TRUE" />
-    <BooleanConfiguration id="sunHalo" displayName="cfg_sun_halo" defaultValue="TRUE" />
-    <BooleanConfiguration id="pureBlack" displayName="cfg_pure_black" defaultValue="FALSE" />
+    <BooleanConfiguration id="secondsOrbit" displayName="@string/cfg_seconds_orbit" defaultValue="TRUE" />
+    <BooleanConfiguration id="sunHalo" displayName="@string/cfg_sun_halo" defaultValue="TRUE" />
+    <BooleanConfiguration id="pureBlack" displayName="@string/cfg_pure_black" defaultValue="FALSE" />
   </UserConfigurations>
 
   <Scene backgroundColor="#FF000000">
@@ -309,7 +309,7 @@
 
     <!-- Ring · lower-left @225° (7:30, r=135) -->
     <ComplicationSlot x="103" y="307" width="68" height="68" slotId="0"
-        name="ringLowerLeft" displayName="slot_rail_left"
+        name="ringLowerLeft" displayName="@string/slot_rail_left"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
@@ -360,7 +360,7 @@
 
     <!-- Ring · bottom @180° -->
     <ComplicationSlot x="202" y="359" width="77" height="77" slotId="1"
-        name="railCentre" displayName="slot_rail_centre"
+        name="railCentre" displayName="@string/slot_rail_centre"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
@@ -411,7 +411,7 @@
 
     <!-- Ring · lower-right @135° (4:30, r=135) -->
     <ComplicationSlot x="308" y="307" width="68" height="68" slotId="2"
-        name="ringLowerRight" displayName="slot_rail_right"
+        name="ringLowerRight" displayName="@string/slot_rail_right"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT" />
@@ -464,7 +464,7 @@
 
     <!-- Ring · upper-left @322°, flanking the time -->
     <ComplicationSlot x="121" y="97" width="68" height="68" slotId="3"
-        name="skyLeft" displayName="slot_sky_left"
+        name="skyLeft" displayName="@string/slot_sky_left"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <!-- No system heart-rate provider exists; default to notifications, user can swap to HR/steps/etc. -->
@@ -516,7 +516,7 @@
 
     <!-- Ring · upper-right @38°, flanking the time -->
     <ComplicationSlot x="291" y="97" width="68" height="68" slotId="4"
-        name="skyRight" displayName="slot_sky_right"
+        name="skyRight" displayName="@string/slot_sky_right"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />

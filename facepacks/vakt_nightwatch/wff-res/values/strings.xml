@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VAKT Night Watch</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Phosphor Night</string>
+    <string name="theme_1">Day Watch</string>
+    <string name="theme_2">Blue Vault</string>
+    <string name="theme_3">Amber Watch</string>
+    <string name="theme_4">Ghost Grey</string>
+    <string name="slot_1">Top register (0–250)</string>
+    <string name="slot_2">Sunrise figure</string>
+    <string name="slot_3">Sunset figure</string>
+    <string name="slot_4">Date window</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_date">Date display</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

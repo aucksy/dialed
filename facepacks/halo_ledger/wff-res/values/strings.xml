@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Halo Ledger</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Ledger Cream</string>
+    <string name="theme_1">Carbon Ledger</string>
+    <string name="theme_2">Banker Green</string>
+    <string name="theme_3">Slate Audit</string>
+    <string name="theme_4">Ochre File</string>
+    <string name="slot_1">Row - NEXT</string>
+    <string name="slot_2">Row - STEPS</string>
+    <string name="slot_3">Row - PWR</string>
+    <string name="cfg_secring">Seconds arc</string>
+    <string name="cfg_gauges">Data gauges</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VAKT Ti</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Ti Natural</string>
+    <string name="theme_1">Ti Chalk</string>
+    <string name="theme_2">Ti Petrol</string>
+    <string name="theme_3">Ti Graphite</string>
+    <string name="theme_4">Ti Saffron</string>
+    <string name="slot_1">Top register (0–250)</string>
+    <string name="slot_2">Steps register</string>
+    <string name="slot_3">Date window</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_date">Date display</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

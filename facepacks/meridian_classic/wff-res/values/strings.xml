@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meridian Classic</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Gallery White</string>
+    <string name="theme_1">Anthracite</string>
+    <string name="theme_2">Prussian</string>
+    <string name="theme_3">Loden</string>
+    <string name="theme_4">Porcelain Noir</string>
+    <string name="slot_1">Date window</string>
+    <string name="slot_2">Line at 6 (hidden by default)</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_batt">Battery arc</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

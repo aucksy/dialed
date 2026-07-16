@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VAKT GT</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Pit Lane</string>
+    <string name="theme_1">Chalk Circuit</string>
+    <string name="theme_2">Gulf Racing</string>
+    <string name="theme_3">Verde Legend</string>
+    <string name="theme_4">Night Stage</string>
+    <string name="slot_1">Top register (0–250)</string>
+    <string name="slot_2">Hero counter override</string>
+    <string name="slot_3">Date window</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_date">Date display</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

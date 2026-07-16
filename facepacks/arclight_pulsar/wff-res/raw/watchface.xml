@@ -170,7 +170,7 @@
     </Group>
 
     <!-- ================= PULSAR'S OWN COMPLICATIONS (slotId 1-4; not shared with any other face) ================= -->
-    <ComplicationSlot x="308" y="99" width="62" height="62" slotId="1" name="satUpper" displayName="slot_sat_upper"
+    <ComplicationSlot x="308" y="99" width="62" height="62" slotId="1" name="satUpper" displayName="@string/slot_sat_upper"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
@@ -194,7 +194,7 @@
         </PartText>
       </Complication>
     </ComplicationSlot>
-    <ComplicationSlot x="357" y="204" width="62" height="62" slotId="2" name="satMid" displayName="slot_sat_mid"
+    <ComplicationSlot x="357" y="204" width="62" height="62" slotId="2" name="satMid" displayName="@string/slot_sat_mid"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
@@ -218,7 +218,7 @@
         </PartText>
       </Complication>
     </ComplicationSlot>
-    <ComplicationSlot x="316" y="311" width="62" height="62" slotId="3" name="satLower" displayName="slot_sat_lower"
+    <ComplicationSlot x="316" y="311" width="62" height="62" slotId="3" name="satLower" displayName="@string/slot_sat_lower"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT" />
@@ -242,7 +242,7 @@
         </PartText>
       </Complication>
     </ComplicationSlot>
-    <ComplicationSlot x="144" y="41" width="192" height="28" slotId="4" name="header" displayName="slot_header"
+    <ComplicationSlot x="144" y="41" width="192" height="28" slotId="4" name="header" displayName="@string/slot_header"
         supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DefaultProviderPolicy defaultSystemProvider="DATE" defaultSystemProviderType="SHORT_TEXT" />

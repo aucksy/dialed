@@ -1,6 +1,8 @@
 package com.dialed.app.ui.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,6 +67,9 @@ fun HomeScreen(
     val c = dialedColors
     val filters = remember(faces) { listOf("All") + faces.flatMap { it.styleTags }.distinct() }
     var selected by remember { mutableStateOf("All") }
+    // Hoisted out of the grid's header item: state remembered inside a lazy item is disposed when
+    // that item scrolls off, which would silently rewind the filter row to "All" on the way back.
+    val filterScroll = rememberScrollState()
     val shown = remember(selected, faces) {
         if (selected == "All") faces else faces.filter { selected in it.styleTags }
     }
@@ -109,7 +114,15 @@ fun HomeScreen(
                 Spacer(Modifier.height(DialedSpacing.md))
                 WatchStatusPill(watchStatus)
                 Spacer(Modifier.height(DialedSpacing.lg))
-                Row(horizontalArrangement = Arrangement.spacedBy(DialedSpacing.sm)) {
+                // Must scroll: a plain Row neither wraps nor scrolls, so any chip past the screen
+                // width is clipped and permanently unreachable. v0.21.0 took the series count 5 -> 10
+                // (filters 6 -> 11, ~900dp of chips against ~312dp of usable width), which would have
+                // hidden half the store behind an unusable filter. Phase 2D replaces this with
+                // collection cards; until then, scrolling keeps every series reachable.
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(DialedSpacing.sm),
+                    modifier = Modifier.horizontalScroll(filterScroll),
+                ) {
                     filters.forEach { f ->
                         FilterChip(text = f, selected = f == selected, onClick = { selected = f })
                     }

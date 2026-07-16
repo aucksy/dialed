@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Terra Meridian Line</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Morning Line</string>
+    <string name="theme_1">Evening Line</string>
+    <string name="theme_2">Fog Line</string>
+    <string name="theme_3">Ash Line</string>
+    <string name="theme_4">Polar Line</string>
+    <string name="slot_1">Sunrise (horizon left)</string>
+    <string name="slot_2">Sunset (horizon right)</string>
+    <string name="slot_3">Ground event line</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_dayarc">Daylight arc</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

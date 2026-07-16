@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aurum Soir</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Heure Bleue</string>
+    <string name="theme_1">Blanc Cassé</string>
+    <string name="theme_2">Merlot</string>
+    <string name="theme_3">Forêt</string>
+    <string name="theme_4">Graphite Soir</string>
+    <string name="slot_1">Sunset figure</string>
+    <string name="slot_2">Lower pair (date)</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_date">Date display</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

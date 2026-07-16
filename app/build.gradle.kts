@@ -13,8 +13,8 @@ android {
         applicationId = "com.dialed.app"
         minSdk = 30
         targetSdk = 36
-        versionCode = 20
-        versionName = "0.19.0"
+        versionCode = 21
+        versionName = "0.21.0"
         vectorDrawables { useSupportLibrary = true }
     }
 

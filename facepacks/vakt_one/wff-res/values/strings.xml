@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VAKT One</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Phosphor Core</string>
+    <string name="theme_1">Arctic Panel</string>
+    <string name="theme_2">Amber Service</string>
+    <string name="theme_3">Ice Watch</string>
+    <string name="theme_4">NVG Ops</string>
+    <string name="slot_1">Top register (0–250 scale)</string>
+    <string name="slot_2">Date window</string>
+    <string name="slot_3">Unread chip</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_date">Date display</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

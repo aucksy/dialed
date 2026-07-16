@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aurum Guilloché</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Argent</string>
+    <string name="theme_1">Or Noir</string>
+    <string name="theme_2">Bleu Royale</string>
+    <string name="theme_3">Émeraude</string>
+    <string name="theme_4">Poudre</string>
+    <string name="slot_1">Whisper date</string>
+    <string name="cfg_seconds">Seconds hand</string>
+    <string name="cfg_date">Date display</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

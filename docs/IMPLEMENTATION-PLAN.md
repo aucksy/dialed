@@ -228,7 +228,26 @@ landed first); owner spot-checks 2–3 faces per series for taste, not just coun
 
 ---
 
-## Phase 2C — `dialed-v0.21.0` · Bundle the 25 built faces (18 → 43)
+## Phase 2C — `dialed-v0.21.0` · Bundle the 25 built faces (18 → 43) — ✅ SHIPPED 2026-07-16
+
+> **Outcome.** Store is 18 → **43**. Two of the five scoped items dissolved once verified against the
+> files, and two unscoped defects were found and fixed. Full detail in `CLAUDE.md` → "Phase 2C findings
+> that contradict the plan". Summary:
+>
+> | # | Scoped work | What actually happened |
+> |---|---|---|
+> | 1 | Icon-label rollout to 18 of the 25 | **NO-OP.** Those faces have no hardcoded label of any kind — they render `[COMPLICATION.TEXT]` only and are already swap-safe. Adding icons would be a redesign of 450-canvas art in 34×26–64×26 slots × 6 theme groups, which audit §4 explicitly rules out. Nothing changed in the submodule; its pointer is untouched. |
+> | 2 | `BUNDLED_FACES` 18 → 43 + `SERIES_META` ×5 | Done. Also added `FACE_META` (per-face display name + blurb) sourced from the handoff spec — without it the store would have read "Eclat", "MeridianLine", "PetiteSeconde". Verified: all 25 storefront names now match each face's own on-watch `app_name`. |
+> | 3 | M2 — derive chips from real slots | Done, and the old guesses were not merely vague but **false** (Aether advertised "Weather" with no weather provider; Kinetik-Orrery advertised "Steps" while having Battery + Sunrise). Chips are now each slot's real `defaultSystemProvider` + a slot count + a derived Always-on. |
+> | 4 | Apply the 2A renames | **SKIPPED — the silkscreen check failed for both.** "TERRA SOLSTICE" / "TERRA · MERIDIAN LINE" are painted into every theme's dial art; the spec and the on-watch label agree with the current names. Renaming would contradict the watch on the wrist. |
+> | 5 | Watch APK size | Done — CI logs `assets/faces`, tokens, previews and both APK sizes to the job summary. Family B is ~2.1 MB/face vs family A's ~0.36 MB and dominates the payload. |
+>
+> **Unscoped defects found and fixed:** (a) Home's filter row was a non-scrolling `Row`; at 11 chips half the
+> series would have been permanently unreachable — now scrollable (Phase 2D replaces the surface). (b) CI could
+> ship a stale generated catalog silently — it now re-runs the generator and fails on drift, and asserts one
+> bundled APK + token per facepack, so "43/43" is enforced rather than assumed.
+>
+> **Still open (owner):** Terra-Compass's leaked `COMPASS · ROSE IS STATIC` dial note (audit §11-q5).
 
 **Scope:** the fastest large win in the whole program — 25 faces that already exist, already
 validate, and simply aren't in the app.

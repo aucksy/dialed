@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Halo Stack</string>
+    <string name="theme_label">Colour theme</string>
+    <string name="theme_0">Newsprint</string>
+    <string name="theme_1">Night Edition</string>
+    <string name="theme_2">Klein</string>
+    <string name="theme_3">Acid Proof</string>
+    <string name="theme_4">Terracotta</string>
+    <string name="slot_1">Ledger row - steps</string>
+    <string name="slot_2">Ledger row - battery</string>
+    <string name="slot_3">Folio line - event</string>
+    <string name="cfg_secring">Seconds arc</string>
+    <string name="cfg_gauges">Data gauges</string>
+    <string name="cfg_dark">Pure-black dark mode</string>
+</resources>

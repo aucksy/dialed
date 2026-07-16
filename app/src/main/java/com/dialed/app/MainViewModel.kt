@@ -9,6 +9,7 @@ import com.dialed.app.data.EntitlementStore
 import com.dialed.app.data.SettingsStore
 import com.dialed.app.model.WatchConnection
 import com.dialed.app.model.WatchStatus
+import com.dialed.app.transport.ConnectedWatch
 import com.dialed.app.transport.PushStatus
 import com.dialed.app.transport.WatchBridge
 import com.dialed.app.ui.theme.ThemeMode
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -39,13 +41,34 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private val watchBridge = WatchBridge(app)
 
+    /**
+     * The reachable Dialed-capable watch, shared once for the ViewModel's life: both [watchStatus]
+     * and the init collector below read it, and an Eagerly-shared StateFlow keeps that to ONE
+     * CapabilityClient listener (collecting the cold flow twice would register two).
+     */
+    private val connectedWatch: StateFlow<ConnectedWatch?> =
+        watchBridge.connectedWatch.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    /**
+     * False once a reachable watch tells us it has no Watch Face Push (Wear OS < 6). Optimistic by
+     * default and reset on every (re)connect, so swapping to a supported watch never inherits a
+     * previous watch's verdict.
+     */
+    private val watchSupported = MutableStateFlow(true)
+
     /** Real reachable-watch detection via CapabilityClient (dialed_wfp_install). */
     val watchStatus: StateFlow<WatchStatus> =
-        watchBridge.connectedWatch.map { watch ->
-            if (watch != null) {
-                WatchStatus(connection = WatchConnection.CONNECTED, deviceName = watch.displayName)
-            } else {
-                WatchStatus(connection = WatchConnection.DISCONNECTED)
+        combine(connectedWatch, watchSupported) { watch, supported ->
+            when {
+                watch == null -> WatchStatus(connection = WatchConnection.DISCONNECTED)
+                !supported -> WatchStatus(
+                    connection = WatchConnection.UNSUPPORTED,
+                    deviceName = watch.displayName,
+                )
+                else -> WatchStatus(
+                    connection = WatchConnection.CONNECTED,
+                    deviceName = watch.displayName,
+                )
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WatchStatus())
 
@@ -76,16 +99,38 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _uninstallingFaceId = MutableStateFlow<String?>(null)
     val uninstallingFaceId: StateFlow<String?> = _uninstallingFaceId.asStateFlow()
 
+    /** Set when an uninstall genuinely failed — shown once as a snackbar, then cleared. */
+    private val _uninstallError = MutableStateFlow<String?>(null)
+    val uninstallError: StateFlow<String?> = _uninstallError.asStateFlow()
+
+    /**
+     * Identifies the live push. Incremented by [startPush] and [dismissPush], and captured by each
+     * push's status callback, so a superseded transfer's late emission can never write into the
+     * sheet that now belongs to another face (or to a sheet the user already dismissed). Plain Long:
+     * every read/write happens on the main dispatcher (viewModelScope's default), never concurrently.
+     *
+     * This token is the WHOLE guard, deliberately. We do NOT cancel an in-flight push: cancelling the
+     * phone coroutine cannot stop the Data Layer transfer the watch is already installing, it only
+     * blinds us to the result — the face lands on the wrist while the phone still shows "Install to
+     * watch". Letting the transfer finish and report is what keeps the badges honest, and it is the
+     * contract the push sheet documents ("a mid-flight transfer simply completes on the watch").
+     */
+    private var pushToken = 0L
+
     init {
         // Keep the installed/active snapshot fresh: query when a watch becomes reachable, clear when
-        // it drops. Collecting watchStatus also keeps its WhileSubscribed source hot for the app's life.
+        // it drops. Keyed off the connection itself (NOT the derived watchStatus) — an UNSUPPORTED
+        // verdict makes isConnected false, and gating the re-query on that would strand a later,
+        // genuinely-supported watch with a stale verdict.
         viewModelScope.launch {
-            watchStatus.collect { status ->
-                if (status.isConnected) {
+            connectedWatch.collect { watch ->
+                if (watch != null) {
+                    watchSupported.value = true // optimistic until this watch says otherwise
                     refreshInstalledState()
                 } else {
                     _installedPackages.value = emptyList()
                     _activePackage.value = null
+                    watchSupported.value = true
                 }
             }
         }
@@ -95,15 +140,28 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun completeOnboarding() = viewModelScope.launch { settings.setOnboarded(true) }
 
-    /** Open the push sheet for [face] and start streaming it to the watch. */
+    /**
+     * Open the push sheet for [face] and start streaming it to the watch. The newest tap owns the
+     * sheet (see [pushToken]); an earlier transfer is left to finish rather than cancelled, because
+     * only the WATCH can actually stop it, and its outcome is still the truth about what is on the
+     * wrist. If two pushes do overlap, the watch's own single-transfer lock answers the second one
+     * BUSY and the sheet says so honestly.
+     */
     fun startPush(face: Face) {
+        val token = ++pushToken
         _pushingFace.value = face
         _pushStatus.value = PushStatus.Preparing
         viewModelScope.launch {
             watchBridge.pushFace(face) { status ->
-                _pushStatus.value = status
-                // A finished install changes the watch's slot — re-read the truth for the badges.
+                // Facts about the watch are recorded no matter who is listening: a face that really
+                // installed must update the badges even if this sheet was dismissed or superseded,
+                // and a watch that can't install anything should say so everywhere.
                 if (status is PushStatus.Done) refreshInstalledState()
+                if (status is PushStatus.Unsupported) watchSupported.value = false
+                // Only the sheet write is gated — a stale transfer must never repaint a sheet that
+                // now belongs to another face.
+                if (token != pushToken) return@pushFace
+                _pushStatus.value = status
             }
         }
     }
@@ -112,22 +170,39 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun refreshInstalledState() {
         viewModelScope.launch {
             val state = watchBridge.queryInstalledState() ?: return@launch
+            watchSupported.value = state.supported
+            if (!state.supported) {
+                _installedPackages.value = emptyList()
+                _activePackage.value = null
+                return@launch
+            }
             _installedPackages.value = state.installedPackages
             _activePackage.value = state.activePackage
         }
     }
 
-    /** Single-tap uninstall of [face] from the watch, then reconcile the badge state with truth. */
+    /**
+     * Single-tap uninstall of [face] from the watch, then reconcile the badge state with truth.
+     * A genuine failure (unreachable watch, WFP error) surfaces in [uninstallError] — it used to
+     * end silently, so the spinner just stopped and the badge stayed with no explanation.
+     */
     fun uninstallFace(face: Face) {
         if (_uninstallingFaceId.value != null) return // one uninstall at a time
         _uninstallingFaceId.value = face.id
+        _uninstallError.value = null
         viewModelScope.launch {
             try {
-                val result = watchBridge.uninstallFace(face)
-                if (result == WatchFaceUninstallResult.REMOVED) {
-                    // Optimistic clear for instant feedback; refreshInstalledState() reconciles below.
-                    _installedPackages.value = _installedPackages.value - face.packageName
-                    if (_activePackage.value == face.packageName) _activePackage.value = null
+                when (watchBridge.uninstallFace(face)) {
+                    WatchFaceUninstallResult.REMOVED -> {
+                        // Optimistic clear for instant feedback; refreshInstalledState() reconciles below.
+                        _installedPackages.value = _installedPackages.value - face.packageName
+                        if (_activePackage.value == face.packageName) _activePackage.value = null
+                    }
+                    // Already gone (removed on the watch): not an error — the refresh below is truth.
+                    WatchFaceUninstallResult.NOT_FOUND -> Unit
+                    WatchFaceUninstallResult.FAILED ->
+                        _uninstallError.value =
+                            "Couldn't remove ${face.displayName} — keep your watch nearby and try again."
                 }
             } finally {
                 _uninstallingFaceId.value = null
@@ -136,16 +211,40 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /** The snackbar has been shown — don't repeat it on the next recomposition. */
+    fun clearUninstallError() {
+        _uninstallError.value = null
+    }
+
     fun retryPush() {
         _pushingFace.value?.let { startPush(it) }
     }
 
+    /**
+     * Close the sheet. The transfer itself is deliberately NOT cancelled — it completes on the watch
+     * (the phone cannot stop it) and its result still reconciles the badges; bumping the token is
+     * enough to stop it repainting a sheet the user has dismissed.
+     */
     fun dismissPush() {
+        pushToken++
         _pushingFace.value = null
         _pushStatus.value = PushStatus.Idle
     }
 
-    /** Debug-only: flip the local entitlement to preview locked/unlocked states. */
-    fun debugToggleEntitlement() =
+    /**
+     * DEBUG ONLY: flip the local entitlement to preview the locked/unlocked states without Play.
+     * Hard no-op in release — this is wired to the paywall's purchase/restore buttons until real
+     * Billing lands (Phase 3), and without this guard a release build would hand out a free,
+     * permanent unlock on a single tap.
+     */
+    fun debugToggleEntitlement() {
+        if (!BuildConfig.DEBUG) return
         viewModelScope.launch { entitlement.setUnlocked(!entitled.value) }
+    }
+
+    /** DEBUG ONLY: stand-in for "restore purchases" — only ever grants, never revokes. */
+    fun debugRestoreEntitlement() {
+        if (!BuildConfig.DEBUG) return
+        viewModelScope.launch { entitlement.setUnlocked(true) }
+    }
 }

@@ -1,6 +1,7 @@
 package com.dialed.app.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -57,12 +58,13 @@ fun FaceDetailScreen(
 ) {
     val c = dialedColors
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
+        // Back only. There was a "More" button here that did nothing at all — a shown control must
+        // do something (the v0.18 lesson); it returns when it has a menu to open.
         Row(
             Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Start,
         ) {
             CircleIconButton(R.drawable.ic_back, "Back", onBack)
-            CircleIconButton(R.drawable.ic_more_vert, "More", {})
         }
 
         Column(
@@ -136,6 +138,9 @@ fun FaceDetailScreen(
             val caption = when {
                 isActive -> "This is your active watch face."
                 isInstalled -> "Installed on ${watchStatus.deviceName ?: "your watch"}. Set it active from your watch's face picker."
+                // Before !isConnected: an unsupported watch IS present, it just can't ever install.
+                watchStatus.isUnsupported ->
+                    "${watchStatus.deviceName ?: "Your watch"} needs Wear OS 6 to install faces."
                 !watchStatus.isConnected -> "Connect a Wear OS 6 watch to install"
                 slotOccupied -> "Replaces the Dialed face on ${watchStatus.deviceName} — one face at a time."
                 else -> "Installs to ${watchStatus.deviceName} · Connected"
@@ -172,18 +177,26 @@ private fun InstalledNotActiveChip() {
     }
 }
 
+/** 42dp of visible circle inside a 48dp touch target (HANDOFF.md §8). */
 @Composable
 private fun CircleIconButton(iconRes: Int, desc: String, onClick: () -> Unit) {
     val c = dialedColors
-    Icon(
-        painter = painterResource(iconRes),
-        contentDescription = desc,
-        tint = c.onSurface,
+    Box(
         modifier = Modifier
-            .size(42.dp)
+            .size(48.dp)
             .clip(CircleShape)
-            .border(1.dp, c.outline, CircleShape)
-            .clickable(onClick = onClick)
-            .padding(11.dp),
-    )
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = desc,
+            tint = c.onSurface,
+            modifier = Modifier
+                .size(42.dp)
+                .clip(CircleShape)
+                .border(1.dp, c.outline, CircleShape)
+                .padding(11.dp),
+        )
+    }
 }

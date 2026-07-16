@@ -13,9 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dialed.Splash">
 
+        <!-- singleTask: the watch's "Open on phone" fires VIEW dialed://open with NEW_TASK. Without
+             this, that deep link stacks a SECOND MainActivity (its own ViewModel + capability
+             listener) on top of the running one; singleTask brings the existing instance forward. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.Dialed.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

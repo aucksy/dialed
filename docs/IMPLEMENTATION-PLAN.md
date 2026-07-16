@@ -265,6 +265,13 @@ seen).
    Settings "Restore purchase" → `BillingManager.restore()` with success/failure feedback.
 4. **Release-build behavior:** with billing present, delete the C1 stub wiring; debug builds keep
    `debugToggleEntitlement` for offline UI testing (guarded since Phase 1).
+   ⚠ **Carry-over from Phase 1's review (must not survive this phase):** the v0.19.0 debug gate makes
+   the paywall CTA and "Restore" *inert no-ops in a release build* — the safe failure mode (no unlock
+   is granted), and unreachable in practice because CI only ships debug builds and Phase 4 is the
+   first release lane. But a shown control that does nothing is exactly the defect Phase 1 removed
+   elsewhere, so **it is this phase's job to end it**: acceptance requires that in a release build
+   every paywall control either performs a real billing action or is not shown at all. No release
+   build may ship with the stub still wired (plan order protects this: 3 lands before 4).
 5. Unit-testable pure logic (no test infra exists — keep logic in plain functions):
    purchase-state → entitlement-set reducer.
 
@@ -422,7 +429,7 @@ face; coaching plays.
 
 | Phase | Tag | State | Notes |
 |---|---|---|---|
-| 1 Hygiene | v0.19.0 | ⬜ | |
+| 1 Hygiene | v0.19.0 | 🚧 **SHIPPING** 2026-07-15 | C1 paywall debug-gate (+ restore only ever grants) · H2 push-token guard + `CancellationException` rethrow + `NonCancellable` cleanup · H3 uninstall-error snackbar · H4 `RESPONSE_UNSUPPORTED=2` + `!unsupported` query sentinel → honest sheet state + the UNSUPPORTED pill finally has a producer (`QueryStateResult.supported`) · M1 `firstOrNull` detail guard · M3 phone `singleTask` · M4 dead "More"/no-op rows removed + `BuildConfig.VERSION_NAME` + real gear icon · M5 48dp targets (incl. the theme selector) + pill live region · M6 dead `hasInstalledFace()` + per-transfer staged APK with sweep · L1 dead `WatchStatus` fields · H6 CLAUDE.md + this table refreshed. **7-lens adversarial review (43 agents, 3 refuters/finding) caught 2 real self-inflicted bugs pre-tag: (a) BLOCKER — the new `catch (CancellationException)` swallowed the setup RPC's `withTimeout` (`TimeoutCancellationException` IS a `CancellationException`) → the sheet hung on "Sending…" forever with no error and no Retry; fixed by `withTimeoutOrNull` + an explicit emit. (b) HIGH — cancelling the push job on dismiss abandoned a transfer the watch was still installing (the phone cannot stop the Data Layer anyway), so the face landed on the wrist while the phone still read "Install to watch"; fixed by making the token the whole guard, never cancelling, and recording watch FACTS (Done→refresh, Unsupported) above the token gate so only the sheet write is gated.** Also fixed off-review: the M3 default Snackbar was painting on unmapped `inverse*` roles (the one off-system surface) and the 48dp gear target visibly indented the glyph past the 24dp margin. |
 | 2 Collections | v0.20.0 | ⬜ | |
 | 3 Billing | v0.21.0 | ⬜ | |
 | 4 Store | v0.22.0 | ⬜ | owner gates: Play account/products/upload |

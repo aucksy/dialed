@@ -2,6 +2,7 @@ package com.dialed.app.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -85,11 +87,24 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Wordmark()
-                    Icon(
-                        painterResource(R.drawable.ic_filter), contentDescription = "Settings",
-                        tint = c.onSurfaceVariant,
-                        modifier = Modifier.size(22.dp).clickable(onClick = onSettings),
-                    )
+                    // 22dp gear inside a 48dp target (HANDOFF.md §8) — and a gear, not the filter
+                    // glyph this used to borrow. The offset pushes the oversized target's slack past
+                    // the screen margin so the GLYPH still lines up with the 24dp margin (and with
+                    // the grid below it); without it, centring 22dp in 48dp visibly indents the gear.
+                    Box(
+                        modifier = Modifier
+                            .offset(x = 13.dp)
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .clickable(onClick = onSettings),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.ic_settings), contentDescription = "Settings",
+                            tint = c.onSurfaceVariant,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    }
                 }
                 Spacer(Modifier.height(DialedSpacing.md))
                 WatchStatusPill(watchStatus)

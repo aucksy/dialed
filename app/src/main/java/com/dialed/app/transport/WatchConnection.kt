@@ -15,14 +15,15 @@ import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 import java.util.UUID
@@ -40,6 +41,9 @@ sealed interface PushStatus {
     data class Done(val needsActivation: Boolean) : PushStatus
     data class Error(val message: String) : PushStatus
     data object NoWatch : PushStatus
+
+    /** The watch answered that it has no Watch Face Push at all (Wear OS < 6) — retrying can't help. */
+    data object Unsupported : PushStatus
 }
 
 /** Guards Data-Layer calls on devices without Google Play services / the Wearable API. */
@@ -55,16 +59,35 @@ private object WearableApiAvailability {
 /** Copies a bundled face APK out of assets to a real file and reads its validation token. */
 class FaceAssetProvider(private val context: Context) {
 
-    suspend fun stageApk(face: Face): Uri = withContext(Dispatchers.IO) {
-        val out = File(context.cacheDir, "push_${face.id}.apk")
+    /**
+     * Stages [face]'s APK to a per-transfer file the Data Layer can stream. The caller MUST delete
+     * it when the transfer ends ([WatchBridge.pushFace] does, under NonCancellable) — a staged copy
+     * per face would otherwise pile up the whole collection in cacheDir. Any orphans from an earlier
+     * crash/kill are swept here; safe because only one push runs at a time and the sweep happens
+     * before the new file is written.
+     */
+    suspend fun stageApk(face: Face, transferId: String): File = withContext(Dispatchers.IO) {
+        sweepOrphans()
+        val out = File(context.cacheDir, "$STAGE_PREFIX$transferId.apk")
         context.assets.open(face.apkAsset).use { input ->
             out.outputStream().use { output -> input.copyTo(output) }
         }
-        Uri.fromFile(out)
+        out
+    }
+
+    private fun sweepOrphans() {
+        runCatching {
+            context.cacheDir.listFiles { f -> f.name.startsWith(STAGE_PREFIX) && f.name.endsWith(".apk") }
+                ?.forEach { it.delete() }
+        }
     }
 
     suspend fun readToken(face: Face): String = withContext(Dispatchers.IO) {
         context.assets.open(face.tokenAsset).bufferedReader().use { it.readText().trim() }
+    }
+
+    private companion object {
+        const val STAGE_PREFIX = "push_"
     }
 }
 
@@ -86,12 +109,16 @@ class WatchBridge(context: Context) {
     val connectedWatch: Flow<ConnectedWatch?> = callbackFlow {
         var listener: CapabilityClient.OnCapabilityChangedListener? = null
         if (WearableApiAvailability.isAvailable(nodeClient)) {
-            runCatching {
+            try {
                 val reachable = capabilityClient
                     .getCapability(WearConstants.CAPABILITY_WEAR, CapabilityClient.FILTER_REACHABLE)
                     .await()
                 trySend(select(reachable.nodes))
-            }.onFailure { trySend(null) }
+            } catch (e: CancellationException) {
+                throw e // the collector went away — don't fake a "no watch" emission on the way out
+            } catch (e: Exception) {
+                trySend(null)
+            }
 
             listener = CapabilityClient.OnCapabilityChangedListener { info ->
                 trySend(select(info.nodes))
@@ -106,41 +133,63 @@ class WatchBridge(context: Context) {
     private fun select(nodes: Set<Node>): ConnectedWatch? =
         nodes.firstOrNull()?.let { ConnectedWatch(it.id, it.displayName) }
 
-    /** The reachable Dialed-capable watch's nodeId, or null if none is reachable / API unavailable. */
-    private suspend fun reachableNodeId(): String? = runCatching {
+    /**
+     * The reachable Dialed-capable watch's nodeId, or null if none is reachable / API unavailable.
+     * Cancellation is rethrown, never reported as "no watch": a cancelled push must not emit a
+     * NoWatch state into a sheet the user already dismissed.
+     */
+    private suspend fun reachableNodeId(): String? = try {
         capabilityClient
             .getCapability(WearConstants.CAPABILITY_WEAR, CapabilityClient.FILTER_REACHABLE)
             .await().nodes.firstOrNull()?.id
-    }.getOrNull()
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Log.w(TAG, "reachableNodeId failed", e)
+        null
+    }
 
     /**
-     * Ask the watch which Dialed face is installed + which is active (slot = 1, so 0..1 installed).
-     * Returns null when the watch is unreachable or gives no reply — callers keep their prior state.
+     * Ask the watch which Dialed face is installed + which is active (slot = 1, so 0..1 installed),
+     * and whether it supports Watch Face Push at all. Returns null when the watch is unreachable or
+     * gives no reply — callers keep their prior state.
+     *
+     * Timeouts use [withTimeoutOrNull] (not `withTimeout`) so a slow watch degrades to null while a
+     * genuine parent cancellation still propagates: a plain `runCatching` would swallow BOTH.
      */
     suspend fun queryInstalledState(): QueryStateResult? {
         val nodeId = reachableNodeId() ?: return null
-        return runCatching {
-            val reply = withTimeout(WearConstants.QUERY_STATE_TIMEOUT_MS) {
+        return try {
+            val reply = withTimeoutOrNull(WearConstants.QUERY_STATE_TIMEOUT_MS) {
                 messageClient.sendRequest(nodeId, WearConstants.PATH_QUERY_STATE, ByteArray(0)).await()
-            }
+            } ?: return null
             WearConstants.decodeQueryState(reply)
-        }.onFailure { Log.w(TAG, "queryInstalledState failed", it) }.getOrNull()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "queryInstalledState failed", e)
+            null
+        }
     }
 
     /** Ask the watch to uninstall [face]. Returns the watch's result (FAILED if unreachable). */
     suspend fun uninstallFace(face: Face): WatchFaceUninstallResult {
         val nodeId = reachableNodeId() ?: return WatchFaceUninstallResult.FAILED
-        return runCatching {
-            val reply = withTimeout(WearConstants.QUERY_STATE_TIMEOUT_MS) {
+        return try {
+            val reply = withTimeoutOrNull(WearConstants.QUERY_STATE_TIMEOUT_MS) {
                 messageClient.sendRequest(
                     nodeId,
                     WearConstants.PATH_UNINSTALL,
                     WearConstants.encodeUninstallRequest(face.packageName),
                 ).await()
-            }
+            } ?: return WatchFaceUninstallResult.FAILED
             WearConstants.decodeUninstallResult(reply)
-        }.onFailure { Log.w(TAG, "uninstallFace failed", it) }
-            .getOrDefault(WatchFaceUninstallResult.FAILED)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "uninstallFace failed", e)
+            WatchFaceUninstallResult.FAILED
+        }
     }
 
     /**
@@ -166,23 +215,43 @@ class WatchBridge(context: Context) {
             }
         }
 
+        var staged: File? = null
         try {
             messageClient.addListener(listener).await()
             emit(PushStatus.Preparing)
-            val apkUri = assets.stageApk(face)
+            staged = assets.stageApk(face, transferId)
+            val apkUri = Uri.fromFile(staged)
             val token = assets.readToken(face)
 
             emit(PushStatus.Sending)
-            val response = withTimeout(WearConstants.SETUP_TIMEOUT_MS) {
+            // withTimeoutOrNull, NOT withTimeout: withTimeout signals expiry by throwing
+            // TimeoutCancellationException — a CancellationException — which the cancellation guard
+            // below would rethrow WITHOUT emitting, leaving the sheet stuck on "Sending…" forever.
+            // Timeouts must degrade to a visible error; only a genuine parent cancel propagates.
+            val response = withTimeoutOrNull(WearConstants.SETUP_TIMEOUT_MS) {
                 messageClient.sendRequest(
                     nodeId,
                     WearConstants.PATH_INITIATE_TRANSFER,
                     WearConstants.encodeInitiate(transferId, token, face.faceName),
                 ).await()
             }
-            if (response.firstOrNull() != WearConstants.RESPONSE_PROCEED) {
-                emit(PushStatus.Error("Your watch is busy — try again in a moment."))
+            if (response == null) {
+                Log.w(TAG, "initiate timed out t=$transferId")
+                emit(PushStatus.Error("Your watch didn't answer. Keep it nearby and retry."))
                 return
+            }
+            when (response.firstOrNull()) {
+                WearConstants.RESPONSE_PROCEED -> Unit // carry on below
+                // The watch has no Watch Face Push at all — retrying can never help, so say so.
+                WearConstants.RESPONSE_UNSUPPORTED -> {
+                    Log.w(TAG, "watch reported UNSUPPORTED t=$transferId")
+                    emit(PushStatus.Unsupported)
+                    return
+                }
+                else -> {
+                    emit(PushStatus.Error("Your watch is busy — try again in a moment."))
+                    return
+                }
             }
 
             val channelPath = WearConstants.PATH_TRANSFER_APK_TEMPLATE.format(transferId)
@@ -206,11 +275,23 @@ class WatchBridge(context: Context) {
                 WatchFaceInstallResult.INSTALLED_ACTIVE -> emit(PushStatus.Done(needsActivation = false))
                 WatchFaceInstallResult.INSTALLED_NEEDS_ACTIVATION -> emit(PushStatus.Done(needsActivation = true))
             }
+        } catch (e: CancellationException) {
+            // A genuine parent cancel (the ViewModel was cleared / the app is going away) — NOT a
+            // timeout, which every call above degrades to a visible error instead. Emit nothing:
+            // there is no longer anyone to tell. The cleanup below still runs (NonCancellable).
+            Log.i(TAG, "push cancelled t=$transferId")
+            throw e
         } catch (e: Exception) {
             Log.w(TAG, "push failed", e)
             emit(PushStatus.Error("Couldn't reach your watch. Keep it nearby and retry."))
         } finally {
-            runCatching { messageClient.removeListener(listener).await() }
+            // Cleanup must survive cancellation: on a cancelled coroutine every suspend call throws
+            // immediately, so without NonCancellable the listener would leak and the staged APK
+            // would be left behind in cacheDir.
+            withContext(NonCancellable) {
+                runCatching { messageClient.removeListener(listener).await() }
+                runCatching { staged?.delete() }
+            }
         }
     }
 

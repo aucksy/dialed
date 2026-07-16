@@ -62,9 +62,26 @@ object WearConstants {
      */
     const val PHONE_FINALIZE_TIMEOUT_MS = 120_000L
 
-    /** InitialResponse over MessageClient.sendRequest: single byte, 1 = proceed, 0 = busy. */
+    /**
+     * InitialResponse over MessageClient.sendRequest: single byte.
+     * 1 = proceed, 0 = busy, 2 = this watch cannot install faces at all (Wear OS < 6, no WFP).
+     *
+     * APPEND-ONLY (the byte IS the wire value). An older phone that only knows 0/1 reads
+     * [RESPONSE_UNSUPPORTED] as "not proceed" and shows its busy copy — degraded but never wrong
+     * about the outcome (the push genuinely cannot happen).
+     */
     const val RESPONSE_PROCEED: Byte = 1
     const val RESPONSE_BUSY: Byte = 0
+    const val RESPONSE_UNSUPPORTED: Byte = 2
+
+    /**
+     * Query-state reply the WATCH sends when Watch Face Push is unavailable (Wear OS < 6), so the
+     * phone can say so BEFORE the user taps Install instead of discovering it as a generic install
+     * failure. Deliberately shaped to be harmless to an older phone: it decodes into `activePackage`,
+     * matches no catalog package (so no face is ever claimed active) and yields an empty installed
+     * list. The '!' prefix can never collide with a real `com.dialed.app.watchfacepush.*` package.
+     */
+    const val UNSUPPORTED_SENTINEL = "!unsupported"
 
     private const val SEP = "\n"
 
@@ -98,8 +115,15 @@ object WearConstants {
         (listOf(activePackage.orEmpty()) + installedPackages)
             .joinToString(SEP).toByteArray(Charsets.UTF_8)
 
+    /** Reply for a watch with no Watch Face Push at all (see [UNSUPPORTED_SENTINEL]). */
+    fun encodeUnsupportedState(): ByteArray = UNSUPPORTED_SENTINEL.toByteArray(Charsets.UTF_8)
+
     fun decodeQueryState(bytes: ByteArray): QueryStateResult {
-        val lines = String(bytes, Charsets.UTF_8).split(SEP)
+        val text = String(bytes, Charsets.UTF_8)
+        if (text.trim() == UNSUPPORTED_SENTINEL) {
+            return QueryStateResult(supported = false, activePackage = null, installedPackages = emptyList())
+        }
+        val lines = text.split(SEP)
         val active = lines.getOrElse(0) { "" }.ifEmpty { null }
         val installed = lines.drop(1).filter { it.isNotEmpty() }
         return QueryStateResult(activePackage = active, installedPackages = installed)
@@ -139,10 +163,15 @@ enum class WatchFaceInstallResult {
     FAILED,
 }
 
-/** Decoded query-state reply: which Dialed face(s) are installed on the watch + which is active. */
+/**
+ * Decoded query-state reply: which Dialed face(s) are installed on the watch + which is active.
+ * [supported] = false means the watch has no Watch Face Push (Wear OS < 6) and can never install a
+ * face — the phone shows that honestly instead of offering a push that will always fail.
+ */
 data class QueryStateResult(
     val activePackage: String?,
     val installedPackages: List<String>,
+    val supported: Boolean = true,
 )
 
 /**

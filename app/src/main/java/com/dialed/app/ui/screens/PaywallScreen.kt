@@ -50,11 +50,17 @@ fun PaywallScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(Modifier.fillMaxWidth().padding(top = 12.dp)) {
-            Icon(
-                painterResource(R.drawable.ic_close), "Close", tint = c.onSurface,
-                modifier = Modifier.size(40.dp).clip(CircleShape).border(1.dp, c.outline, CircleShape)
-                    .clickable(onClick = onClose).padding(11.dp),
-            )
+            // 40dp visual inside a 48dp target (HANDOFF.md §8).
+            Box(
+                modifier = Modifier.size(48.dp).clip(CircleShape).clickable(onClick = onClose),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_close), "Close", tint = c.onSurface,
+                    modifier = Modifier.size(40.dp).clip(CircleShape)
+                        .border(1.dp, c.outline, CircleShape).padding(11.dp),
+                )
+            }
         }
 
         Spacer(Modifier.height(28.dp))

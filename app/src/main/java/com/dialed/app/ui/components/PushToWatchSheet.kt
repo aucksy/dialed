@@ -72,6 +72,7 @@ fun PushToWatchSheet(
         ) {
             when (status) {
                 is PushStatus.NoWatch -> NoWatchContent(face)
+                is PushStatus.Unsupported -> UnsupportedContent(deviceName, onDismiss)
                 is PushStatus.Error -> ErrorContent(face, status.message, onRetry, onDismiss)
                 is PushStatus.Done -> DoneContent(face, needsActivation = status.needsActivation, onDone = onDismiss)
                 else -> SendingContent(face, deviceName)
@@ -151,6 +152,32 @@ private fun ErrorContent(face: Face, message: String, onRetry: () -> Unit, onDis
     DialedButton("Retry", onRetry, height = 52.dp)
     Spacer(Modifier.height(DialedSpacing.sm))
     DialedButton("Not now", onDismiss, variant = DialedButtonVariant.TEXT)
+}
+
+/**
+ * The watch answered that it has no Watch Face Push (Wear OS < 6). There is no retry — the honest
+ * move is to say the watch can't do this, not to offer a button that will fail identically.
+ */
+@Composable
+private fun UnsupportedContent(deviceName: String?, onDismiss: () -> Unit) {
+    val c = dialedColors
+    Box(
+        Modifier.size(84.dp).clip(RoundedCornerShape(24.dp)).background(c.error.copy(alpha = 0.10f)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(painterResource(R.drawable.ic_watch), null, tint = c.error, modifier = Modifier.size(38.dp))
+    }
+    Spacer(Modifier.height(DialedSpacing.lg))
+    Text("This watch can't install faces", style = MaterialTheme.typography.titleMedium, color = c.onSurface)
+    Spacer(Modifier.height(8.dp))
+    Text(
+        "${deviceName ?: "Your watch"} needs Wear OS 6 to receive faces from Dialed. Everything else on it stays exactly as it is.",
+        style = MaterialTheme.typography.bodyMedium,
+        color = c.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+    )
+    Spacer(Modifier.height(DialedSpacing.xl))
+    DialedButton("Got it", onDismiss, variant = DialedButtonVariant.TONAL, height = 48.dp)
 }
 
 @Composable

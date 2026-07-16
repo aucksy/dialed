@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.dialed.app.BuildConfig
 import com.dialed.app.R
 import com.dialed.app.model.WatchStatus
 import com.dialed.app.ui.theme.DialedRadius
@@ -52,11 +54,17 @@ fun SettingsScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Icon(
-                painterResource(R.drawable.ic_back), "Back", tint = c.onSurface,
-                modifier = Modifier.size(42.dp).clip(CircleShape).border(1.dp, c.outline, CircleShape)
-                    .clickable(onClick = onBack).padding(11.dp),
-            )
+            // 42dp visual inside a 48dp target (HANDOFF.md §8).
+            Box(
+                modifier = Modifier.size(48.dp).clip(CircleShape).clickable(onClick = onBack),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_back), "Back", tint = c.onSurface,
+                    modifier = Modifier.size(42.dp).clip(CircleShape)
+                        .border(1.dp, c.outline, CircleShape).padding(11.dp),
+                )
+            }
             Text("Settings", style = MaterialTheme.typography.headlineSmall, color = c.onSurface)
         }
 
@@ -68,14 +76,18 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.titleMedium, color = c.onSurface,
                 )
                 Text(
-                    if (watchStatus.isConnected) "Connected · ${watchStatus.wearOsVersion ?: "Wear OS"}"
-                    else "Pair a Wear OS 6 watch to install faces",
+                    when {
+                        watchStatus.isConnected -> "Connected · ready to receive faces"
+                        watchStatus.isUnsupported -> "Needs Wear OS 6 to receive faces"
+                        else -> "Pair a Wear OS 6 watch to install faces"
+                    },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (watchStatus.isConnected) c.success else c.onSurfaceVariant,
+                    color = when {
+                        watchStatus.isConnected -> c.success
+                        watchStatus.isUnsupported -> c.error
+                        else -> c.onSurfaceVariant
+                    },
                 )
-                watchStatus.activeFaceName?.let {
-                    Text("Active face: $it", style = MaterialTheme.typography.bodyMedium, color = c.onSurfaceVariant)
-                }
             }
         }
 
@@ -121,11 +133,10 @@ fun SettingsScreen(
         SectionHeader("About")
         SettingsCard {
             Column {
-                AboutRow("Version", trailingText = "0.1.0")
-                Divider()
-                AboutRow("Privacy policy")
-                Divider()
-                AboutRow("Open-source licenses")
+                // Real version, from the build. The Privacy-policy and Open-source-licenses rows
+                // that used to sit here were `clickable {}` no-ops; they return in Phase 4, when
+                // there is a published policy and a licenses screen for them to open.
+                AboutRow("Version", trailingText = BuildConfig.VERSION_NAME)
             }
         }
         Spacer(Modifier.height(DialedSpacing.xxl))
@@ -159,19 +170,22 @@ private fun Divider() {
     )
 }
 
+/**
+ * A plain informational row. Deliberately NOT clickable: every row here is read-only today, and a
+ * row that looks tappable but does nothing is the exact defect this pass removes. When Phase 4 adds
+ * real destinations, give the row an [onClick] and a chevron together — never one without the other.
+ */
 @Composable
 private fun AboutRow(label: String, trailingText: String? = null) {
     val c = dialedColors
     Row(
-        Modifier.fillMaxWidth().clickable {}.padding(16.dp),
+        Modifier.fillMaxWidth().padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(label, style = MaterialTheme.typography.bodyLarge, color = c.onSurface)
         if (trailingText != null) {
             Text(trailingText, style = MaterialTheme.typography.bodyMedium, color = c.onSurfaceVariant)
-        } else {
-            Icon(painterResource(R.drawable.ic_chevron_right), null, tint = c.locked, modifier = Modifier.size(16.dp))
         }
     }
 }
@@ -191,9 +205,11 @@ private fun ThemeSelector(selected: ThemeMode, onSelect: (ThemeMode) -> Unit) {
                 style = MaterialTheme.typography.labelLarge,
                 color = if (on) c.onPrimaryContainer else c.onSurfaceVariant,
                 textAlign = TextAlign.Center,
+                // 14dp of vertical padding around a 20sp line box = a 48dp target (HANDOFF.md §8);
+                // 9dp left these segments at 38dp.
                 modifier = Modifier.weight(1f).clip(CircleShape)
                     .background(if (on) c.primaryContainer else androidx.compose.ui.graphics.Color.Transparent)
-                    .clickable { onSelect(mode) }.padding(vertical = 9.dp),
+                    .clickable { onSelect(mode) }.padding(vertical = 14.dp),
             )
         }
     }

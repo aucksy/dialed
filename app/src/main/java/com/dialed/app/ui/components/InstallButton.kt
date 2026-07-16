@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dialed.app.R
 import com.dialed.app.ui.theme.dialedColors
@@ -114,30 +116,56 @@ fun UninstallButton(
     compact: Boolean = false,
 ) {
     val c = dialedColors
-    Row(
-        modifier = modifier
-            .then(if (compact) Modifier.size(38.dp) else Modifier.fillMaxWidth().height(56.dp))
-            .clip(CircleShape)
-            .background(c.error.copy(alpha = 0.10f))
-            .border(1.dp, c.error.copy(alpha = 0.35f), CircleShape)
-            .clickable(enabled = !loading, onClick = onClick),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        if (loading) {
-            CircularProgressIndicator(color = c.error, strokeWidth = 2.dp, modifier = Modifier.size(16.dp))
-        } else {
-            Icon(
-                painterResource(R.drawable.ic_trash), contentDescription = "Uninstall from watch",
-                tint = c.error, modifier = Modifier.size(if (compact) 16.dp else 18.dp),
-            )
+    if (compact) {
+        // 38dp of visible pill inside a 48dp touch target (HANDOFF.md §8): the clickable belongs on
+        // the OUTER box, or the target stays 38dp no matter how large the wrapper is.
+        Box(
+            modifier = modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .clickable(enabled = !loading, onClick = onClick),
+            contentAlignment = Alignment.Center,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(38.dp)
+                    .clip(CircleShape)
+                    .background(c.error.copy(alpha = 0.10f))
+                    .border(1.dp, c.error.copy(alpha = 0.35f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) { UninstallGlyph(loading = loading, iconSize = 16.dp) }
         }
-        if (!compact) {
+    } else {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .clip(CircleShape)
+                .background(c.error.copy(alpha = 0.10f))
+                .border(1.dp, c.error.copy(alpha = 0.35f), CircleShape)
+                .clickable(enabled = !loading, onClick = onClick),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            UninstallGlyph(loading = loading, iconSize = 18.dp)
             Text(
                 text = if (loading) "Removing…" else "Remove from watch",
                 color = c.error,
                 style = MaterialTheme.typography.labelLarge,
             )
         }
+    }
+}
+
+@Composable
+private fun UninstallGlyph(loading: Boolean, iconSize: Dp) {
+    val c = dialedColors
+    if (loading) {
+        CircularProgressIndicator(color = c.error, strokeWidth = 2.dp, modifier = Modifier.size(16.dp))
+    } else {
+        Icon(
+            painterResource(R.drawable.ic_trash), contentDescription = "Uninstall from watch",
+            tint = c.error, modifier = Modifier.size(iconSize),
+        )
     }
 }

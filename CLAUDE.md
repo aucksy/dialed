@@ -1,15 +1,20 @@
 # Dialed — project context (read first)
 
 Dialed is a **native Kotlin/Compose Watch Face Push (WFP) marketplace** for Wear OS 6 — a **living
-hub** that bundles the whole fablecollection watch-face collection, sells it as a **one-time
-purchase**, pushes faces to the watch via WFP, and doubles as the developer's **laptop-free test
-harness**. Repo: **github.com/aucksy/dialed** (live; CI green; shipped `dialed-v0.2.1`). Build guide:
-`watchface-marketplace-build-guide.md`.
+hub** that bundles the fablecollection watch-face collection, pushes faces to the watch via WFP, and
+doubles as the developer's **laptop-free test harness**. Repo: **github.com/aucksy/dialed** (live; CI
+green; shipped **`dialed-v0.19.0`**). Build guide: `watchface-marketplace-build-guide.md`.
 
-**▶ ACTIVE ROADMAP (post-v0.2.1): `docs/IMPROVEMENTS-PLAN.md`** — the 8 owner-reported on-device issues
-(resolution, installed-state/uninstall, animated showcase, wear setting-face animation, carousel
-visibility, motion jank, complication alignment) phased v0.3.0→v0.8.0. Start there; keep its Progress
-table live. Phase 0 is a research spike that unblocks the faces-repo fixes.
+**▶ ACTIVE ROADMAP: `docs/ASSESSMENT.md` + `docs/IMPLEMENTATION-PLAN.md`** (2026-07-15 end-to-end
+Fable assessment of both apps). **Start there.** The plan is 8 dependency-sliced phases —
+1 hygiene (v0.19.0 ✅) · 2 collections IA + remote catalog config · 3 per-collection Play Billing ·
+4 store readiness · 5 default face · 6 living gallery · 7 Collection-3 scale-out · 8 wear polish —
+each with exact scope, acceptance criteria, and a ready-to-paste kickoff prompt. Its §0 carries the
+standing rules and the owner-approved product decisions (collections model, free-face trials,
+per-collection one-time purchases, `config/catalog.json` as the admin surface, prices in Play Console).
+
+`docs/IMPROVEMENTS-PLAN.md` is the **superseded** v0.3.0→v0.10.0 roadmap — history only; its Progress
+table records what each of those tags shipped.
 
 **Design source of truth:**
 - Phone: `Dialed Watch-Face Store-handoff/dialed-watch-face-store/project/Dialed - Design Spec.dc.html` + `HANDOFF.md`.
@@ -29,12 +34,12 @@ table live. Phase 0 is a research spike that unblocks the faces-repo fixes.
 - Toolchain pinned to Google's WatchFacePush sample: **AGP 9.1.1 · Gradle 9.4.1 · Kotlin 2.3.21 · Compose BOM 2026.04.01 · compileSdk 36 · JVM 17**. AGP 9 has built-in Kotlin — do NOT apply `org.jetbrains.kotlin.android` (fatal); apply only `android-application`/`library` + `compose-compiler`.
 
 ## Architecture
-- **`:app`** — phone: Compose storefront + (Phase 2) Billing + (Phase 4) Data-Layer sender. CI bundles face APKs → `assets/faces/<key>.apk` + tokens → `assets/tokens/<key>.token` (gitignored, built fresh each run).
-- **`faces/`** — git submodule → github.com/aucksy/fablecollection (the 18-face library, one source of truth).
-- **`facepacks/<key>/`** — GENERATED per-face WFP packaging modules. `wff-res/` = a COPY of the submodule's res with `watchface.xml` patched to **bare resource names**; `build.gradle.kts` overrides applicationId. Regenerate with `tools/gen-facepacks.mjs` (idempotent).
-- **`:wear-common`** — DONE. Shared phone↔watch protocol (`WearConstants`, dependency-free) + `WatchFaceActivationStrategy`.
-- **`:wear`** — NEXT (Phase 3-4): WFP bridge. **`:watchface`** — Phase 5 (bundled default face).
-- `dialed-faces.keystore` — shared throwaway faces key (≠ `:app` key). `dialed-app` currently debug-signed in CI.
+- **`:app`** — phone storefront (Compose) + Data-Layer sender (`transport/WatchConnection.kt` = `WatchBridge`). CI bundles face APKs → `assets/faces/<key>.apk` + tokens → `assets/tokens/<key>.token` (gitignored, built fresh each run). Billing is still a **debug-only stub** — real Play Billing is plan Phase 3.
+- **`faces/`** — git submodule → github.com/aucksy/fablecollection (the 18-face library, one source of truth). ⚠ fablecollection also hosts Collection 3 (25 faces) — `tools/gen-facepacks.mjs` has an explicit `BUNDLED_FACES` allowlist so a submodule bump can't silently balloon the store 18→43.
+- **`facepacks/<key>/`** — GENERATED per-face WFP packaging modules. `wff-res/` = a COPY of the submodule's res with `watchface.xml` patched to **bare resource names**; `build.gradle.kts` overrides applicationId. Regenerate with `node tools/gen-facepacks.mjs "<ABSOLUTE-REPO-ROOT>"` — **pass the root explicitly**, the space in "Dialed App" breaks the script's own path resolution.
+- **`:wear-common`** — shared phone↔watch protocol (`WearConstants`, dependency-free) + `WatchFaceActivationStrategy`. Wire enums/bytes are **ordinal/value-stable: append only**.
+- **`:wear`** — the WFP bridge + concierge UI (`wfp/` = repository, `DialedListenerService`, `TransferSession`, `WfpStateStore`, `FacePreviewExtractor`). **`:watchface`** (bundled default face) = plan Phase 5.
+- **Signing:** `:app` + `:wear` share the committed **stable** `dialed-app-debug.keystore` (a per-run debug key gave every release a new signature → "app not compatible"). `dialed-faces.keystore` signs the faces and MUST stay a different key (WFP rule).
 
 ## ⚠ WFP FACE-VALIDATION GOTCHAS (these blocked everything — the 18 faces were never WFP-validated before)
 Google's validator rejected all 18 for two reasons; both fixed in `tools/gen-facepacks.mjs`:
@@ -48,7 +53,16 @@ Dead-ends ruled out: NOT density (nodpi is fine), NOT PNG-decode (ImageIO reads 
 3. `java -jar validator-push-cli-1.0.0-alpha09.jar --apk_path=<face>.apk --package_name=com.dialed.app` → on success prints `generated token: <base64>:<base64>`.
 4. Download CI artifacts w/o gh CLI: `git credential fill` → `curl -H "Authorization: Bearer $TOKEN"` the Actions API (NEVER print the token). Extract zips with PowerShell (tar chokes on `C:` paths).
 
-## Wear bridge plan (Phase 3-4, next) — reference: Google androidify
+## ⚠ WFP APP-LAYER RULES (each one was paid for with an on-wrist cycle — see `Resources/wff-watchface.skill` → `references/companion-app.md`)
+- **Timeout EVERY WFP binder call** (`withTimeoutOrNull`) and **rethrow `CancellationException` before any broad `catch`** — an unbounded call on a cold service hangs the receive coroutine, its `finally` never runs, the single-transfer lock leaks, and every later push answers BUSY ("your watch is busy") until force-stop.
+- **Never downgrade a real install to FAILED**: commit success first, wrap post-install side-effects in `runCatching`. **Finalize exactly once, in a `finally`, defaulting FAILED.**
+- **Activation is a platform once-ever budget.** Always ATTEMPT the unattended set-active when we don't own the active face and hold the permission; let the platform's own refusal be the authority; never latch locally; a refused set → the manual long-press coach, **never** a false "Dialed in.". Auto-apply keeps working only via the ownership chain (updating the slot we already own). First-of-day auto-apply after the user switches away is **platform-limited — closed, not fixable**.
+- **Never `channelClient.close()` after `sendFile`** (sendFile closes its own stream → receiver sees `CLOSE_REASON_NORMAL` = success; closing yourself surfaces `REMOTE_CLOSE` and breaks every transfer).
+- Receive/install runs on a **process-scoped** scope, not the service `Job` (GMS destroys an idle `WearableListenerService` the moment a callback returns).
+- Home/glance must show the **genuine** slot state (`listWatchFaces()` + `isWatchFaceActive`), never a "last pushed" cache; trust a cached name/preview only when the stored package matches what WFP reports installed.
+- Wear round hero layouts: **no centred `Column`** (it overflows + clips) — `BoxWithConstraints` + fractional anchors per the spec; let the EdgeButton overlay the bezel. `ScrollInfoProvider` is in **`wear.compose.foundation`**, not material3.
+
+## Wear bridge design — reference: Google androidify
 Dep-free protocol already in `:wear-common/WearConstants`: phone `MessageClient.sendRequest("/dialed/initiate_transfer", "<transferId>\n<token>")` → watch replies 1 byte (proceed) → phone `ChannelClient.openChannel("/dialed/transfer_apk/<id>")` + `sendFile(apkUri)` → watch receives, installs via WFP, sends `/dialed/finalize_transfer/<id>` back.
 - **`:wear`**: `WatchFacePushRepository` (androidx WFP: `listWatchFaces()` → `remainingSlotCount`/`installedWatchFaceDetails.first().slotId`; `addWatchFace(pfd,token)`/`updateWatchFace(slotId,pfd,token)` catching `AddWatchFaceException`/`UpdateWatchFaceException`; `setWatchFaceAsActive(slotId)` one-shot; `isWatchFaceActive(pkg)`) + `DialedListenerService : WearableListenerService` (3 intent-filters) + minimal Wear-Compose status/permission UI (build from `HANDOFF-WATCH.md`) + manifest (WFP perms `PUSH_WATCH_FACES` + `SET_PUSHED_WATCH_FACE_AS_ACTIVE`, capability `dialed_wfp_install` in `res/values/wear.xml`, `DEFAULT_WATCHFACE_VALIDATION_TOKEN` meta-data for Phase 5).
 - **`:app`**: `WatchConnection` (CapabilityClient discover `dialed_wfp_install` + `WearableApiAvailability` guard; MessageClient/ChannelClient sender reading `assets/faces/<key>.apk`+`assets/tokens/<key>.token`; APK→PFD via cacheDir copy) + `PushToWatchSheet` (4-beat, HANDOFF.md F3) + wire the Install button.
@@ -59,19 +73,23 @@ Exact androidify reference files (re-fetch raw): `wear/.../watchfacepush/WatchFa
 `node scripts/add_face.mjs` (sync submodule + regenerate facepacks/catalog/previews) → commit → tag `dialed-vX.Y.Z` → push --follow-tags → CI builds+validates+bundles.
 
 ## Ship loop
-Validate → adversarial review → push main → tag `dialed-v*` → paste the direct `.apk` link. Git author `simpleapps108@gmail.com`. No `gh` CLI (poll/download CI via the API + credential-helper token).
+Edit → compile-review → **adversarial logic review** → fix → commit → **bump versionCode/versionName in BOTH `app/` and `wear/`** → push main → `git tag dialed-vX.Y.Z` → **push the tag explicitly** (`git push origin <tag>`; a lightweight tag does NOT ride `--follow-tags`) → poll CI green → paste BOTH direct APK links (`releases/download/<tag>/<tag>-phone.apk` and `-wear.apk`) + what to re-test. Review BEFORE tagging, never after. Git author `simpleapps108@gmail.com`. No `gh` CLI (poll/download CI via the Actions API + `git credential fill` token — never print it).
 
-## Phase status
-- ✅ **Phase 0 COMPLETE + verified** — all 18 faces pass WFP validation (18/18); CI bundles 18 APKs + 18 tokens into `:app` (confirmed in the built APK).
-- ✅ **Phase 1** storefront (Home/FaceDetail/Paywall/Settings/Onboarding + full design system) + debug-unlock. `:wear-common` done.
-- ✅ **Phase 3-4 Wear bridge + phone→watch transport** — CODE COMPLETE + adversarially reviewed (4-agent, primary-source API-verified; ships on CI green). `:wear` companion (applicationId `com.dialed.app` = token package_name) = `WatchFacePushRepository` (androidx suspend WFP) + `DialedListenerService` (WearableListenerService: onRequest→proceed byte, onChannelOpened→receiveFile→install→finalize; single-transfer `AtomicBoolean` + one-way `claimTerminal`) + `TransferSession` (process-static bridge to the Wear-Compose UI) + `WfpStateStore` (DataStore: one-shot set-active + permission-denied) + `FacePreviewExtractor` (preview from the received APK). Wear UI (Home/FirstRun/Receive/Concierge/Unsupported) built from the wear design spec. `:app` = `WatchBridge` (CapabilityClient discover `dialed_wfp_install` + Message/Channel sender) + `PushToWatchSheet` + real watch status. CI builds both APKs in one run (same debug key → Data-Layer pairs them). **Owner-gated e2e remains: install `:wear` on the Pixel Watch 4 + grant set-active once.**
-- ⏳ Remaining: **4A** dev/sideload · **Phase 2** Billing · **Phase 5** default face + activation (`DEFAULT_WATCHFACE_VALIDATION_TOKEN` meta-data) · **Phase 6** polish/publish.
+## Phase status (see docs/IMPLEMENTATION-PLAN.md for what's next)
+- ✅ **Pipeline** — all 18 faces pass WFP validation; CI builds facepacks → validates → tokenises → bundles into `:app`, then builds both APKs (same stable key → the Data Layer pairs them).
+- ✅ **Phone storefront** (Home/FaceDetail/Paywall/Settings/Onboarding + the full design system).
+- ✅ **Wear bridge + transport** — shipped and hardened on-wrist across v0.2.1 → v0.18.0: push-reporting, installed-state + uninstall, auto-apply reliability + exit-to-face (v0.15), WFP call timeouts / transfer-lock leak (v0.16), genuine Home state (v0.17), working "Open on phone" (v0.18).
+- ✅ **Face quality** — complication alignment (v0.4.0), smooth motion (v0.5.0/v0.6.0), canvas → 480 fleet-max (v0.8.0/v0.9.0), icon complication labels across 17 faces (v0.11–v0.12).
+- ✅ **v0.19.0 hygiene** (plan Phase 1) — release paywall can no longer grant a free unlock; push-job race + cancellation hygiene; uninstall errors surfaced; honest unsupported-watch path (`RESPONSE_UNSUPPORTED` + query sentinel); restored-detail crash guard; `singleTask`; 48dp targets; dead code/controls removed.
+- ⏭️ **Next: plan Phase 2** — collections IA + `config/catalog.json` + free faces. Then Billing (3), store (4), default face (5), living gallery (6), Collection 3 (7), wear polish (8).
 
 ## Known deviations / TODO
-- Instrument Sans not wired (metrics match; typeface pending — `ui-text-google-fonts` + certs); wear side uses default typeface too.
-- FaceDial renders real `preview.png` (not procedural dials); `ticking` overlay deferred.
-- CI release APKs now `<tag>-phone.apk` + `<tag>-wear.apk` (fixed the old double-"dialed" name).
-- Wear "Browse/Open on phone" shows the platform `OpenOnPhoneDialog` only — it does NOT deep-link-launch the phone app (avoids the `wear-remote-interactions` dep); wire that in a later polish pass.
-- Watch receive progress is **indeterminate** (the Data Layer file transfer exposes no byte progress); the design's determinate % is not literally reproducible.
-- Phone push sheet has no distinct "unsupported watch" state — a watch that doesn't advertise `dialed_wfp_install` reads as disconnected.
-- `DEFAULT_WATCHFACE_VALIDATION_TOKEN` meta-data intentionally omitted until Phase 5 (needs a real default face APK).
+- **Billing is a debug-only stub.** `EntitlementStore` is one boolean; debug builds default UNLOCKED; the paywall/restore buttons are `BuildConfig.DEBUG`-gated no-ops in release. Real per-collection Play Billing = plan Phase 3; the entitlement schema becomes a per-collection set in Phase 2.
+- **Store readiness has not started** — CI ships debug-signed APKs only (no upload key, no AAB, no privacy policy, no listing). Plan Phase 4. ⚠ verify `com.dialed.app` is still free on Play FIRST: a collision forces a new applicationId, which re-mints every face token.
+- Instrument Sans not wired (metrics match; typeface pending — `ui-text-google-fonts` + certs); wear side uses the default typeface too.
+- `FaceDial` renders the real `preview.png` (static). The `ticking`/`rememberSecondsAngle` hook exists but is **currently unused** — it's the landing point for the real per-face animation (plan Phase 6 / `docs/research/R7`).
+- Detail "feature" chips are **series-level guesses** from `gen-facepacks.mjs` `SERIES_META`, not each face's real complication slots (plan Phase 2 fixes this at the generator).
+- Watch receive progress is **indeterminate** (the Data Layer file transfer exposes no byte progress); the design's determinate % is not literally reproducible. The receive screen also shows a placeholder, not the incoming face (plan Phase 8).
+- Phone F2 shared-element / F3 transfer beats / F4 unlock sheen / F6 logo sweep are not built (plain crossfade + indeterminate bar today).
+- `DEFAULT_WATCHFACE_VALIDATION_TOKEN` meta-data intentionally omitted until the default face exists (plan Phase 5) — the placeholder comment sits in `wear/src/main/AndroidManifest.xml`.
+- Wear Home face is **73dp per the spec**; the owner finds it small/high — a deliberate deviation is queued (plan Phase 8).

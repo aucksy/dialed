@@ -22,8 +22,19 @@ import kotlinx.coroutines.withTimeoutOrNull
  */
 class WatchFacePushRepository(private val context: Context) {
 
-    /** True on Wear OS 6+ where WFP exists. Call BEFORE [manager] — the factory throws otherwise. */
-    fun isSupported(): Boolean = WatchFacePushManagerFactory.isSupported()
+    /**
+     * True on Wear OS 6+ where WFP exists. Call BEFORE [manager] — the factory throws otherwise.
+     * Guarded against [Throwable] (not just Exception) on purpose: this is the "does this platform
+     * have Watch Face Push at all" probe, and on an old watch a linkage failure against the
+     * API-36-only surface would surface as an Error, not an Exception. Anything other than a clean
+     * `true` means: treat the watch as unsupported and say so honestly.
+     */
+    fun isSupported(): Boolean = try {
+        WatchFacePushManagerFactory.isSupported()
+    } catch (t: Throwable) {
+        Log.w(TAG, "isSupported probe failed (${t.javaClass.simpleName}) — treating as unsupported")
+        false
+    }
 
     private fun manager(): WatchFacePushManager =
         WatchFacePushManagerFactory.createWatchFacePushManager(context)
@@ -106,12 +117,6 @@ class WatchFacePushRepository(private val context: Context) {
         } ?: false // cold/wedged service -> assume not-owned (never block the pre-install strategy)
     } catch (e: CancellationException) {
         throw e
-    } catch (e: Exception) {
-        false
-    }
-
-    suspend fun hasInstalledFace(): Boolean = try {
-        manager().listWatchFaces().installedWatchFaceDetails.isNotEmpty()
     } catch (e: Exception) {
         false
     }

@@ -34,6 +34,12 @@ private fun materialSchemeFrom(c: DialedColors): ColorScheme {
         outlineVariant = c.outlineVariant,
         error = c.error,
         scrim = c.scrim,
+        // The inverse roles are what Material's default Snackbar paints itself with. Left unmapped
+        // they fall back to the baseline (non-Dialed) palette, which would make the snackbar the one
+        // off-system surface in the app.
+        inverseSurface = c.surfaceContainerHigh,
+        inverseOnSurface = c.onSurface,
+        inversePrimary = c.primary,
     )
 }
 

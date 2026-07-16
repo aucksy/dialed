@@ -18,6 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.dialed.app.model.WatchConnection
 import com.dialed.app.model.WatchStatus
@@ -61,7 +65,12 @@ fun WatchStatusPill(status: WatchStatus, modifier: Modifier = Modifier) {
             .clip(CircleShape)
             .background(bg)
             .border(1.dp, border, CircleShape)
-            .padding(horizontal = 14.dp, vertical = 7.dp),
+            .padding(horizontal = 14.dp, vertical = 7.dp)
+            // HANDOFF.md §8: the pill announces connection changes to TalkBack as a live region.
+            .semantics {
+                liveRegion = LiveRegionMode.Polite
+                contentDescription = label
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         androidx.compose.foundation.layout.Box(

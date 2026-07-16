@@ -65,6 +65,22 @@ class DialedListenerService : WearableListenerService() {
      * the binder thread always replies before the phone's own [WearConstants.QUERY_STATE_TIMEOUT_MS].
      */
     override fun onRequest(nodeId: String, path: String, data: ByteArray): Task<ByteArray?>? {
+        // Wear OS < 6 has no Watch Face Push: this watch can NEVER install a face. Say so on every
+        // RPC so the phone can state it plainly (and up-front, on the query) instead of letting the
+        // user push and meet a generic "couldn't install" after a full transfer. The app installs
+        // here (minSdk 33) precisely so it can answer this honestly.
+        if (!repo.isSupported()) {
+            Log.w(TAG, "RPC on an unsupported watch (no WFP): $path")
+            return when {
+                path == WearConstants.PATH_QUERY_STATE ->
+                    Tasks.forResult(WearConstants.encodeUnsupportedState())
+                path == WearConstants.PATH_UNINSTALL ->
+                    Tasks.forResult(WearConstants.encodeUninstallResult(WatchFaceUninstallResult.NOT_FOUND))
+                path.startsWith(WearConstants.PATH_INITIATE_TRANSFER) ->
+                    Tasks.forResult(byteArrayOf(WearConstants.RESPONSE_UNSUPPORTED))
+                else -> Tasks.forResult(null)
+            }
+        }
         when (path) {
             WearConstants.PATH_QUERY_STATE ->
                 return Tasks.forResult(runBlocking {

@@ -7,7 +7,7 @@
     <string name="theme_2">Slate Grand</string>
     <string name="theme_3">Bordeaux</string>
     <string name="theme_4">Emerald Hour</string>
-    <string name="slot_1">Top register (0–250)</string>
+    <string name="slot_1">Top register</string>
     <string name="slot_2">Event line</string>
     <string name="slot_3">Date window</string>
     <string name="cfg_seconds">Seconds hand</string>

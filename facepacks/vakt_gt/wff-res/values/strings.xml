@@ -7,8 +7,8 @@
     <string name="theme_2">Gulf Racing</string>
     <string name="theme_3">Verde Legend</string>
     <string name="theme_4">Night Stage</string>
-    <string name="slot_1">Top register (0–250)</string>
-    <string name="slot_2">Hero counter override</string>
+    <string name="slot_1">Top register</string>
+    <string name="slot_2">Hero counter</string>
     <string name="slot_3">Date window</string>
     <string name="cfg_seconds">Seconds hand</string>
     <string name="cfg_date">Date display</string>

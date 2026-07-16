@@ -17,8 +17,8 @@ android {
         applicationId = "com.dialed.app"
         minSdk = 33          // WFP itself needs API 36; gated at runtime via isSupported().
         targetSdk = 36
-        versionCode = 21
-        versionName = "0.21.0"
+        versionCode = 22
+        versionName = "0.22.0"
         vectorDrawables { useSupportLibrary = true }
     }
 

@@ -46,12 +46,6 @@
 </RoundRectangle>
 </PartDraw>
 </Group>
-<PartText x="316" y="225" width="37" height="29" name="nt_t0_2_dnum">
-<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
-<Text align="CENTER">
-<Font family="sairasemicondensed_700" size="19" color="#ddd2a8"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
-</Text>
-</PartText>
 <PartImage x="121" y="192" width="19" height="56" pivotX="0.4947" pivotY="0.7143" angle="40" name="needle_0_t0">
 <Transform target="angle" value="40 + ([BATTERY_PERCENT] * 2.800000)" />
 <Image resource="needle_0_t0" />
@@ -60,23 +54,6 @@
 <Transform target="angle" value="0 + ((([STEP_COUNT] - (floor([STEP_COUNT] / 10000) * 10000)) / 10000) * 360.0000)" />
 <Image resource="needle_1_t0" />
 </PartImage>
-<AnalogClock x="204" y="96" width="108" height="108">
-<SecondHand resource="subsec_0_t0" x="44" y="2" width="20" height="71" pivotX="0.5000" pivotY="0.7324">
-<Tick strength="0.5" duration="0.3" />
-</SecondHand>
-</AnalogClock>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t0" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
-<MinuteHand resource="hand_minute_t0" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t0">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t0" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
 </Group>
 </ListOption>
 <ListOption id="t1">
@@ -99,12 +76,6 @@
 </RoundRectangle>
 </PartDraw>
 </Group>
-<PartText x="316" y="225" width="37" height="29" name="nt_t1_2_dnum">
-<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
-<Text align="CENTER">
-<Font family="sairasemicondensed_700" size="19" color="#c2c8a4"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
-</Text>
-</PartText>
 <PartImage x="121" y="192" width="19" height="56" pivotX="0.4947" pivotY="0.7143" angle="40" name="needle_0_t1">
 <Transform target="angle" value="40 + ([BATTERY_PERCENT] * 2.800000)" />
 <Image resource="needle_0_t1" />
@@ -113,23 +84,6 @@
 <Transform target="angle" value="0 + ((([STEP_COUNT] - (floor([STEP_COUNT] / 10000) * 10000)) / 10000) * 360.0000)" />
 <Image resource="needle_1_t1" />
 </PartImage>
-<AnalogClock x="204" y="96" width="108" height="108">
-<SecondHand resource="subsec_0_t1" x="44" y="2" width="20" height="71" pivotX="0.5000" pivotY="0.7324">
-<Tick strength="0.5" duration="0.3" />
-</SecondHand>
-</AnalogClock>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t1" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
-<MinuteHand resource="hand_minute_t1" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t1">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t1" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
 </Group>
 </ListOption>
 <ListOption id="t2">
@@ -152,12 +106,6 @@
 </RoundRectangle>
 </PartDraw>
 </Group>
-<PartText x="316" y="225" width="37" height="29" name="nt_t2_2_dnum">
-<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
-<Text align="CENTER">
-<Font family="sairasemicondensed_700" size="19" color="#b7d2c4"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
-</Text>
-</PartText>
 <PartImage x="121" y="192" width="19" height="56" pivotX="0.4947" pivotY="0.7143" angle="40" name="needle_0_t2">
 <Transform target="angle" value="40 + ([BATTERY_PERCENT] * 2.800000)" />
 <Image resource="needle_0_t2" />
@@ -166,23 +114,6 @@
 <Transform target="angle" value="0 + ((([STEP_COUNT] - (floor([STEP_COUNT] / 10000) * 10000)) / 10000) * 360.0000)" />
 <Image resource="needle_1_t2" />
 </PartImage>
-<AnalogClock x="204" y="96" width="108" height="108">
-<SecondHand resource="subsec_0_t2" x="44" y="2" width="20" height="71" pivotX="0.5000" pivotY="0.7324">
-<Tick strength="0.5" duration="0.3" />
-</SecondHand>
-</AnalogClock>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t2" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
-<MinuteHand resource="hand_minute_t2" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t2">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t2" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
 </Group>
 </ListOption>
 <ListOption id="t3">
@@ -205,12 +136,6 @@
 </RoundRectangle>
 </PartDraw>
 </Group>
-<PartText x="316" y="225" width="37" height="29" name="nt_t3_2_dnum">
-<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
-<Text align="CENTER">
-<Font family="sairasemicondensed_700" size="19" color="#dba892"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
-</Text>
-</PartText>
 <PartImage x="121" y="192" width="19" height="56" pivotX="0.4947" pivotY="0.7143" angle="40" name="needle_0_t3">
 <Transform target="angle" value="40 + ([BATTERY_PERCENT] * 2.800000)" />
 <Image resource="needle_0_t3" />
@@ -219,23 +144,6 @@
 <Transform target="angle" value="0 + ((([STEP_COUNT] - (floor([STEP_COUNT] / 10000) * 10000)) / 10000) * 360.0000)" />
 <Image resource="needle_1_t3" />
 </PartImage>
-<AnalogClock x="204" y="96" width="108" height="108">
-<SecondHand resource="subsec_0_t3" x="44" y="2" width="20" height="71" pivotX="0.5000" pivotY="0.7324">
-<Tick strength="0.5" duration="0.3" />
-</SecondHand>
-</AnalogClock>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t3" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
-<MinuteHand resource="hand_minute_t3" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t3">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t3" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
 </Group>
 </ListOption>
 <ListOption id="t4">
@@ -258,12 +166,6 @@
 </RoundRectangle>
 </PartDraw>
 </Group>
-<PartText x="316" y="225" width="37" height="29" name="nt_t4_2_dnum">
-<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
-<Text align="CENTER">
-<Font family="sairasemicondensed_700" size="19" color="#d8c88a"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
-</Text>
-</PartText>
 <PartImage x="121" y="192" width="19" height="56" pivotX="0.4947" pivotY="0.7143" angle="40" name="needle_0_t4">
 <Transform target="angle" value="40 + ([BATTERY_PERCENT] * 2.800000)" />
 <Image resource="needle_0_t4" />
@@ -272,23 +174,6 @@
 <Transform target="angle" value="0 + ((([STEP_COUNT] - (floor([STEP_COUNT] / 10000) * 10000)) / 10000) * 360.0000)" />
 <Image resource="needle_1_t4" />
 </PartImage>
-<AnalogClock x="204" y="96" width="108" height="108">
-<SecondHand resource="subsec_0_t4" x="44" y="2" width="20" height="71" pivotX="0.5000" pivotY="0.7324">
-<Tick strength="0.5" duration="0.3" />
-</SecondHand>
-</AnalogClock>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t4" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
-<MinuteHand resource="hand_minute_t4" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t4">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t4" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
 </Group>
 </ListOption>
 </ListConfiguration>
@@ -313,12 +198,6 @@
 </RoundRectangle>
 </PartDraw>
 </Group>
-<PartText x="316" y="225" width="37" height="29" name="nt_dark_2_dnum">
-<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
-<Text align="CENTER">
-<Font family="sairasemicondensed_700" size="19" color="#d8d4cc"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
-</Text>
-</PartText>
 <PartImage x="121" y="192" width="19" height="56" pivotX="0.4947" pivotY="0.7143" angle="40" name="needle_0_dark">
 <Transform target="angle" value="40 + ([BATTERY_PERCENT] * 2.800000)" />
 <Image resource="needle_0_dark" />
@@ -327,11 +206,1698 @@
 <Transform target="angle" value="0 + ((([STEP_COUNT] - (floor([STEP_COUNT] / 10000) * 10000)) / 10000) * 360.0000)" />
 <Image resource="needle_1_dark" />
 </PartImage>
-<AnalogClock x="204" y="96" width="108" height="108">
-<SecondHand resource="subsec_0_dark" x="44" y="2" width="20" height="71" pivotX="0.5000" pivotY="0.7324">
-<Tick strength="0.5" duration="0.3" />
+</Group>
+</Group>
+<ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="202" y="94" width="112" height="112" supportedTypes="SHORT_TEXT LONG_TEXT RANGED_VALUE GOAL_PROGRESS WEIGHTED_ELEMENTS MONOCHROMATIC_IMAGE SMALL_IMAGE PHOTO_IMAGE EMPTY" isCustomizable="TRUE">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<DefaultProviderPolicy defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" />
+<BoundingOval x="0" y="0" width="112" height="112" outlinePadding="2" />
+<Complication type="SHORT_TEXT">
+<Group x="0" y="0" width="112" height="112" name="scT_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="sc_SHORT_TEXT_t0">
+<PartImage x="47" y="24" width="18" height="18" tintColor="#5c5c58" name="ic_SHORT_TEXT_t0">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_SHORT_TEXT_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#eae7df"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_SHORT_TEXT_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#5c5c58"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="sc_SHORT_TEXT_t1">
+<PartImage x="47" y="24" width="18" height="18" tintColor="#94897a" name="ic_SHORT_TEXT_t1">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_SHORT_TEXT_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#241f19"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_SHORT_TEXT_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#94897a"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="sc_SHORT_TEXT_t2">
+<PartImage x="47" y="24" width="18" height="18" tintColor="#5c6467" name="ic_SHORT_TEXT_t2">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_SHORT_TEXT_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#e4e8ea"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_SHORT_TEXT_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#5c6467"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="sc_SHORT_TEXT_t3">
+<PartImage x="47" y="24" width="18" height="18" tintColor="#6a5a58" name="ic_SHORT_TEXT_t3">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_SHORT_TEXT_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#ece2dd"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_SHORT_TEXT_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#6a5a58"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="sc_SHORT_TEXT_t4">
+<PartImage x="47" y="24" width="18" height="18" tintColor="#57635a" name="ic_SHORT_TEXT_t4">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_SHORT_TEXT_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#e7e5d8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_SHORT_TEXT_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#57635a"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="sc_SHORT_TEXT_dark">
+<PartImage x="47" y="24" width="18" height="18" tintColor="#8f8877" name="ic_SHORT_TEXT_dark">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_SHORT_TEXT_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_SHORT_TEXT_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#8f8877"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Complication>
+<Complication type="LONG_TEXT">
+<Group x="0" y="0" width="112" height="112" name="scT_LONG_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="sc_LONG_TEXT_t0">
+<PartText x="4" y="14" width="104" height="30" name="t_LONG_TEXT_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#b3a274"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="40" width="104" height="32" name="v_LONG_TEXT_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="21" color="#eae7df"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartImage x="48" y="74" width="16" height="16" tintColor="#5c5c58" name="ic_LONG_TEXT_t0">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="sc_LONG_TEXT_t1">
+<PartText x="4" y="14" width="104" height="30" name="t_LONG_TEXT_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#6a5a3a"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="40" width="104" height="32" name="v_LONG_TEXT_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="21" color="#241f19"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartImage x="48" y="74" width="16" height="16" tintColor="#94897a" name="ic_LONG_TEXT_t1">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="sc_LONG_TEXT_t2">
+<PartText x="4" y="14" width="104" height="30" name="t_LONG_TEXT_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#8aa6a0"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="40" width="104" height="32" name="v_LONG_TEXT_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="21" color="#e4e8ea"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartImage x="48" y="74" width="16" height="16" tintColor="#5c6467" name="ic_LONG_TEXT_t2">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="sc_LONG_TEXT_t3">
+<PartText x="4" y="14" width="104" height="30" name="t_LONG_TEXT_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#b06a5c"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="40" width="104" height="32" name="v_LONG_TEXT_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="21" color="#ece2dd"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartImage x="48" y="74" width="16" height="16" tintColor="#6a5a58" name="ic_LONG_TEXT_t3">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="sc_LONG_TEXT_t4">
+<PartText x="4" y="14" width="104" height="30" name="t_LONG_TEXT_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#c2a35c"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="40" width="104" height="32" name="v_LONG_TEXT_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="21" color="#e7e5d8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartImage x="48" y="74" width="16" height="16" tintColor="#57635a" name="ic_LONG_TEXT_t4">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_LONG_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="sc_LONG_TEXT_dark">
+<PartText x="4" y="14" width="104" height="30" name="t_LONG_TEXT_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="40" width="104" height="32" name="v_LONG_TEXT_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="21" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartImage x="48" y="74" width="16" height="16" tintColor="#8f8877" name="ic_LONG_TEXT_dark">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</Group>
+</Complication>
+<Complication type="RANGED_VALUE">
+<Group x="0" y="0" width="112" height="112" name="scT_RANGED_VALUE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="sc_RANGED_VALUE_t0">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_RANGED_VALUE_t0">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="150" direction="CLOCKWISE">
+<Stroke color="#595c5c58" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_RANGED_VALUE_t0">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="-150" direction="CLOCKWISE">
+<Transform target="endAngle" value="-150 + (clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 300)" />
+<Stroke color="#b3a274" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<PartImage x="47" y="24" width="18" height="18" tintColor="#5c5c58" name="ic_RANGED_VALUE_t0">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_RANGED_VALUE_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#eae7df"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_RANGED_VALUE_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#5c5c58"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="sc_RANGED_VALUE_t1">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_RANGED_VALUE_t1">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="150" direction="CLOCKWISE">
+<Stroke color="#5994897a" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_RANGED_VALUE_t1">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="-150" direction="CLOCKWISE">
+<Transform target="endAngle" value="-150 + (clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 300)" />
+<Stroke color="#6a5a3a" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<PartImage x="47" y="24" width="18" height="18" tintColor="#94897a" name="ic_RANGED_VALUE_t1">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_RANGED_VALUE_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#241f19"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_RANGED_VALUE_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#94897a"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="sc_RANGED_VALUE_t2">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_RANGED_VALUE_t2">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="150" direction="CLOCKWISE">
+<Stroke color="#595c6467" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_RANGED_VALUE_t2">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="-150" direction="CLOCKWISE">
+<Transform target="endAngle" value="-150 + (clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 300)" />
+<Stroke color="#8aa6a0" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<PartImage x="47" y="24" width="18" height="18" tintColor="#5c6467" name="ic_RANGED_VALUE_t2">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_RANGED_VALUE_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#e4e8ea"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_RANGED_VALUE_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#5c6467"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="sc_RANGED_VALUE_t3">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_RANGED_VALUE_t3">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="150" direction="CLOCKWISE">
+<Stroke color="#596a5a58" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_RANGED_VALUE_t3">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="-150" direction="CLOCKWISE">
+<Transform target="endAngle" value="-150 + (clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 300)" />
+<Stroke color="#b06a5c" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<PartImage x="47" y="24" width="18" height="18" tintColor="#6a5a58" name="ic_RANGED_VALUE_t3">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_RANGED_VALUE_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#ece2dd"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_RANGED_VALUE_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#6a5a58"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="sc_RANGED_VALUE_t4">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_RANGED_VALUE_t4">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="150" direction="CLOCKWISE">
+<Stroke color="#5957635a" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_RANGED_VALUE_t4">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="-150" direction="CLOCKWISE">
+<Transform target="endAngle" value="-150 + (clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 300)" />
+<Stroke color="#c2a35c" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<PartImage x="47" y="24" width="18" height="18" tintColor="#57635a" name="ic_RANGED_VALUE_t4">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_RANGED_VALUE_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#e7e5d8"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_RANGED_VALUE_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#57635a"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_RANGED_VALUE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="sc_RANGED_VALUE_dark">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_RANGED_VALUE_dark">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="150" direction="CLOCKWISE">
+<Stroke color="#598f8877" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_RANGED_VALUE_dark">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="-150" endAngle="-150" direction="CLOCKWISE">
+<Transform target="endAngle" value="-150 + (clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 300)" />
+<Stroke color="#d8d4cc" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<PartImage x="47" y="24" width="18" height="18" tintColor="#8f8877" name="ic_RANGED_VALUE_dark">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="4" y="33" width="104" height="47" name="v_RANGED_VALUE_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#d8d4cc"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="t_RANGED_VALUE_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#8f8877"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Complication>
+<Complication type="GOAL_PROGRESS">
+<Group x="0" y="0" width="112" height="112" name="scT_GOAL_PROGRESS">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="sc_GOAL_PROGRESS_t0">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_GOAL_PROGRESS_t0">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<Stroke color="#595c5c58" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_GOAL_PROGRESS_t0">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#b3a274" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<Group x="0" y="0" width="112" height="112" name="ovg_GOAL_PROGRESS_t0">
+<Transform target="alpha" value="[COMPLICATION.GOAL_PROGRESS_VALUE] > [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] ? 255 : 0" />
+<PartDraw x="0" y="0" width="112" height="112" name="ov_GOAL_PROGRESS_t0">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp(([COMPLICATION.GOAL_PROGRESS_VALUE] - [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#ddd2a8" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+</Group>
+<PartText x="4" y="33" width="104" height="47" name="v_GOAL_PROGRESS_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#eae7df"><Template>%.0f<Parameter expression="[COMPLICATION.GOAL_PROGRESS_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="pct_GOAL_PROGRESS_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#5c5c58"><Template>%.0f%%<Parameter expression="([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1)) * 100" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="sc_GOAL_PROGRESS_t1">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_GOAL_PROGRESS_t1">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<Stroke color="#5994897a" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_GOAL_PROGRESS_t1">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#6a5a3a" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<Group x="0" y="0" width="112" height="112" name="ovg_GOAL_PROGRESS_t1">
+<Transform target="alpha" value="[COMPLICATION.GOAL_PROGRESS_VALUE] > [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] ? 255 : 0" />
+<PartDraw x="0" y="0" width="112" height="112" name="ov_GOAL_PROGRESS_t1">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp(([COMPLICATION.GOAL_PROGRESS_VALUE] - [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#c2c8a4" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+</Group>
+<PartText x="4" y="33" width="104" height="47" name="v_GOAL_PROGRESS_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#241f19"><Template>%.0f<Parameter expression="[COMPLICATION.GOAL_PROGRESS_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="pct_GOAL_PROGRESS_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#94897a"><Template>%.0f%%<Parameter expression="([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1)) * 100" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="sc_GOAL_PROGRESS_t2">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_GOAL_PROGRESS_t2">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<Stroke color="#595c6467" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_GOAL_PROGRESS_t2">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#8aa6a0" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<Group x="0" y="0" width="112" height="112" name="ovg_GOAL_PROGRESS_t2">
+<Transform target="alpha" value="[COMPLICATION.GOAL_PROGRESS_VALUE] > [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] ? 255 : 0" />
+<PartDraw x="0" y="0" width="112" height="112" name="ov_GOAL_PROGRESS_t2">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp(([COMPLICATION.GOAL_PROGRESS_VALUE] - [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#b7d2c4" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+</Group>
+<PartText x="4" y="33" width="104" height="47" name="v_GOAL_PROGRESS_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#e4e8ea"><Template>%.0f<Parameter expression="[COMPLICATION.GOAL_PROGRESS_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="pct_GOAL_PROGRESS_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#5c6467"><Template>%.0f%%<Parameter expression="([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1)) * 100" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="sc_GOAL_PROGRESS_t3">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_GOAL_PROGRESS_t3">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<Stroke color="#596a5a58" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_GOAL_PROGRESS_t3">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#b06a5c" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<Group x="0" y="0" width="112" height="112" name="ovg_GOAL_PROGRESS_t3">
+<Transform target="alpha" value="[COMPLICATION.GOAL_PROGRESS_VALUE] > [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] ? 255 : 0" />
+<PartDraw x="0" y="0" width="112" height="112" name="ov_GOAL_PROGRESS_t3">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp(([COMPLICATION.GOAL_PROGRESS_VALUE] - [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#dba892" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+</Group>
+<PartText x="4" y="33" width="104" height="47" name="v_GOAL_PROGRESS_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#ece2dd"><Template>%.0f<Parameter expression="[COMPLICATION.GOAL_PROGRESS_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="pct_GOAL_PROGRESS_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#6a5a58"><Template>%.0f%%<Parameter expression="([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1)) * 100" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="sc_GOAL_PROGRESS_t4">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_GOAL_PROGRESS_t4">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<Stroke color="#5957635a" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_GOAL_PROGRESS_t4">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#c2a35c" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<Group x="0" y="0" width="112" height="112" name="ovg_GOAL_PROGRESS_t4">
+<Transform target="alpha" value="[COMPLICATION.GOAL_PROGRESS_VALUE] > [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] ? 255 : 0" />
+<PartDraw x="0" y="0" width="112" height="112" name="ov_GOAL_PROGRESS_t4">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp(([COMPLICATION.GOAL_PROGRESS_VALUE] - [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#d8c88a" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+</Group>
+<PartText x="4" y="33" width="104" height="47" name="v_GOAL_PROGRESS_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#e7e5d8"><Template>%.0f<Parameter expression="[COMPLICATION.GOAL_PROGRESS_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="pct_GOAL_PROGRESS_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#57635a"><Template>%.0f%%<Parameter expression="([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1)) * 100" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_GOAL_PROGRESS">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="sc_GOAL_PROGRESS_dark">
+<PartDraw x="0" y="0" width="112" height="112" name="trk_GOAL_PROGRESS_dark">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<Stroke color="#598f8877" thickness="3" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartDraw x="0" y="0" width="112" height="112" name="fill_GOAL_PROGRESS_dark">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#d8d4cc" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+<Group x="0" y="0" width="112" height="112" name="ovg_GOAL_PROGRESS_dark">
+<Transform target="alpha" value="[COMPLICATION.GOAL_PROGRESS_VALUE] > [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] ? 255 : 0" />
+<PartDraw x="0" y="0" width="112" height="112" name="ov_GOAL_PROGRESS_dark">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="0" direction="CLOCKWISE">
+<Transform target="endAngle" value="clamp(([COMPLICATION.GOAL_PROGRESS_VALUE] - [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+<Stroke color="#8f8877" thickness="3" cap="ROUND" />
+</Arc>
+</PartDraw>
+</Group>
+<PartText x="4" y="33" width="104" height="47" name="v_GOAL_PROGRESS_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_700" size="31" color="#d8d4cc"><Template>%.0f<Parameter expression="[COMPLICATION.GOAL_PROGRESS_VALUE]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="4" y="64" width="104" height="30" name="pct_GOAL_PROGRESS_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="20" color="#8f8877"><Template>%.0f%%<Parameter expression="([COMPLICATION.GOAL_PROGRESS_VALUE] / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] > 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1)) * 100" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Complication>
+<Complication type="WEIGHTED_ELEMENTS">
+<Group x="0" y="0" width="112" height="112" name="scT_WEIGHTED_ELEMENTS">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="sc_WEIGHTED_ELEMENTS_t0">
+<PartDraw x="0" y="0" width="112" height="112" name="we_WEIGHTED_ELEMENTS_t0">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<WeightedStroke colors="[COMPLICATION.WEIGHTED_ELEMENTS_COLORS]" weights="[COMPLICATION.WEIGHTED_ELEMENTS_WEIGHTS]" thickness="4" discreteGap="7" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartImage x="46" y="46" width="20" height="20" tintColor="#5c5c58" name="ic_WEIGHTED_ELEMENTS_t0">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="sc_WEIGHTED_ELEMENTS_t1">
+<PartDraw x="0" y="0" width="112" height="112" name="we_WEIGHTED_ELEMENTS_t1">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<WeightedStroke colors="[COMPLICATION.WEIGHTED_ELEMENTS_COLORS]" weights="[COMPLICATION.WEIGHTED_ELEMENTS_WEIGHTS]" thickness="4" discreteGap="7" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartImage x="46" y="46" width="20" height="20" tintColor="#94897a" name="ic_WEIGHTED_ELEMENTS_t1">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="sc_WEIGHTED_ELEMENTS_t2">
+<PartDraw x="0" y="0" width="112" height="112" name="we_WEIGHTED_ELEMENTS_t2">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<WeightedStroke colors="[COMPLICATION.WEIGHTED_ELEMENTS_COLORS]" weights="[COMPLICATION.WEIGHTED_ELEMENTS_WEIGHTS]" thickness="4" discreteGap="7" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartImage x="46" y="46" width="20" height="20" tintColor="#5c6467" name="ic_WEIGHTED_ELEMENTS_t2">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="sc_WEIGHTED_ELEMENTS_t3">
+<PartDraw x="0" y="0" width="112" height="112" name="we_WEIGHTED_ELEMENTS_t3">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<WeightedStroke colors="[COMPLICATION.WEIGHTED_ELEMENTS_COLORS]" weights="[COMPLICATION.WEIGHTED_ELEMENTS_WEIGHTS]" thickness="4" discreteGap="7" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartImage x="46" y="46" width="20" height="20" tintColor="#6a5a58" name="ic_WEIGHTED_ELEMENTS_t3">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="sc_WEIGHTED_ELEMENTS_t4">
+<PartDraw x="0" y="0" width="112" height="112" name="we_WEIGHTED_ELEMENTS_t4">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<WeightedStroke colors="[COMPLICATION.WEIGHTED_ELEMENTS_COLORS]" weights="[COMPLICATION.WEIGHTED_ELEMENTS_WEIGHTS]" thickness="4" discreteGap="7" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartImage x="46" y="46" width="20" height="20" tintColor="#57635a" name="ic_WEIGHTED_ELEMENTS_t4">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_WEIGHTED_ELEMENTS">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="sc_WEIGHTED_ELEMENTS_dark">
+<PartDraw x="0" y="0" width="112" height="112" name="we_WEIGHTED_ELEMENTS_dark">
+<Arc centerX="56" centerY="56" width="100" height="100" startAngle="0" endAngle="360" direction="CLOCKWISE">
+<WeightedStroke colors="[COMPLICATION.WEIGHTED_ELEMENTS_COLORS]" weights="[COMPLICATION.WEIGHTED_ELEMENTS_WEIGHTS]" thickness="4" discreteGap="7" cap="BUTT" />
+</Arc>
+</PartDraw>
+<PartImage x="46" y="46" width="20" height="20" tintColor="#8f8877" name="ic_WEIGHTED_ELEMENTS_dark">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</Group>
+</Complication>
+<Complication type="MONOCHROMATIC_IMAGE">
+<Group x="0" y="0" width="112" height="112" name="scT_MONOCHROMATIC_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="sc_MONOCHROMATIC_IMAGE_t0">
+<PartImage x="33" y="33" width="47" height="47" tintColor="#eae7df" name="ic_MONOCHROMATIC_IMAGE_t0">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="sc_MONOCHROMATIC_IMAGE_t1">
+<PartImage x="33" y="33" width="47" height="47" tintColor="#241f19" name="ic_MONOCHROMATIC_IMAGE_t1">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="sc_MONOCHROMATIC_IMAGE_t2">
+<PartImage x="33" y="33" width="47" height="47" tintColor="#e4e8ea" name="ic_MONOCHROMATIC_IMAGE_t2">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="sc_MONOCHROMATIC_IMAGE_t3">
+<PartImage x="33" y="33" width="47" height="47" tintColor="#ece2dd" name="ic_MONOCHROMATIC_IMAGE_t3">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="sc_MONOCHROMATIC_IMAGE_t4">
+<PartImage x="33" y="33" width="47" height="47" tintColor="#e7e5d8" name="ic_MONOCHROMATIC_IMAGE_t4">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_MONOCHROMATIC_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="sc_MONOCHROMATIC_IMAGE_dark">
+<PartImage x="33" y="33" width="47" height="47" tintColor="#d8d4cc" name="ic_MONOCHROMATIC_IMAGE_dark">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</Group>
+</Complication>
+<Complication type="SMALL_IMAGE">
+<Group x="0" y="0" width="112" height="112" name="scT_SMALL_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="sc_SMALL_IMAGE_t0">
+<PartImage x="22" y="22" width="68" height="68" name="img_SMALL_IMAGE_t0">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="sc_SMALL_IMAGE_t1">
+<PartImage x="22" y="22" width="68" height="68" name="img_SMALL_IMAGE_t1">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="sc_SMALL_IMAGE_t2">
+<PartImage x="22" y="22" width="68" height="68" name="img_SMALL_IMAGE_t2">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="sc_SMALL_IMAGE_t3">
+<PartImage x="22" y="22" width="68" height="68" name="img_SMALL_IMAGE_t3">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="sc_SMALL_IMAGE_t4">
+<PartImage x="22" y="22" width="68" height="68" name="img_SMALL_IMAGE_t4">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_SMALL_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="sc_SMALL_IMAGE_dark">
+<PartImage x="22" y="22" width="68" height="68" name="img_SMALL_IMAGE_dark">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</Group>
+</Complication>
+<Complication type="PHOTO_IMAGE">
+<Group x="0" y="0" width="112" height="112" name="scT_PHOTO_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="sc_PHOTO_IMAGE_t0">
+<PartImage x="20" y="20" width="73" height="73" name="img_PHOTO_IMAGE_t0">
+<Image resource="[COMPLICATION.PHOTO_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="sc_PHOTO_IMAGE_t1">
+<PartImage x="20" y="20" width="73" height="73" name="img_PHOTO_IMAGE_t1">
+<Image resource="[COMPLICATION.PHOTO_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="sc_PHOTO_IMAGE_t2">
+<PartImage x="20" y="20" width="73" height="73" name="img_PHOTO_IMAGE_t2">
+<Image resource="[COMPLICATION.PHOTO_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="sc_PHOTO_IMAGE_t3">
+<PartImage x="20" y="20" width="73" height="73" name="img_PHOTO_IMAGE_t3">
+<Image resource="[COMPLICATION.PHOTO_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="sc_PHOTO_IMAGE_t4">
+<PartImage x="20" y="20" width="73" height="73" name="img_PHOTO_IMAGE_t4">
+<Image resource="[COMPLICATION.PHOTO_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_PHOTO_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="sc_PHOTO_IMAGE_dark">
+<PartImage x="20" y="20" width="73" height="73" name="img_PHOTO_IMAGE_dark">
+<Image resource="[COMPLICATION.PHOTO_IMAGE]" />
+</PartImage>
+</Group>
+</Group>
+</Complication>
+<Complication type="EMPTY">
+<Group x="0" y="0" width="112" height="112" name="scT_EMPTY">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="112" height="112" name="se_t0">
+<PartImage x="0" y="0" width="112" height="112" name="slotart_t0">
+<Image resource="slotart_0_t0" />
+</PartImage>
+<PartImage x="46" y="4" width="20" height="71" pivotX="0.5000" pivotY="0.7324" angle="0" name="subsec_0_t0_e">
+<Transform target="angle" value="[SECOND] * 6" />
+<Image resource="subsec_0_t0" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="112" height="112" name="se_t1">
+<PartImage x="0" y="0" width="112" height="112" name="slotart_t1">
+<Image resource="slotart_0_t1" />
+</PartImage>
+<PartImage x="46" y="4" width="20" height="71" pivotX="0.5000" pivotY="0.7324" angle="0" name="subsec_0_t1_e">
+<Transform target="angle" value="[SECOND] * 6" />
+<Image resource="subsec_0_t1" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="112" height="112" name="se_t2">
+<PartImage x="0" y="0" width="112" height="112" name="slotart_t2">
+<Image resource="slotart_0_t2" />
+</PartImage>
+<PartImage x="46" y="4" width="20" height="71" pivotX="0.5000" pivotY="0.7324" angle="0" name="subsec_0_t2_e">
+<Transform target="angle" value="[SECOND] * 6" />
+<Image resource="subsec_0_t2" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="112" height="112" name="se_t3">
+<PartImage x="0" y="0" width="112" height="112" name="slotart_t3">
+<Image resource="slotart_0_t3" />
+</PartImage>
+<PartImage x="46" y="4" width="20" height="71" pivotX="0.5000" pivotY="0.7324" angle="0" name="subsec_0_t3_e">
+<Transform target="angle" value="[SECOND] * 6" />
+<Image resource="subsec_0_t3" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="112" height="112" name="se_t4">
+<PartImage x="0" y="0" width="112" height="112" name="slotart_t4">
+<Image resource="slotart_0_t4" />
+</PartImage>
+<PartImage x="46" y="4" width="20" height="71" pivotX="0.5000" pivotY="0.7324" angle="0" name="subsec_0_t4_e">
+<Transform target="angle" value="[SECOND] * 6" />
+<Image resource="subsec_0_t4" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="112" height="112" name="scD_EMPTY">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="112" height="112" name="se_dark">
+<PartImage x="0" y="0" width="112" height="112" name="slotart_dark">
+<Image resource="slotart_0_dark" />
+</PartImage>
+<PartImage x="46" y="4" width="20" height="71" pivotX="0.5000" pivotY="0.7324" angle="0" name="subsec_0_dark_e">
+<Transform target="angle" value="[SECOND] * 6" />
+<Image resource="subsec_0_dark" />
+</PartImage>
+</Group>
+</Group>
+</Complication>
+</ComplicationSlot>
+<ComplicationSlot slotId="1" name="slot2" displayName="@string/slot_2" x="300" y="258" width="70" height="32" supportedTypes="SHORT_TEXT LONG_TEXT MONOCHROMATIC_IMAGE EMPTY" isCustomizable="TRUE">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT" />
+<BoundingBox x="0" y="0" width="70" height="32" outlinePadding="2" />
+<Complication type="SHORT_TEXT">
+<Group x="0" y="0" width="70" height="32" name="scT_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="70" height="32" name="sc_SHORT_TEXT_t0">
+<PartImage x="2" y="8" width="16" height="16" tintColor="#5c5c58" name="ic_SHORT_TEXT_t0">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="20" y="4" width="48" height="24" name="v_SHORT_TEXT_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_600" size="16" color="#eae7df"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="70" height="32" name="sc_SHORT_TEXT_t1">
+<PartImage x="2" y="8" width="16" height="16" tintColor="#94897a" name="ic_SHORT_TEXT_t1">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="20" y="4" width="48" height="24" name="v_SHORT_TEXT_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_600" size="16" color="#241f19"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="70" height="32" name="sc_SHORT_TEXT_t2">
+<PartImage x="2" y="8" width="16" height="16" tintColor="#5c6467" name="ic_SHORT_TEXT_t2">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="20" y="4" width="48" height="24" name="v_SHORT_TEXT_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_600" size="16" color="#e4e8ea"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="70" height="32" name="sc_SHORT_TEXT_t3">
+<PartImage x="2" y="8" width="16" height="16" tintColor="#6a5a58" name="ic_SHORT_TEXT_t3">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="20" y="4" width="48" height="24" name="v_SHORT_TEXT_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_600" size="16" color="#ece2dd"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="70" height="32" name="sc_SHORT_TEXT_t4">
+<PartImage x="2" y="8" width="16" height="16" tintColor="#57635a" name="ic_SHORT_TEXT_t4">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="20" y="4" width="48" height="24" name="v_SHORT_TEXT_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_600" size="16" color="#e7e5d8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="70" height="32" name="scD_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="70" height="32" name="sc_SHORT_TEXT_dark">
+<PartImage x="2" y="8" width="16" height="16" tintColor="#8f8877" name="ic_SHORT_TEXT_dark">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+<PartText x="20" y="4" width="48" height="24" name="v_SHORT_TEXT_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_600" size="16" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Complication>
+<Complication type="LONG_TEXT">
+<Group x="0" y="0" width="70" height="32" name="scT_LONG_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="70" height="32" name="sc_LONG_TEXT_t0">
+<PartText x="2" y="4" width="66" height="24" name="v_LONG_TEXT_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="16" color="#eae7df"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="70" height="32" name="sc_LONG_TEXT_t1">
+<PartText x="2" y="4" width="66" height="24" name="v_LONG_TEXT_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="16" color="#241f19"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="70" height="32" name="sc_LONG_TEXT_t2">
+<PartText x="2" y="4" width="66" height="24" name="v_LONG_TEXT_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="16" color="#e4e8ea"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="70" height="32" name="sc_LONG_TEXT_t3">
+<PartText x="2" y="4" width="66" height="24" name="v_LONG_TEXT_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="16" color="#ece2dd"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="70" height="32" name="sc_LONG_TEXT_t4">
+<PartText x="2" y="4" width="66" height="24" name="v_LONG_TEXT_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="16" color="#e7e5d8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="70" height="32" name="scD_LONG_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="70" height="32" name="sc_LONG_TEXT_dark">
+<PartText x="2" y="4" width="66" height="24" name="v_LONG_TEXT_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="16" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Complication>
+<Complication type="MONOCHROMATIC_IMAGE">
+<Group x="0" y="0" width="70" height="32" name="scT_MONOCHROMATIC_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="70" height="32" name="sc_MONOCHROMATIC_IMAGE_t0">
+<PartImage x="22" y="3" width="26" height="26" tintColor="#eae7df" name="ic_MONOCHROMATIC_IMAGE_t0">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="70" height="32" name="sc_MONOCHROMATIC_IMAGE_t1">
+<PartImage x="22" y="3" width="26" height="26" tintColor="#241f19" name="ic_MONOCHROMATIC_IMAGE_t1">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="70" height="32" name="sc_MONOCHROMATIC_IMAGE_t2">
+<PartImage x="22" y="3" width="26" height="26" tintColor="#e4e8ea" name="ic_MONOCHROMATIC_IMAGE_t2">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="70" height="32" name="sc_MONOCHROMATIC_IMAGE_t3">
+<PartImage x="22" y="3" width="26" height="26" tintColor="#ece2dd" name="ic_MONOCHROMATIC_IMAGE_t3">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="70" height="32" name="sc_MONOCHROMATIC_IMAGE_t4">
+<PartImage x="22" y="3" width="26" height="26" tintColor="#e7e5d8" name="ic_MONOCHROMATIC_IMAGE_t4">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="70" height="32" name="scD_MONOCHROMATIC_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="70" height="32" name="sc_MONOCHROMATIC_IMAGE_dark">
+<PartImage x="22" y="3" width="26" height="26" tintColor="#d8d4cc" name="ic_MONOCHROMATIC_IMAGE_dark">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</Group>
+</Complication>
+<Complication type="EMPTY">
+<Group x="0" y="0" width="70" height="32" name="scT_EMPTY">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="70" height="32" name="se_t0">
+<PartImage x="0" y="0" width="70" height="32" name="slotart_t0">
+<Image resource="slotart_1_t0" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="70" height="32" name="se_t1">
+<PartImage x="0" y="0" width="70" height="32" name="slotart_t1">
+<Image resource="slotart_1_t1" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="70" height="32" name="se_t2">
+<PartImage x="0" y="0" width="70" height="32" name="slotart_t2">
+<Image resource="slotart_1_t2" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="70" height="32" name="se_t3">
+<PartImage x="0" y="0" width="70" height="32" name="slotart_t3">
+<Image resource="slotart_1_t3" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="70" height="32" name="se_t4">
+<PartImage x="0" y="0" width="70" height="32" name="slotart_t4">
+<Image resource="slotart_1_t4" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="70" height="32" name="scD_EMPTY">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="70" height="32" name="se_dark">
+<PartImage x="0" y="0" width="70" height="32" name="slotart_dark">
+<Image resource="slotart_1_dark" />
+</PartImage>
+</Group>
+</Group>
+</Complication>
+</ComplicationSlot>
+<ComplicationSlot slotId="2" name="slot3" displayName="@string/slot_3" x="313" y="221" width="42" height="36" supportedTypes="SHORT_TEXT LONG_TEXT RANGED_VALUE MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY" isCustomizable="TRUE">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<DefaultProviderPolicy defaultSystemProvider="DATE" defaultSystemProviderType="SHORT_TEXT" />
+<BoundingBox x="1" y="2" width="40" height="30" outlinePadding="2" />
+<Complication type="SHORT_TEXT">
+<Group x="0" y="0" width="42" height="36" name="scG_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="scT_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="42" height="36" name="sc_SHORT_TEXT_t0">
+<PartText x="3" y="3" width="36" height="29" name="v_SHORT_TEXT_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#ddd2a8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="42" height="36" name="sc_SHORT_TEXT_t1">
+<PartText x="3" y="3" width="36" height="29" name="v_SHORT_TEXT_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#c2c8a4"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="42" height="36" name="sc_SHORT_TEXT_t2">
+<PartText x="3" y="3" width="36" height="29" name="v_SHORT_TEXT_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#b7d2c4"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="42" height="36" name="sc_SHORT_TEXT_t3">
+<PartText x="3" y="3" width="36" height="29" name="v_SHORT_TEXT_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#dba892"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="42" height="36" name="sc_SHORT_TEXT_t4">
+<PartText x="3" y="3" width="36" height="29" name="v_SHORT_TEXT_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#d8c88a"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="42" height="36" name="scD_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="sc_SHORT_TEXT_dark">
+<PartText x="3" y="3" width="36" height="29" name="v_SHORT_TEXT_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Group>
+</Complication>
+<Complication type="LONG_TEXT">
+<Group x="0" y="0" width="42" height="36" name="scG_LONG_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="scT_LONG_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="42" height="36" name="sc_LONG_TEXT_t0">
+<PartText x="3" y="3" width="36" height="29" name="v_LONG_TEXT_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="17" color="#eae7df"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="42" height="36" name="sc_LONG_TEXT_t1">
+<PartText x="3" y="3" width="36" height="29" name="v_LONG_TEXT_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="17" color="#241f19"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="42" height="36" name="sc_LONG_TEXT_t2">
+<PartText x="3" y="3" width="36" height="29" name="v_LONG_TEXT_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="17" color="#e4e8ea"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="42" height="36" name="sc_LONG_TEXT_t3">
+<PartText x="3" y="3" width="36" height="29" name="v_LONG_TEXT_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="17" color="#ece2dd"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="42" height="36" name="sc_LONG_TEXT_t4">
+<PartText x="3" y="3" width="36" height="29" name="v_LONG_TEXT_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="17" color="#e7e5d8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="42" height="36" name="scD_LONG_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="sc_LONG_TEXT_dark">
+<PartText x="3" y="3" width="36" height="29" name="v_LONG_TEXT_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="archivo_600" size="17" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Group>
+</Complication>
+<Complication type="RANGED_VALUE">
+<Group x="0" y="0" width="42" height="36" name="scG_RANGED_VALUE">
+<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="scT_RANGED_VALUE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="42" height="36" name="sc_RANGED_VALUE_t0">
+<PartText x="3" y="3" width="36" height="23" name="v_RANGED_VALUE_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#ddd2a8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartDraw x="0" y="0" width="42" height="36" name="bar_RANGED_VALUE_t0">
+<Rectangle x="4" y="26" width="34" height="3">
+<Fill color="#595c5c58" />
+</Rectangle>
+</PartDraw>
+<PartDraw x="0" y="0" width="42" height="36" name="fill_RANGED_VALUE_t0">
+<Rectangle x="4" y="26" width="34" height="3">
+<Transform target="width" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 34" />
+<Fill color="#b3a274" />
+</Rectangle>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="42" height="36" name="sc_RANGED_VALUE_t1">
+<PartText x="3" y="3" width="36" height="23" name="v_RANGED_VALUE_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#c2c8a4"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartDraw x="0" y="0" width="42" height="36" name="bar_RANGED_VALUE_t1">
+<Rectangle x="4" y="26" width="34" height="3">
+<Fill color="#5994897a" />
+</Rectangle>
+</PartDraw>
+<PartDraw x="0" y="0" width="42" height="36" name="fill_RANGED_VALUE_t1">
+<Rectangle x="4" y="26" width="34" height="3">
+<Transform target="width" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 34" />
+<Fill color="#6a5a3a" />
+</Rectangle>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="42" height="36" name="sc_RANGED_VALUE_t2">
+<PartText x="3" y="3" width="36" height="23" name="v_RANGED_VALUE_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#b7d2c4"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartDraw x="0" y="0" width="42" height="36" name="bar_RANGED_VALUE_t2">
+<Rectangle x="4" y="26" width="34" height="3">
+<Fill color="#595c6467" />
+</Rectangle>
+</PartDraw>
+<PartDraw x="0" y="0" width="42" height="36" name="fill_RANGED_VALUE_t2">
+<Rectangle x="4" y="26" width="34" height="3">
+<Transform target="width" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 34" />
+<Fill color="#8aa6a0" />
+</Rectangle>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="42" height="36" name="sc_RANGED_VALUE_t3">
+<PartText x="3" y="3" width="36" height="23" name="v_RANGED_VALUE_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#dba892"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartDraw x="0" y="0" width="42" height="36" name="bar_RANGED_VALUE_t3">
+<Rectangle x="4" y="26" width="34" height="3">
+<Fill color="#596a5a58" />
+</Rectangle>
+</PartDraw>
+<PartDraw x="0" y="0" width="42" height="36" name="fill_RANGED_VALUE_t3">
+<Rectangle x="4" y="26" width="34" height="3">
+<Transform target="width" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 34" />
+<Fill color="#b06a5c" />
+</Rectangle>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="42" height="36" name="sc_RANGED_VALUE_t4">
+<PartText x="3" y="3" width="36" height="23" name="v_RANGED_VALUE_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#d8c88a"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartDraw x="0" y="0" width="42" height="36" name="bar_RANGED_VALUE_t4">
+<Rectangle x="4" y="26" width="34" height="3">
+<Fill color="#5957635a" />
+</Rectangle>
+</PartDraw>
+<PartDraw x="0" y="0" width="42" height="36" name="fill_RANGED_VALUE_t4">
+<Rectangle x="4" y="26" width="34" height="3">
+<Transform target="width" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 34" />
+<Fill color="#c2a35c" />
+</Rectangle>
+</PartDraw>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="42" height="36" name="scD_RANGED_VALUE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="sc_RANGED_VALUE_dark">
+<PartText x="3" y="3" width="36" height="23" name="v_RANGED_VALUE_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="sairasemicondensed_700" size="19" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+<PartDraw x="0" y="0" width="42" height="36" name="bar_RANGED_VALUE_dark">
+<Rectangle x="4" y="26" width="34" height="3">
+<Fill color="#598f8877" />
+</Rectangle>
+</PartDraw>
+<PartDraw x="0" y="0" width="42" height="36" name="fill_RANGED_VALUE_dark">
+<Rectangle x="4" y="26" width="34" height="3">
+<Transform target="width" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) * 34" />
+<Fill color="#d8d4cc" />
+</Rectangle>
+</PartDraw>
+</Group>
+</Group>
+</Group>
+</Complication>
+<Complication type="MONOCHROMATIC_IMAGE">
+<Group x="0" y="0" width="42" height="36" name="scG_MONOCHROMATIC_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="scT_MONOCHROMATIC_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="42" height="36" name="sc_MONOCHROMATIC_IMAGE_t0">
+<PartImage x="9" y="5" width="24" height="24" tintColor="#eae7df" name="ic_MONOCHROMATIC_IMAGE_t0">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="42" height="36" name="sc_MONOCHROMATIC_IMAGE_t1">
+<PartImage x="9" y="5" width="24" height="24" tintColor="#241f19" name="ic_MONOCHROMATIC_IMAGE_t1">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="42" height="36" name="sc_MONOCHROMATIC_IMAGE_t2">
+<PartImage x="9" y="5" width="24" height="24" tintColor="#e4e8ea" name="ic_MONOCHROMATIC_IMAGE_t2">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="42" height="36" name="sc_MONOCHROMATIC_IMAGE_t3">
+<PartImage x="9" y="5" width="24" height="24" tintColor="#ece2dd" name="ic_MONOCHROMATIC_IMAGE_t3">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="42" height="36" name="sc_MONOCHROMATIC_IMAGE_t4">
+<PartImage x="9" y="5" width="24" height="24" tintColor="#e7e5d8" name="ic_MONOCHROMATIC_IMAGE_t4">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="42" height="36" name="scD_MONOCHROMATIC_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="sc_MONOCHROMATIC_IMAGE_dark">
+<PartImage x="9" y="5" width="24" height="24" tintColor="#d8d4cc" name="ic_MONOCHROMATIC_IMAGE_dark">
+<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+</PartImage>
+</Group>
+</Group>
+</Group>
+</Complication>
+<Complication type="SMALL_IMAGE">
+<Group x="0" y="0" width="42" height="36" name="scG_SMALL_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="scT_SMALL_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="42" height="36" name="sc_SMALL_IMAGE_t0">
+<PartImage x="8" y="4" width="26" height="26" name="img_SMALL_IMAGE_t0">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="42" height="36" name="sc_SMALL_IMAGE_t1">
+<PartImage x="8" y="4" width="26" height="26" name="img_SMALL_IMAGE_t1">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="42" height="36" name="sc_SMALL_IMAGE_t2">
+<PartImage x="8" y="4" width="26" height="26" name="img_SMALL_IMAGE_t2">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="42" height="36" name="sc_SMALL_IMAGE_t3">
+<PartImage x="8" y="4" width="26" height="26" name="img_SMALL_IMAGE_t3">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="42" height="36" name="sc_SMALL_IMAGE_t4">
+<PartImage x="8" y="4" width="26" height="26" name="img_SMALL_IMAGE_t4">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="42" height="36" name="scD_SMALL_IMAGE">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="sc_SMALL_IMAGE_dark">
+<PartImage x="8" y="4" width="26" height="26" name="img_SMALL_IMAGE_dark">
+<Image resource="[COMPLICATION.SMALL_IMAGE]" />
+</PartImage>
+</Group>
+</Group>
+</Group>
+</Complication>
+<Complication type="EMPTY">
+<Group x="0" y="0" width="42" height="36" name="scG_EMPTY">
+<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="scT_EMPTY">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="42" height="36" name="se_t0">
+<PartText x="3" y="4" width="37" height="29" name="nt_t0_dnum">
+<Text align="CENTER">
+<Font family="sairasemicondensed_700" size="19" color="#ddd2a8"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="42" height="36" name="se_t1">
+<PartText x="3" y="4" width="37" height="29" name="nt_t1_dnum">
+<Text align="CENTER">
+<Font family="sairasemicondensed_700" size="19" color="#c2c8a4"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="42" height="36" name="se_t2">
+<PartText x="3" y="4" width="37" height="29" name="nt_t2_dnum">
+<Text align="CENTER">
+<Font family="sairasemicondensed_700" size="19" color="#b7d2c4"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="42" height="36" name="se_t3">
+<PartText x="3" y="4" width="37" height="29" name="nt_t3_dnum">
+<Text align="CENTER">
+<Font family="sairasemicondensed_700" size="19" color="#dba892"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="42" height="36" name="se_t4">
+<PartText x="3" y="4" width="37" height="29" name="nt_t4_dnum">
+<Text align="CENTER">
+<Font family="sairasemicondensed_700" size="19" color="#d8c88a"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="42" height="36" name="scD_EMPTY">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="42" height="36" name="se_dark">
+<PartText x="3" y="4" width="37" height="29" name="nt_dark_dnum">
+<Text align="CENTER">
+<Font family="sairasemicondensed_700" size="19" color="#d8d4cc"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Group>
+</Complication>
+</ComplicationSlot>
+<Group x="0" y="0" width="450" height="450" name="interactiveOver">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<Group x="0" y="0" width="450" height="450" name="themedOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="450" height="450" name="theme_t0">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t0" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
+<MinuteHand resource="hand_minute_t0" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t0">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t0" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
+<Sweep frequency="15" />
 </SecondHand>
 </AnalogClock>
+</Group>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="450" height="450" name="theme_t1">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t1" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
+<MinuteHand resource="hand_minute_t1" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t1">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t1" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="450" height="450" name="theme_t2">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t2" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
+<MinuteHand resource="hand_minute_t2" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t2">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t2" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="450" height="450" name="theme_t3">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t3" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
+<MinuteHand resource="hand_minute_t3" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t3">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t3" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="450" height="450" name="theme_t4">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t4" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
+<MinuteHand resource="hand_minute_t4" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t4">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t4" x="211" y="25" width="28" height="244" pivotX="0.5000" pivotY="0.8197">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="darkTwinOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
 <AnalogClock x="0" y="0" width="450" height="450">
 <HourHand resource="hand_hour_dark" x="204" y="97" width="42" height="156" pivotX="0.5000" pivotY="0.8205" />
 <MinuteHand resource="hand_minute_dark" x="212" y="37" width="26" height="220" pivotX="0.5000" pivotY="0.8545" />
@@ -406,359 +1972,5 @@
 <MinuteHand resource="aod_minute" x="216" y="45" width="18" height="206" pivotX="0.5000" pivotY="0.8738" />
 </AnalogClock>
 </Group>
-<ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="202" y="94" width="112" height="112" supportedTypes="RANGED_VALUE EMPTY" isCustomizable="TRUE">
-<Variant mode="AMBIENT" target="alpha" value="0" />
-<DefaultProviderPolicy defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" />
-<BoundingOval x="0" y="0" width="112" height="112" outlinePadding="2" />
-<Complication type="RANGED_VALUE">
-<Group x="0" y="0" width="112" height="112" name="scT_RANGED_VALUE">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
-<ListConfiguration id="theme">
-<ListOption id="t0">
-<Group x="0" y="0" width="112" height="112" name="sc_t0">
-<PartDraw x="0" y="0" width="112" height="112" name="patch_t0">
-<Ellipse x="6" y="6" width="100" height="100">
-<Fill color="#09090a" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="112" height="112" name="rvarc_t0">
-<Arc centerX="56" centerY="56" width="96" height="96" startAngle="30" endAngle="30" direction="CLOCKWISE">
-<Transform target="endAngle" value="30 + ((([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 300)" />
-<Stroke color="#b3a274" thickness="3" cap="ROUND" />
-</Arc>
-</PartDraw>
-<PartImage x="47" y="11" width="18" height="18" tintColor="#5c5c58" name="rvic_t0">
-<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
-</PartImage>
-<PartText x="4" y="33" width="104" height="47" name="rvtxt_t0">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="archivo_700" size="31" color="#eae7df"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t1">
-<Group x="0" y="0" width="112" height="112" name="sc_t1">
-<PartDraw x="0" y="0" width="112" height="112" name="patch_t1">
-<Ellipse x="6" y="6" width="100" height="100">
-<Fill color="#86837c" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="112" height="112" name="rvarc_t1">
-<Arc centerX="56" centerY="56" width="96" height="96" startAngle="30" endAngle="30" direction="CLOCKWISE">
-<Transform target="endAngle" value="30 + ((([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 300)" />
-<Stroke color="#6a5a3a" thickness="3" cap="ROUND" />
-</Arc>
-</PartDraw>
-<PartImage x="47" y="11" width="18" height="18" tintColor="#94897a" name="rvic_t1">
-<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
-</PartImage>
-<PartText x="4" y="33" width="104" height="47" name="rvtxt_t1">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="archivo_700" size="31" color="#241f19"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t2">
-<Group x="0" y="0" width="112" height="112" name="sc_t2">
-<PartDraw x="0" y="0" width="112" height="112" name="patch_t2">
-<Ellipse x="6" y="6" width="100" height="100">
-<Fill color="#0d1011" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="112" height="112" name="rvarc_t2">
-<Arc centerX="56" centerY="56" width="96" height="96" startAngle="30" endAngle="30" direction="CLOCKWISE">
-<Transform target="endAngle" value="30 + ((([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 300)" />
-<Stroke color="#8aa6a0" thickness="3" cap="ROUND" />
-</Arc>
-</PartDraw>
-<PartImage x="47" y="11" width="18" height="18" tintColor="#5c6467" name="rvic_t2">
-<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
-</PartImage>
-<PartText x="4" y="33" width="104" height="47" name="rvtxt_t2">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="archivo_700" size="31" color="#e4e8ea"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t3">
-<Group x="0" y="0" width="112" height="112" name="sc_t3">
-<PartDraw x="0" y="0" width="112" height="112" name="patch_t3">
-<Ellipse x="6" y="6" width="100" height="100">
-<Fill color="#0e090a" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="112" height="112" name="rvarc_t3">
-<Arc centerX="56" centerY="56" width="96" height="96" startAngle="30" endAngle="30" direction="CLOCKWISE">
-<Transform target="endAngle" value="30 + ((([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 300)" />
-<Stroke color="#b06a5c" thickness="3" cap="ROUND" />
-</Arc>
-</PartDraw>
-<PartImage x="47" y="11" width="18" height="18" tintColor="#6a5a58" name="rvic_t3">
-<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
-</PartImage>
-<PartText x="4" y="33" width="104" height="47" name="rvtxt_t3">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="archivo_700" size="31" color="#ece2dd"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t4">
-<Group x="0" y="0" width="112" height="112" name="sc_t4">
-<PartDraw x="0" y="0" width="112" height="112" name="patch_t4">
-<Ellipse x="6" y="6" width="100" height="100">
-<Fill color="#080d0a" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="112" height="112" name="rvarc_t4">
-<Arc centerX="56" centerY="56" width="96" height="96" startAngle="30" endAngle="30" direction="CLOCKWISE">
-<Transform target="endAngle" value="30 + ((([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 300)" />
-<Stroke color="#c2a35c" thickness="3" cap="ROUND" />
-</Arc>
-</PartDraw>
-<PartImage x="47" y="11" width="18" height="18" tintColor="#57635a" name="rvic_t4">
-<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
-</PartImage>
-<PartText x="4" y="33" width="104" height="47" name="rvtxt_t4">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="archivo_700" size="31" color="#e7e5d8"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-</ListConfiguration>
-</Group>
-<Group x="0" y="0" width="112" height="112" name="scD_RANGED_VALUE">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
-<Group x="0" y="0" width="112" height="112" name="sc_dark">
-<PartDraw x="0" y="0" width="112" height="112" name="patch_dark">
-<Ellipse x="6" y="6" width="100" height="100">
-<Fill color="#000000" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="112" height="112" name="rvarc_dark">
-<Arc centerX="56" centerY="56" width="96" height="96" startAngle="30" endAngle="30" direction="CLOCKWISE">
-<Transform target="endAngle" value="30 + ((([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 300)" />
-<Stroke color="#d8d4cc" thickness="3" cap="ROUND" />
-</Arc>
-</PartDraw>
-<PartImage x="47" y="11" width="18" height="18" tintColor="#8f8877" name="rvic_dark">
-<Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
-</PartImage>
-<PartText x="4" y="33" width="104" height="47" name="rvtxt_dark">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="archivo_700" size="31" color="#d8d4cc"><Template>%.0f<Parameter expression="[COMPLICATION.RANGED_VALUE_VALUE]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</Group>
-</Complication>
-</ComplicationSlot>
-<ComplicationSlot slotId="1" name="slot2" displayName="@string/slot_2" x="300" y="258" width="70" height="32" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
-<Variant mode="AMBIENT" target="alpha" value="0" />
-<DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="SHORT_TEXT" />
-<BoundingBox x="0" y="0" width="70" height="32" outlinePadding="2" />
-<Complication type="SHORT_TEXT">
-<Group x="0" y="0" width="70" height="32" name="scT_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
-<ListConfiguration id="theme">
-<ListOption id="t0">
-<Group x="0" y="0" width="70" height="32" name="sc_t0">
-<PartDraw x="0" y="0" width="70" height="32" name="patch_t0">
-<Rectangle x="0" y="16" width="70" height="16">
-<Fill color="#0f0f11" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="16" width="70" height="16" name="sttx_t0">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_600" size="16" color="#eae7df"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t1">
-<Group x="0" y="0" width="70" height="32" name="sc_t1">
-<PartDraw x="0" y="0" width="70" height="32" name="patch_t1">
-<Rectangle x="0" y="16" width="70" height="16">
-<Fill color="#e0dbce" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="16" width="70" height="16" name="sttx_t1">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_600" size="16" color="#241f19"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t2">
-<Group x="0" y="0" width="70" height="32" name="sc_t2">
-<PartDraw x="0" y="0" width="70" height="32" name="patch_t2">
-<Rectangle x="0" y="16" width="70" height="16">
-<Fill color="#161a1d" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="16" width="70" height="16" name="sttx_t2">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_600" size="16" color="#e4e8ea"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t3">
-<Group x="0" y="0" width="70" height="32" name="sc_t3">
-<PartDraw x="0" y="0" width="70" height="32" name="patch_t3">
-<Rectangle x="0" y="16" width="70" height="16">
-<Fill color="#170f11" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="16" width="70" height="16" name="sttx_t3">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_600" size="16" color="#ece2dd"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t4">
-<Group x="0" y="0" width="70" height="32" name="sc_t4">
-<PartDraw x="0" y="0" width="70" height="32" name="patch_t4">
-<Rectangle x="0" y="16" width="70" height="16">
-<Fill color="#0d1510" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="16" width="70" height="16" name="sttx_t4">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_600" size="16" color="#e7e5d8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-</ListConfiguration>
-</Group>
-<Group x="0" y="0" width="70" height="32" name="scD_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
-<Group x="0" y="0" width="70" height="32" name="sc_dark">
-<PartDraw x="0" y="0" width="70" height="32" name="patch_dark">
-<Rectangle x="0" y="16" width="70" height="16">
-<Fill color="#000000" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="16" width="70" height="16" name="sttx_dark">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_600" size="16" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</Group>
-</Complication>
-</ComplicationSlot>
-<ComplicationSlot slotId="2" name="slot3" displayName="@string/slot_3" x="314" y="223" width="40" height="30" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
-<Variant mode="AMBIENT" target="alpha" value="0" />
-<DefaultProviderPolicy defaultSystemProvider="DATE" defaultSystemProviderType="SHORT_TEXT" />
-<BoundingBox x="0" y="0" width="40" height="30" outlinePadding="2" />
-<Complication type="SHORT_TEXT">
-<Group x="0" y="0" width="40" height="30" name="scG_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
-<Group x="0" y="0" width="40" height="30" name="scT_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
-<ListConfiguration id="theme">
-<ListOption id="t0">
-<Group x="0" y="0" width="40" height="30" name="sc_t0">
-<PartDraw x="0" y="0" width="40" height="30" name="frame_t0">
-<RoundRectangle x="0" y="0" width="40" height="30" cornerRadiusX="4" cornerRadiusY="4">
-<Fill color="#080809" />
-<Stroke color="#3a3a3c" thickness="1.2" />
-</RoundRectangle>
-</PartDraw>
-<PartText x="3" y="2" width="34" height="26" name="sttx_t0">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_700" size="19" color="#ddd2a8"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t1">
-<Group x="0" y="0" width="40" height="30" name="sc_t1">
-<PartDraw x="0" y="0" width="40" height="30" name="frame_t1">
-<RoundRectangle x="0" y="0" width="40" height="30" cornerRadiusX="4" cornerRadiusY="4">
-<Fill color="#706e67" />
-<Stroke color="#e6e1d7" thickness="1.2" />
-</RoundRectangle>
-</PartDraw>
-<PartText x="3" y="2" width="34" height="26" name="sttx_t1">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_700" size="19" color="#c2c8a4"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t2">
-<Group x="0" y="0" width="40" height="30" name="sc_t2">
-<PartDraw x="0" y="0" width="40" height="30" name="frame_t2">
-<RoundRectangle x="0" y="0" width="40" height="30" cornerRadiusX="4" cornerRadiusY="4">
-<Fill color="#0b0d0f" />
-<Stroke color="#404346" thickness="1.2" />
-</RoundRectangle>
-</PartDraw>
-<PartText x="3" y="2" width="34" height="26" name="sttx_t2">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_700" size="19" color="#b7d2c4"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t3">
-<Group x="0" y="0" width="40" height="30" name="sc_t3">
-<PartDraw x="0" y="0" width="40" height="30" name="frame_t3">
-<RoundRectangle x="0" y="0" width="40" height="30" cornerRadiusX="4" cornerRadiusY="4">
-<Fill color="#0c0809" />
-<Stroke color="#413a3c" thickness="1.2" />
-</RoundRectangle>
-</PartDraw>
-<PartText x="3" y="2" width="34" height="26" name="sttx_t3">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_700" size="19" color="#dba892"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t4">
-<Group x="0" y="0" width="40" height="30" name="sc_t4">
-<PartDraw x="0" y="0" width="40" height="30" name="frame_t4">
-<RoundRectangle x="0" y="0" width="40" height="30" cornerRadiusX="4" cornerRadiusY="4">
-<Fill color="#070b08" />
-<Stroke color="#393f3b" thickness="1.2" />
-</RoundRectangle>
-</PartDraw>
-<PartText x="3" y="2" width="34" height="26" name="sttx_t4">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_700" size="19" color="#d8c88a"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-</ListConfiguration>
-</Group>
-<Group x="0" y="0" width="40" height="30" name="scD_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
-<Group x="0" y="0" width="40" height="30" name="sc_dark">
-<PartDraw x="0" y="0" width="40" height="30" name="frame_dark">
-<RoundRectangle x="0" y="0" width="40" height="30" cornerRadiusX="4" cornerRadiusY="4">
-<Fill color="#000000" />
-<Stroke color="#2e2e2e" thickness="1.2" />
-</RoundRectangle>
-</PartDraw>
-<PartText x="3" y="2" width="34" height="26" name="sttx_dark">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="sairasemicondensed_700" size="19" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</Group>
-</Group>
-</Complication>
-</ComplicationSlot>
 </Scene>
 </WatchFace>

@@ -7,7 +7,7 @@
     <string name="theme_2">Amber Service</string>
     <string name="theme_3">Ice Watch</string>
     <string name="theme_4">NVG Ops</string>
-    <string name="slot_1">Top register (0–250 scale)</string>
+    <string name="slot_1">Top register</string>
     <string name="slot_2">Date window</string>
     <string name="slot_3">Unread chip</string>
     <string name="cfg_seconds">Seconds hand</string>

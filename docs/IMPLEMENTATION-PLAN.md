@@ -77,18 +77,247 @@ per chat, without re-deriving context.
 
 | Phase | Tag | Theme | Depends on |
 |---|---|---|---|
-| 1 | `dialed-v0.19.0` | Correctness & hygiene batch (C1 guard, H2, H3, H4, M1–M6, docs refresh) | — |
-| 2 | `dialed-v0.20.0` | **Collections Home + remote catalog config + free faces** (no billing yet) | 1 |
-| 3 | `dialed-v0.21.0` | **Play Billing per-collection + entitlement v2 + paywall v2** (code-complete) | 2 |
-| 4 | `dialed-v0.22.0` | Store readiness: release lane, AAB, privacy policy, listing kit (billing e2e happens here) | 3 |
-| 5 | `dialed-v0.23.0` | Default watch face + system-gallery discoverability (R4 recipe) | 1 (independent of 2–4) |
-| 6 | `dialed-v0.24.0` | Living gallery — real face animation phase 1 (R7 E-LITE + WebP delivery) | 1 |
-| 7 | `dialed-v0.25.0` | Catalog scale-out: Collection 3 (25 faces) incl. icon-label rollout | 2 (config), 6 (nice) |
-| 8 | `dialed-v0.26.0` | Wear polish: Home face size, W3 coaching motion, receive thumbnail, optional tile | 1 |
+| 1 | `dialed-v0.19.0` ✅ | Correctness & hygiene batch (C1 guard, H2, H3, H4, M1–M6, docs refresh) | — |
+| **2A** | — (docs) | **Catalog census & curation plan** — every face we have built vs only designed; collections of ≥10; renames/collisions; colour audit. **Owner sign-off gate.** | 1 |
+| **2B** | `dialed-v0.20.0` | **Colour parity → 5+ options on every face** (faces repo) | 2A |
+| **2C** | `dialed-v0.21.0` | **Bundle the 25 built-but-unbundled faces** (Aurum/Halo/Meridian/Terra/Vakt) + icon-label rollout — 18 → 43 | 2A |
+| **2D** | `dialed-v0.22.0` | **Collections IA + `config/catalog.json` + free faces + coming-soon tiles** (app) | 2A, 2C |
+| **2E** | `dialed-v0.23.0` | **Showcase & motion** — the collection experience (design skills, animation) | 2D |
+| **2F** | `dialed-v0.24.0`+ | **Gap builds** — build the designed-but-unbuilt faces each collection still needs | 2A, rolling |
+| 3 | `dialed-v0.25.0` | Play Billing per-collection + entitlement v2 + paywall v2 (code-complete) | 2D |
+| 4 | `dialed-v0.26.0` | Store readiness: release lane, AAB, privacy policy, listing kit (billing e2e here) | 3 |
+| 5 | `dialed-v0.27.0` | Default watch face + system-gallery discoverability (R4 recipe) | 1 (independent) |
+| 6 | `dialed-v0.28.0` | Living gallery — real face animation (R7 E-LITE + WebP delivery) | 1 |
+| 8 | `dialed-v0.29.0` | Wear polish: Home face size, W3 coaching motion, receive thumbnail, optional tile | 1 |
 
-Phases 5/6 can be reordered after 2 if the owner wants visible sparkle before billing; 3→4 order is
-fixed (billing e2e needs the Play upload from 4's prep, so 3 ships code-complete with debug fakes
-and 4 lights it up).
+**Phase 7 (Collection-3 scale-out) is absorbed into 2C** — it was always the same work.
+3→4 order is fixed (billing e2e needs 4's Play upload, so 3 ships code-complete and 4 lights it up).
+2B and 2C are independent of each other and can ship in either order once 2A is signed off.
+
+---
+
+# PHASE 2 — the catalog program (2A → 2F)
+
+> **Why this is a program, not a phase.** The original Phase 2 assumed "wrap the 18 bundled faces in
+> a collections IA". A survey on 2026-07-16 (evidence below, all verified from the working tree) found
+> the real job is much larger: 25 built faces aren't in the app at all, ~50+ designed faces aren't
+> built, no collection has 10 faces, series names collide, and the colour-option story is broken in a
+> way the owner spotted. Doing the IA before the catalog is understood would mean building the shelves
+> before knowing the stock.
+
+## Verified facts (2026-07-16 — re-verify, but these are read from disk, not memory)
+
+**The faces submodule (`faces/` → aucksy/fablecollection) holds 43 built faces in 10 series:**
+
+| Series | Built | In the Dialed app? |
+|---|---|---|
+| Aether | 2 (Ember, Horizon) | ✅ bundled |
+| Arclight | 2 (Pulsar, Solstice) | ✅ bundled |
+| Kinetik | 5 (Escapement, Metronome, Odometer, Orrery, Turbine) | ✅ bundled |
+| Settype | 4 (Counterform, Halftone, Marquee, Masthead) | ✅ bundled |
+| Vespera | 5 (Aurum, Meteorite, Noir, Opaline, Salon) | ✅ bundled |
+| Aurum | 5 (Baguette, Eclat, Guilloche, Soir, Squelette) | ❌ **built, never bundled** |
+| Halo | 5 (Beacon, Ledger, Orbit, Quadrant, Stack) | ❌ **built, never bundled** |
+| Meridian | 5 (Calendrier, Classic, PetiteSeconde, Roman, Sector) | ❌ **built, never bundled** |
+| Terra | 5 (Altimeter, Compass, Field24, MeridianLine, Solstice) | ❌ **built, never bundled** |
+| Vakt | 5 (GT, Meridian, NightWatch, One, Ti) | ❌ **built, never bundled** |
+
+18 bundled + 25 built-but-unbundled = 43. **No series has 10 faces.** The 25 are Collection 3
+([[premiumwatchfaces]]); `tools/gen-facepacks.mjs` has an 18-name `BUNDLED_FACES` allowlist that
+deliberately excludes them.
+
+**⭐ The colour audit — the owner's suspicion is confirmed, and it's worse than "only 3":**
+
+| Faces | Mechanism | Options |
+|---|---|---|
+| 16 of the 18 bundled (Aether ×2, Kinetik ×5, Settype ×4, Vespera ×5) | `<ColorConfiguration id="accent">` + `<ColorOption>` | **exactly 3** ❌ |
+| Arclight-Solstice | `<ColorConfiguration id="themeColor">` | **5** ✅ |
+| **Arclight-Pulsar** | — | **ZERO — no `<UserConfigurations>` at all** ❌❌ |
+| All 25 Collection-3 faces | `<ListConfiguration id="theme">` → `t0..t4`, baked per-theme dial art | **5 themes** ✅ |
+
+So the two halves of the catalog use *different theming systems*: Fable series = a colour swatch
+picker; Collection 3 = 5 structurally-baked themes. 2A must decide whether they converge (and 2B
+must not naively "add 2 more swatches" to a face whose art is baked per theme).
+
+**Designed but NOT built** (all are HTML/spec mockups — **there are no PNG/SVG previews anywhere**):
+
+| Source | Path (under `D:\Apps\WearOS Apps\WatchFaces\`) | Faces |
+|---|---|---|
+| Fable series showcases | `Fable Collection/FABLE-{Ledger,Armature,Wilder,Afterglow}-Showcase.html` | 4 × 5 = **20** (Ledger: Canon/Paragon/Pica/Brevier/Nonpareil · Armature: Caliper/Sector/Odometer/Orrery/Regulator · Wilder: Ridgeline/Almanac/Planisphere/Bloom/Contour · Afterglow: Arcade/Cathode/Neon/Standby/Segment) |
+| Fable proposals | `Fable Collection/proposals/PROPOSAL-{06..10}-*.html` | **5** (Passage, Amplitude, Charter, Patience, Avant) |
+| Collection 4 "Atelier IV" | `WatchFaces Collection 4/{faces,series}/*.html` + `handoff/` | **6** (Podium, Airframe, Sextant, Monolith, Strata, Counterpoise) |
+| Collection 6 **"The Art of Motion"** | `WatchFace Collection 6 Art of Motion/The Art Of Motion/handoff/` | **15** — ⭐ has a machine-readable `manifest.json` (name/id/territory/mechanic/signature/**palettes** per face), `specs/motion-specs.json`, and JS renderers. WFF v2, 450 canvas. The richest unbuilt source. |
+| Collection 5 "Meridian" | `WatchFace Collection 5 Meridian/Premium Wear OS Watch Face Collection-handoff/` | TBD — census it |
+| "1st Designs by Fable 5" | `1st Designs by Fable 5/# Premium Smartwatch Face Collection/design_handoff_watch_faces` | TBD — likely the origin of Aether/Kinetik/Settype/Vespera |
+| TwelveSixty | `TwelveSixty/` (own repo aucksy/twelvesixty) | **25** — ⚠ a SEPARATE product line (5 collection apps). **Owner decision in 2A: fold into Dialed or leave alone?** |
+
+**⭐ Name collisions that force the rename/recategorise work the owner asked for:**
+- **Meridian** = a built series (5 faces) **and** a face (`Vakt-Meridian`) **and** a whole design folder (Collection 5).
+- **Aurum** = a built series (5) **and** a face (`Vespera-Aurum`).
+- **Ledger** = a designed Fable series **and** a built face (`Halo-Ledger`).
+- **Odometer / Orrery** = built `Kinetik-*` faces **and** designed `Armature-*` faces.
+- **Solstice** = `Arclight-Solstice` **and** `Terra-Solstice`.
+- **Sector** = `Meridian-Sector` **and** a designed `Armature-Sector`.
+
+**Feasibility note for "coming soon" art:** the unbuilt designs are HTML that renders via SVG/CSS/JS.
+No exportable image exists. Previews must be **rendered from the HTML with headless Chrome** (this
+machine has Chrome; Puppeteer/Playwright browser auto-download is known to fail here — point at the
+installed Chrome binary, the [[kirana-promo-reel]] lesson).
+
+---
+
+## Phase 2A — Catalog census & curation plan · docs only, no code · **OWNER SIGN-OFF GATE**
+
+**Goal:** one authoritative, machine-readable inventory of every face we own — built or designed —
+plus a curation proposal that turns them into collections of **≥10** each. Nothing else in Phase 2
+can be scoped correctly until this exists.
+
+**Deliverables (in the Dialed repo):**
+1. **`docs/CATALOG-AUDIT.md`** — the human read: what we have, what's missing, what collides, what
+   each collection needs to reach 10, and the recommended structure with reasoning.
+2. **`config/catalog-inventory.json`** — the machine read, one record per face:
+   `{id, currentSeries, currentName, proposedCollection, proposedName, state: built|designed|planned,
+   source: <repo path>, bundled: bool, wffVersion, canvas, themeMechanism: color|list|none,
+   themeCount, complicationSlots, motionType, previewAsset|null, designSource: <html path>, notes}`.
+   This file becomes the input to 2B/2C/2D — hand-maintained after, generated once here.
+3. **A curation proposal** (inside the audit doc) the owner signs off before any code moves:
+   - the collection map: **which faces group into which collection, each ≥10** (built + coming-soon
+     both count toward the 10 — the owner accepts coming-soon tiles as members);
+   - **renames** that resolve every collision above, with the old→new mapping (⚠ a rename of a BUILT
+     face changes its package id → new WFP token → treat as a new face; the audit must say so);
+   - **gap flags**: per collection, how many faces short of 10 and which designed faces fill it;
+   - the **theming decision**: do Fable-series swatch faces and Collection-3 list-theme faces
+     converge on one mechanism, and what "5 colour options" means for each (2B depends on this);
+   - the **TwelveSixty scope call** and the **Collection 5 / 1st-Designs** census result.
+
+**Method:** this is a fan-out reading job — run it as a Workflow (ultracode is on). One agent per
+source folder + one per built series, each returning structured records; then a merge/dedupe pass;
+then a curation agent; then an adversarial pass that attacks the proposal (are these collections
+coherent? do the renames break tokens? is any face double-counted?). **Do not trust this plan's
+tables — verify every count from the files.**
+
+**Acceptance:** every one of the 43 built faces appears exactly once with real per-face facts read
+from its `watchface.xml`; every designed face is traced to a real source file; no collection in the
+proposal has <10 members; every collision above is resolved; the owner has approved the map.
+No version bump (docs only).
+
+**Risk:** scope creep into "let's redesign the collections". The job is to *organise what exists* and
+*name the gaps*, not to invent new design languages.
+
+---
+
+## Phase 2B — `dialed-v0.20.0` · Colour parity → 5+ on every face
+
+**Scope (faces submodule):** bring every bundled face to **≥5** theme options, per 2A's theming
+decision. Known work: 16 faces at 3 `<ColorOption>`s → 5; **Arclight-Pulsar has no user config at
+all** → give it a real theme set; Arclight-Solstice already has 5 (leave). Collection-3's 25 already
+have 5 baked themes — **do not touch them** unless 2A says converge.
+
+⚠ **The trap:** a `<ColorConfiguration>` swatch only recolours elements that reference
+`[CONFIGURATION.<id>]`. Adding two hex values is cheap; making them *look designed* is not. Each new
+swatch must be chosen against the face's actual art (and its AOD twin), not sampled at random —
+read `Resources/WFF-Design-Guidelines.md` + the polish skill's §7 review pass, and check every
+element that binds the config ref.
+
+**Ship loop:** edit XML in the submodule → validate locally (`java -jar wff-validator.jar 2 <xml>`)
+→ push fablecollection → bump the pointer in Dialed → `node tools/gen-facepacks.mjs "<ABS-ROOT>"`
+→ CI re-mints all tokens. **No `isAutoSize`** (WFF v3 attr; these are v2).
+
+**Acceptance:** every bundled face exposes ≥5 themes on-wrist; CI validates 18/18 (or 43/43 if 2C
+landed first); owner spot-checks 2–3 faces per series for taste, not just count.
+
+---
+
+## Phase 2C — `dialed-v0.21.0` · Bundle the 25 built faces (18 → 43)
+
+**Scope:** the fastest large win in the whole program — 25 faces that already exist, already
+validate, and simply aren't in the app.
+1. **Icon-label rollout to the 25 first** (owner's standing rule: fix faces to the current recipe
+   before shipping them). Reuse the v0.12.0 scripted transform verbatim — scope strictly inside
+   `<Complication>` blocks, handle both label shapes, layout-aware STACKED/SIDE placement, the
+   value-box per-element match, the tint rules. See [[dialed-app]] for the recipe.
+2. Extend `BUNDLED_FACES` in `tools/gen-facepacks.mjs` to the 43 (apply 2A's renames), add
+   `SERIES_META` for the 5 new series, regenerate facepacks + previews + `FaceCatalog.kt`.
+3. **Fix M2 while here:** `features` chips are series-level guesses (`SERIES_META`) — derive them
+   from each face's real `<ComplicationSlot>`s in the generator.
+4. Watch the APK size (43 face APKs bundled; log the assets dir size in CI) and the CI validator
+   runtime (linear, ~43 × a few seconds).
+
+**Acceptance:** CI validates + tokenises **43/43**; all 43 appear in the app; a Collection-3 face
+pushes and installs on-wrist; APK size recorded in the plan.
+
+---
+
+## Phase 2D — `dialed-v0.22.0` · Collections IA + config + free faces + coming-soon
+
+**Scope:** the owner's product model, now with real stock behind it.
+- **Home = collection cards, no paywall anywhere on Home.** Tap a card → that collection's faces.
+- Per collection: a configured subset is **FREE** and fully installable; the rest show a lock that
+  routes to a per-collection unlock CTA (still a debug stub until Phase 3).
+- **Coming-soon tiles:** designed-but-unbuilt faces appear as real members with rendered art and a
+  "Coming soon" treatment — not installable, never a dead control (no Install button at all).
+- `config/catalog.json` + `CatalogConfigRepository` (bundled asset → raw-GitHub refresh, 24 h cache,
+  last-good fallback) exactly as the original Phase 2 spec below describes, now also carrying
+  `state: built|coming_soon` per face and the collection→product mapping.
+- Entitlement v2: boolean → per-collection set (schema only; billing is Phase 3).
+- **Coming-soon art pipeline:** `tools/render-designs.mjs` — headless **installed Chrome** →
+  screenshot each design HTML → square 480 PNG → `app/src/main/res/drawable-nodpi/coming_<id>.png`.
+  Committed as generated assets (deterministic, re-runnable), not fetched at runtime.
+
+**Design gate:** the `.dc.html` specs predate collections → write `docs/DESIGN-ADDENDUM-COLLECTIONS.md`
+FIRST, built from the existing tokens/components (see the original Phase-2 detail below).
+
+**Acceptance:** every collection shows ≥10 members (built + coming-soon); free faces install with no
+unlock; locked faces route to the CTA; coming-soon tiles are honest and inert; airplane-mode fresh
+install renders the bundled config; flipping a face free↔paid in `config/catalog.json` on main
+reaches the app after a refresh.
+
+---
+
+## Phase 2E — `dialed-v0.23.0` · Showcase & motion
+
+**Goal (owner's words): "these collections should be showcased with nice design and interactive with
+nice animations."** This is the phase where Dialed stops looking like a grid and starts looking like
+a boutique.
+
+**Method:** load the design skills — **`frontend-design`** for aesthetic direction and
+**`impeccable`** / **`ui-ux-pro-max`** for the interaction/critique pass — and treat the existing
+`Dialed - Design Spec.dc.html` tokens + `HANDOFF.md` §5 motion tokens as the constraint, not a
+starting-over licence. The brand already has springs (`springExpressive`, `springSettle`), a gold
+accent, and named signature moments (F1 living gallery, F2 shared-element expand, F4 unlock sheen).
+**Build the collection experience out of those**, don't invent a second design language.
+
+**Candidate scope (pick with the owner; each is independently shippable):**
+- **F2 shared-element expand** — collection card → collection screen → face detail, one continuous
+  motion (`SharedTransitionLayout`, key `"face/{id}"` / `"collection/{id}"`, `boundsTransform =
+  springExpressive`, circular clip throughout). This is the single biggest perceived-quality lever
+  and is already specced but never built (assessment M8).
+- **Collection cover** — a hero treatment per collection (the cover trio parallax, F5).
+- **Coming-soon treatment** — a tasteful "in the workshop" state, not a grey box.
+- **Unlock celebration (F4)** — the gold sheen band, ready for Phase 3 to fire.
+- Reduced-motion parity for every one of them (`ANIMATOR_DURATION_SCALE == 0` → snap to rest).
+
+**Acceptance:** motion runs at 60fps on the owner's phone (transform-only, no per-frame
+recomposition — the `rememberSecondsAngle` rule); reduced-motion honoured; owner signs off on feel.
+
+---
+
+## Phase 2F — `dialed-v0.24.0`+ · Gap builds (rolling)
+
+**Goal:** turn coming-soon into shipped, collection by collection, until each genuinely has 10 built
+faces. Ordered by 2A's gap flags and the owner's priority.
+
+**Start with "The Art of Motion" (15 faces)** — it is the best-prepared unbuilt source in the repo
+(machine-readable `manifest.json` with per-face palettes + `motion-specs.json` + JS renderers), and
+15 faces is a complete collection in one go.
+
+**Per face:** author WFF v2 at **480 canvas**, ≥5 themes (2B's standard), the icon-label complication
+recipe from the start, AOD twin, `wff-watchface-polish.skill` §7 review pass before showing it, local
+validator PASS, then bundle via 2C's pipeline. **Load `Resources/wff-watchface.skill` +
+`wff-watchface-polish.skill` + `WFF-Design-Guidelines.md` every session** (standing rule).
+
+**Acceptance per slice:** validator PASS; owner confirms on-wrist; the collection's coming-soon count
+drops. This phase runs alongside 3/4 — it never blocks billing or the store.
 
 ---
 
@@ -156,7 +385,11 @@ note it in the release notes; both APKs ship together anyway.
 
 ---
 
-## Phase 2 — `dialed-v0.20.0` · Collections Home + remote catalog + free faces
+## Phase 2D detail — Collections Home + remote catalog + free faces
+
+> This section is the original Phase-2 spec and remains the **contract for 2D's IA work**. Read it
+> together with the 2D summary above (which adds coming-soon tiles + the rendered-art pipeline).
+> Where it says "Phase 2", read "Phase 2D".
 
 **Goal:** the owner's marketplace IA. Home = collection cards (no paywall). Collection screen =
 that collection's faces; a configured subset is FREE and installable by anyone; the rest show a
@@ -386,10 +619,15 @@ STARTED lifecycle as `rememberSecondsAngle` already does.
 
 ---
 
-## Phase 7 — `dialed-v0.25.0` · Collection 3 scale-out (25 faces)
+## ~~Phase 7~~ → **ABSORBED INTO PHASE 2C** · Collection 3 scale-out (25 faces)
+
+> **This is no longer a separate phase.** The 2026-07-16 census established that these 25 faces are
+> already built and merely unbundled, which makes them the cheapest large win in the program — so the
+> work moved forward into **Phase 2C** (`dialed-v0.21.0`). The detail below is unchanged and is still
+> 2C's contract; read it there.
 
 **Goal:** grow the catalog 18→43 with the premium Collection 3 (Vakt/Meridian/Terra/Halo/Aurum) —
-the collections IA from Phase 2 exists precisely to absorb this.
+the collections IA from Phase 2D exists precisely to absorb this.
 
 **Scope:**
 1. **Icon-label rollout to the 25 faces first** (owner standing rule: fix faces to current recipe
@@ -430,46 +668,91 @@ face; coaching plays.
 | Phase | Tag | State | Notes |
 |---|---|---|---|
 | 1 Hygiene | v0.19.0 | ✅ **SHIPPED** 2026-07-16 (CI run 29472817925 green, 18/18 faces validated; commit `0ed9dfe`) | C1 paywall debug-gate (+ restore only ever grants) · H2 push-token guard + `CancellationException` rethrow + `NonCancellable` cleanup · H3 uninstall-error snackbar · H4 `RESPONSE_UNSUPPORTED=2` + `!unsupported` query sentinel → honest sheet state + the UNSUPPORTED pill finally has a producer (`QueryStateResult.supported`) · M1 `firstOrNull` detail guard · M3 phone `singleTask` · M4 dead "More"/no-op rows removed + `BuildConfig.VERSION_NAME` + real gear icon · M5 48dp targets (incl. the theme selector) + pill live region · M6 dead `hasInstalledFace()` + per-transfer staged APK with sweep · L1 dead `WatchStatus` fields · H6 CLAUDE.md + this table refreshed. **7-lens adversarial review (43 agents, 3 refuters/finding) caught 2 real self-inflicted bugs pre-tag: (a) BLOCKER — the new `catch (CancellationException)` swallowed the setup RPC's `withTimeout` (`TimeoutCancellationException` IS a `CancellationException`) → the sheet hung on "Sending…" forever with no error and no Retry; fixed by `withTimeoutOrNull` + an explicit emit. (b) HIGH — cancelling the push job on dismiss abandoned a transfer the watch was still installing (the phone cannot stop the Data Layer anyway), so the face landed on the wrist while the phone still read "Install to watch"; fixed by making the token the whole guard, never cancelling, and recording watch FACTS (Done→refresh, Unsupported) above the token gate so only the sheet write is gated.** Also fixed off-review: the M3 default Snackbar was painting on unmapped `inverse*` roles (the one off-system surface) and the 48dp gear target visibly indented the glyph past the 24dp margin. |
-| 2 Collections | v0.20.0 | ⬜ | |
-| 3 Billing | v0.21.0 | ⬜ | |
-| 4 Store | v0.22.0 | ⬜ | owner gates: Play account/products/upload |
-| 5 Default face | v0.23.0 | ⬜ | closes R4 UNVERIFIEDs on device |
-| 6 Living gallery | v0.24.0 | ⬜ | 6b = emulator WebP, optional |
-| 7 Collection 3 | v0.25.0 | ⬜ | faces repo work first |
-| 8 Wear polish | v0.26.0 | ⬜ | face-size = owner call |
+| **2A Census & curation** | — (docs) | ⬜ **NEXT** | **Owner sign-off gate.** Inventory every built + designed face; collections of ≥10; renames/collisions; theming decision; TwelveSixty scope call. Nothing else in Phase 2 is correctly scoped until this lands. |
+| 2B Colour parity → 5 | v0.20.0 | ⬜ | 16 bundled faces sit at 3 ColorOptions; **Arclight-Pulsar has ZERO**; Collection-3's 25 already have 5 baked themes (leave). |
+| 2C Bundle the 25 | v0.21.0 | ⬜ | 18 → 43. Icon-labels first, then allowlist + SERIES_META + M2 real complication chips. Absorbs old Phase 7. |
+| 2D Collections IA | v0.22.0 | ⬜ | Home = collection cards, no paywall; free faces; `config/catalog.json`; coming-soon tiles + Chrome-rendered art. |
+| 2E Showcase & motion | v0.23.0 | ⬜ | F2 shared-element expand + collection covers; `frontend-design`/`impeccable` skills. |
+| 2F Gap builds | v0.24.0+ | ⬜ | Rolling. Start with "The Art of Motion" (15, best-prepared handoff). |
+| 3 Billing | v0.25.0 | ⬜ | Must end the release paywall no-op (see Phase 3 §4). |
+| 4 Store | v0.26.0 | ⬜ | owner gates: Play account/products/upload; verify `com.dialed.app` is free FIRST |
+| 5 Default face | v0.27.0 | ⬜ | closes R4 UNVERIFIEDs on device |
+| 6 Living gallery | v0.28.0 | ⬜ | 6b = emulator WebP, optional |
+| ~~7 Collection 3~~ | — | ➡️ **MOVED** | Absorbed into 2C (the faces are already built — it's the cheapest big win). |
+| 8 Wear polish | v0.29.0 | ⬜ | face-size = owner call |
 
 ---
 
-## Kickoff prompt for the next session (Phase 1) — paste verbatim
+## Kickoff prompt for the next session (Phase 2A) — paste verbatim
 
 ```
-You're executing Phase 1 of the Dialed implementation plan.
+You're executing PHASE 2A of the Dialed implementation plan: the CATALOG CENSUS & CURATION PLAN.
+This is a research + planning phase. Produce documents, not features. Do NOT write app code, do NOT
+touch any watchface.xml, do NOT tag a release.
 
-Repo: D:\Apps\WearOS Apps\WatchFaces\Dialed App (github.com/aucksy/dialed), currently at
-dialed-v0.18.0 (versionCode 19). READ FIRST, in order:
-1. CLAUDE.md (project context; note it is stale — Phase 1 itself refreshes it),
-2. docs/ASSESSMENT.md (findings C1–L6 — Phase 1 fixes the ones listed below),
-3. docs/IMPLEMENTATION-PLAN.md → "Phase 1 — dialed-v0.19.0" (your exact scope, acceptance
-   criteria, and the standing rules in §0 — they are non-negotiable),
-4. Resources/wff-watchface.skill → references/companion-app.md (WFP app-layer playbook).
+Repo: D:\Apps\WearOS Apps\WatchFaces\Dialed App (github.com/aucksy/dialed), at dialed-v0.19.0.
+Work in Fable mode: evidence before opinion, adversarial self-check, calibrated reporting.
+Ultracode is on — run the census as a Workflow (fan out; token cost is not a constraint).
 
-Scope (details in the plan — do not exceed it): C1 debug-gate the entitlement toggle; H2 push-job
-guard + cancellation hygiene; H3 uninstall error surfacing; H4 RESPONSE_UNSUPPORTED wire byte +
-honest unsupported UI (append-only enum!); M1 detail-restore crash guard; M3 phone singleTask;
-M4 dead controls + real version string; M5 48dp targets + status-pill live region; M6 dead
-hasInstalledFace + staged-APK cleanup; L1 dead WatchStatus fields; H6 refresh CLAUDE.md +
-IMPROVEMENTS-PLAN progress table.
+READ FIRST (authoritative — do not assess from memory):
+1. docs/IMPLEMENTATION-PLAN.md → "PHASE 2 — the catalog program", especially "Verified facts
+   (2026-07-16)" and "Phase 2A". That section has starting coordinates for every source folder.
+   TREAT ITS TABLES AS A HYPOTHESIS TO VERIFY, NOT AS TRUTH — re-count everything from the files.
+2. CLAUDE.md (architecture, WFP gotchas, ship loop) + docs/ASSESSMENT.md (M2 = the features-chips
+   defect you will fix in 2C; note what the catalog currently is).
+3. Resources/wff-watchface.skill + Resources/wff-watchface-polish.skill + WFF-Design-Guidelines.md
+   (standing rule: load these every faces session).
 
-Hard rules: NO local Android builds (CI compiles); adversarial review BEFORE tagging; bump
-versionCode/versionName to 20 / 0.19.0 in BOTH app/build.gradle.kts and wear/build.gradle.kts;
-git author simpleapps108@gmail.com; AGP 9 built-in Kotlin (never apply org.jetbrains.kotlin.android);
-never reorder wire enums; every WFP binder call stays timeout-bounded.
+THE OWNER'S GOAL, in his words:
+- The app must show ALL the watch faces we've built — including the ones already on GitHub but not
+  in the app — not just the 18 bundled today.
+- "Each collection inside the app should have at least 10 watch faces." Understand the whole
+  catalog, RECATEGORIZE and RENAME as needed, and where a collection genuinely can't reach 10,
+  FLAG IT so we can design more to complete it.
+- Any design that isn't built yet: show its image in the app marked "coming soon" (so coming-soon
+  faces count toward the 10).
+- Every face should have at least 5 colour options — he noticed the built ones only have 3.
 
-Ship loop: commit → push main → tag dialed-v0.19.0 → push the tag explicitly → poll CI via the
-Actions API (git credential fill for the token, never print it) → when green, paste BOTH direct
-APK links (releases/download/dialed-v0.19.0/dialed-v0.19.0-phone.apk and …-wear.apk) + an
-on-device re-test list for the owner (push/dismiss/push race, uninstall-out-of-range error,
-settings version, unsupported-watch message if testable). Then update the plan's Progress table
-and hand off the Phase 2 kickoff prompt (collections — read the plan's Phase 2 and the design
-handoffs before writing any UI).
+YOUR DELIVERABLES (commit to the Dialed repo; docs only):
+1. docs/CATALOG-AUDIT.md — the human read.
+2. config/catalog-inventory.json — one record per face, schema in the plan's Phase 2A.
+3. A CURATION PROPOSAL inside the audit, for owner sign-off, covering: the collection map (each
+   ≥10, built + coming-soon); every rename with old→new (⚠ renaming a BUILT face changes its
+   package id → new WFP token → call that out); per-collection gap counts + which designed faces
+   fill them; the THEMING DECISION (Fable series use <ColorConfiguration> swatches, Collection 3
+   uses <ListConfiguration> 5 baked themes — do they converge? what does "5 colour options" mean
+   for each?); the TwelveSixty scope call; and the Collection 5 / "1st Designs" census result.
+
+METHOD (fan out, then verify):
+- One agent per source: each of the 10 built series (read the real watchface.xml: WFF version,
+  canvas, theme mechanism + count, complication slots, motion type, preview asset), and each design
+  folder (Fable showcases, proposals, Collection 4 Atelier IV, Collection 5 Meridian, Collection 6
+  "The Art of Motion" — that one has a machine-readable handoff/manifest.json with per-face
+  palettes, start there — "1st Designs by Fable 5", TwelveSixty).
+- Then merge/dedupe into one inventory. Then a curation agent proposes the collection map.
+- Then an ADVERSARIAL pass that attacks the proposal: are these collections coherent to a buyer, or
+  just bins? Does any rename break a token or a package id? Is any face double-counted or missing?
+  Does every collection really reach 10? Are the collisions actually resolved?
+
+KNOWN COLLISIONS you must resolve (verify, then fix in the proposal): Meridian is a built series AND
+a face (Vakt-Meridian) AND a design folder; Aurum is a series AND a face (Vespera-Aurum); Ledger is
+a designed series AND a face (Halo-Ledger); Odometer/Orrery exist as both Kinetik (built) and
+Armature (designed); Solstice is both Arclight and Terra; Sector is both Meridian and Armature.
+
+FACTS ALREADY ESTABLISHED (verify, don't re-derive): 43 built faces in faces/ (10 series); 18
+bundled, 25 built-but-unbundled (Aurum/Halo/Meridian/Terra/Vakt); no series has 10; 16 of the 18
+bundled have exactly 3 <ColorOption>s, Arclight-Solstice has 5, ARCLIGHT-PULSAR HAS NO USER CONFIG
+AT ALL; the 25 unbundled use <ListConfiguration id="theme"> with t0..t4 = 5 themes each; unbuilt
+designs exist ONLY as HTML (no PNG/SVG anywhere) so coming-soon art must be rendered with headless
+INSTALLED Chrome (browser auto-download fails on this machine).
+
+RULES: docs only this phase (no version bump, no tag, no code). Git author simpleapps108@gmail.com.
+Don't invent new design languages — organise what exists and name the gaps. Report in PLAIN ENGLISH
+to the owner (he is not a developer): lead with what he has, what's missing, and what you recommend;
+put the detail in the docs, not the chat.
+
+END BY: committing the docs, then presenting the curation proposal to the owner for sign-off — a
+short, plain-English summary of the recommended collections, what each is missing, and the decisions
+you need from him (theming convergence, TwelveSixty, any rename he may dislike). Then hand off the
+kickoff prompt for whichever of 2B (colour parity) or 2C (bundle the 25) he wants first.
 ```

@@ -12,8 +12,9 @@ per chat, without re-deriving context.
   (storefront + Data-Layer sender) + watch `:wear` (WFP install concierge) + `:wear-common`
   (wire protocol) + 18 generated `facepacks/*` face APK modules built from the `faces/` submodule
   (github.com/aucksy/fablecollection). Repo: **github.com/aucksy/dialed**, local
-  `D:\Apps\WearOS Apps\WatchFaces\Dialed App`. Currently at tag `dialed-v0.18.0`, versionCode 19
+  `D:\Apps\WearOS Apps\WatchFaces\Dialed App`. Currently at tag **`dialed-v0.22.0`, versionCode 22**
   (both `app/build.gradle.kts` and `wear/build.gradle.kts` — bump BOTH, in lockstep, every phase).
+  ⚠ The 18→**43** face count below is the 2C-era number; the facepack modules are now 43, not 18.
 - **Platform hard limits (never fight these):** WFP is Wear OS 6 / API 36 only; **slot = 1** (one
   Dialed face on the watch at a time; different-package install = full replace); unattended
   `setWatchFaceAsActive` is a **once-ever platform budget** — always attempt, let the platform
@@ -75,24 +76,33 @@ per chat, without re-deriving context.
 
 ## Phase map (dependency-sliced)
 
+> ⚠ **Tag numbers below are INDICATIVE ORDER, NOT RESERVATIONS.** Renumbered 2026-07-17 after the
+> original reservations collided with reality: `v0.20.0` was held for 2B but never tagged, and
+> `v0.22.0` — reserved for 2D — was spent by an unplanned faces-only ship (VAKT complications).
+> **`v0.20.0` is now permanently unusable**: versionCode is already 22, and an APK at code 20 cannot
+> install over it. **Rule going forward: a phase claims its tag at SHIP time = the next free number.**
+> Never hold a number for a future phase — an out-of-band ship will take it.
+
 | Phase | Tag | Theme | Depends on |
 |---|---|---|---|
 | 1 | `dialed-v0.19.0` ✅ | Correctness & hygiene batch (C1 guard, H2, H3, H4, M1–M6, docs refresh) | — |
 | **2A** | — (docs) | **Catalog census & curation plan** — every face we have built vs only designed; collections of ≥10; renames/collisions; colour audit. **Owner sign-off gate.** | 1 |
-| **2B** | `dialed-v0.20.0` | **Colour parity → 5+ options on every face** (faces repo) | 2A |
-| **2C** | `dialed-v0.21.0` | **Bundle the 25 built-but-unbundled faces** (Aurum/Halo/Meridian/Terra/Vakt) + icon-label rollout — 18 → 43 | 2A |
-| **2D** | `dialed-v0.22.0` | **Collections IA + `config/catalog.json` + free faces + coming-soon tiles** (app) | 2A, 2C |
-| **2E** | `dialed-v0.23.0` | **Showcase & motion** — the collection experience (design skills, animation) | 2D |
-| **2F** | `dialed-v0.24.0`+ | **Gap builds** — build the designed-but-unbuilt faces each collection still needs | 2A, rolling |
-| 3 | `dialed-v0.25.0` | Play Billing per-collection + entitlement v2 + paywall v2 (code-complete) | 2D |
-| 4 | `dialed-v0.26.0` | Store readiness: release lane, AAB, privacy policy, listing kit (billing e2e here) | 3 |
-| 5 | `dialed-v0.27.0` | Default watch face + system-gallery discoverability (R4 recipe) | 1 (independent) |
-| 6 | `dialed-v0.28.0` | Living gallery — real face animation (R7 E-LITE + WebP delivery) | 1 |
-| 8 | `dialed-v0.29.0` | Wear polish: Home face size, W3 coaching motion, receive thumbnail, optional tile | 1 |
+| **2C** | `dialed-v0.21.0` ✅ | **Bundle the 25 built-but-unbundled faces** (Aurum/Halo/Meridian/Terra/Vakt) — 18 → 43 | 2A |
+| — | `dialed-v0.22.0` ✅ | **VAKT any-provider complications** (out-of-band, faces-only; not a planned phase — this is the ship that took 2D's reserved number) | — |
+| **2D** | `dialed-v0.23.0` | **Collections IA + `config/catalog.json` + free faces + coming-soon tiles** (app) | 2A, 2C |
+| **2B** | `dialed-v0.24.0` | **Colour parity → 5+ options on every face** (faces repo). Moved after 2D: it never blocked the IA, and its `v0.20.0` slot is dead. | 2A |
+| **2E** | `dialed-v0.25.0` | **Showcase & motion** — the collection experience (design skills, animation) | 2D |
+| **2F** | *rolling* | **Gap builds** — build the designed-but-unbuilt faces each collection still needs. **No reserved range** — each slice takes the next free tag when it ships. | 2A, rolling |
+| 3 | `dialed-v0.26.0` | Play Billing per-collection + entitlement v2 + paywall v2 (code-complete) | 2D |
+| 4 | `dialed-v0.27.0` | Store readiness: release lane, AAB, privacy policy, listing kit (billing e2e here) | 3 |
+| 5 | `dialed-v0.28.0` | Default watch face + system-gallery discoverability (R4 recipe) | 1 (independent) |
+| 6 | `dialed-v0.29.0` | Living gallery — real face animation (R7 E-LITE + WebP delivery) | 1 |
+| 8 | `dialed-v0.30.0` | Wear polish: Home face size, W3 coaching motion, receive thumbnail, optional tile | 1 |
 
 **Phase 7 (Collection-3 scale-out) is absorbed into 2C** — it was always the same work.
 3→4 order is fixed (billing e2e needs 4's Play upload, so 3 ships code-complete and 4 lights it up).
-2B and 2C are independent of each other and can ship in either order once 2A is signed off.
+2B is independent of 2C and 2D and can ship whenever 2A is signed off — it is sequenced after 2D
+only because 2D is the owner's priority, not because anything blocks it.
 
 ---
 
@@ -206,7 +216,7 @@ No version bump (docs only).
 
 ---
 
-## Phase 2B — `dialed-v0.20.0` · Colour parity → 5+ on every face
+## Phase 2B — `dialed-v0.24.0` · Colour parity → 5+ on every face
 
 **Scope (faces submodule):** bring every bundled face to **≥5** theme options, per 2A's theming
 decision. Known work: 16 faces at 3 `<ColorOption>`s → 5; **Arclight-Pulsar has no user config at
@@ -267,7 +277,7 @@ pushes and installs on-wrist; APK size recorded in the plan.
 
 ---
 
-## Phase 2D — `dialed-v0.22.0` · Collections IA + config + free faces + coming-soon
+## Phase 2D — `dialed-v0.23.0` · Collections IA + config + free faces + coming-soon
 
 **Scope:** the owner's product model, now with real stock behind it.
 - **Home = collection cards, no paywall anywhere on Home.** Tap a card → that collection's faces.
@@ -293,7 +303,7 @@ reaches the app after a refresh.
 
 ---
 
-## Phase 2E — `dialed-v0.23.0` · Showcase & motion
+## Phase 2E — `dialed-v0.25.0` · Showcase & motion
 
 **Goal (owner's words): "these collections should be showcased with nice design and interactive with
 nice animations."** This is the phase where Dialed stops looking like a grid and starts looking like
@@ -321,7 +331,7 @@ recomposition — the `rememberSecondsAngle` rule); reduced-motion honoured; own
 
 ---
 
-## Phase 2F — `dialed-v0.24.0`+ · Gap builds (rolling)
+## Phase 2F — *rolling, next free tag per slice* · Gap builds
 
 **Goal:** turn coming-soon into shipped, collection by collection, until each genuinely has 10 built
 faces. Ordered by 2A's gap flags and the owner's priority.
@@ -491,7 +501,7 @@ config afterwards, which is the whole point.
 
 ---
 
-## Phase 3 — `dialed-v0.21.0` · Play Billing (per-collection) — code-complete
+## Phase 3 — `dialed-v0.26.0` · Play Billing (per-collection) — code-complete
 
 **Goal:** real money. `BillingManager` on billing-ktx 9.1.0 (already a dep), per-collection INAPP
 + optional all-access, restore, acknowledge, price display from `ProductDetails`. Ships
@@ -541,7 +551,7 @@ official docs during the phase (pinned facts move); do not bump the dep version 
 
 ---
 
-## Phase 4 — `dialed-v0.22.0` · Store readiness (and billing e2e)
+## Phase 4 — `dialed-v0.27.0` · Store readiness (and billing e2e)
 
 **Goal:** a Play-uploadable, properly-signed release lane, and the owner-facing kit. This is where
 Phase 3's billing gets its real end-to-end test.
@@ -582,7 +592,7 @@ launch reconcile.
 
 ---
 
-## Phase 5 — `dialed-v0.23.0` · Default watch face + gallery discoverability
+## Phase 5 — `dialed-v0.28.0` · Default watch face + gallery discoverability
 
 **Goal:** execute the R4 recipe (`docs/research/R4-carousel-slot-model.md` — execution-ready):
 a branded "Dialed" default face seeds the system watch-face gallery at install time, and
@@ -614,7 +624,7 @@ must take the update path (it already does: `installOrUpdate` checks `remainingS
 
 ---
 
-## Phase 6 — `dialed-v0.24.0` · Living gallery (R7 phase 1: E-LITE + WebP delivery)
+## Phase 6 — `dialed-v0.29.0` · Living gallery (R7 phase 1: E-LITE + WebP delivery)
 
 **Goal:** real, per-face motion in the phone app — no fake hands — per
 `docs/research/R7-face-animation-in-app.md` Phase-1 scope.
@@ -667,7 +677,7 @@ L3 — Coil from Phase 6 mitigates; make the grid use size-aware requests here a
 
 ---
 
-## Phase 8 — `dialed-v0.26.0` · Wear polish batch
+## Phase 8 — `dialed-v0.30.0` · Wear polish batch
 
 **Goal:** the remaining wear-side comfort items, sized by owner feedback.
 
@@ -688,17 +698,18 @@ face; coaching plays.
 |---|---|---|---|
 | 1 Hygiene | v0.19.0 | ✅ **SHIPPED** 2026-07-16 (CI run 29472817925 green, 18/18 faces validated; commit `0ed9dfe`) | C1 paywall debug-gate (+ restore only ever grants) · H2 push-token guard + `CancellationException` rethrow + `NonCancellable` cleanup · H3 uninstall-error snackbar · H4 `RESPONSE_UNSUPPORTED=2` + `!unsupported` query sentinel → honest sheet state + the UNSUPPORTED pill finally has a producer (`QueryStateResult.supported`) · M1 `firstOrNull` detail guard · M3 phone `singleTask` · M4 dead "More"/no-op rows removed + `BuildConfig.VERSION_NAME` + real gear icon · M5 48dp targets (incl. the theme selector) + pill live region · M6 dead `hasInstalledFace()` + per-transfer staged APK with sweep · L1 dead `WatchStatus` fields · H6 CLAUDE.md + this table refreshed. **7-lens adversarial review (43 agents, 3 refuters/finding) caught 2 real self-inflicted bugs pre-tag: (a) BLOCKER — the new `catch (CancellationException)` swallowed the setup RPC's `withTimeout` (`TimeoutCancellationException` IS a `CancellationException`) → the sheet hung on "Sending…" forever with no error and no Retry; fixed by `withTimeoutOrNull` + an explicit emit. (b) HIGH — cancelling the push job on dismiss abandoned a transfer the watch was still installing (the phone cannot stop the Data Layer anyway), so the face landed on the wrist while the phone still read "Install to watch"; fixed by making the token the whole guard, never cancelling, and recording watch FACTS (Done→refresh, Unsupported) above the token gate so only the sheet write is gated.** Also fixed off-review: the M3 default Snackbar was painting on unmapped `inverse*` roles (the one off-system surface) and the 48dp gear target visibly indented the glyph past the 24dp margin. |
 | **2A Census & curation** | — (docs) | 🟡 **DOCS DELIVERED 2026-07-16 — awaiting owner sign-off** | `docs/CATALOG-AUDIT.md` + `config/catalog-inventory.json` (102-agent census + deterministic merge + judged curation panel + 3-refuter adversarial pass, every count re-verified from disk). **Findings that revise this plan's hypotheses:** 192 distinct designs total (43 built / 149 designed-unbuilt — plan guessed ~46 designed, off ~3×); ⭐**Collection 5 "Meridian" = 70 faces with 170 finished SVGs**, not 5 sketches (nearly half the backlog); Collection 4 = 32 not 6; the "Second Movement" proposals (25) are the owner-REJECTED direction — excluded; TwelveSixty already folded (16 of the 18 bundled ARE its designs) → archive, harvest only FIELD-Splitline. **Colour audit corrected:** not "16 at 3" but 16-at-3 + Pulsar-at-ZERO + **9 placed coming-soon designs also at 3** (FIELD×5, Aether ×3, Settype Spoken); the 25 unbundled already have 5 baked themes. **Theming decision: do NOT converge** — bring the 18 to 5 swatches (8 rich = cheap, 8 low-wiring = ½-day each, Pulsar = owner call), leave the 25 baked-theme faces alone. **Map: 7 collections all ≥10** (Vespera 10/10 built = pilot; Vakt 15; Atelier/Kinetik/Halo 5+5; Settype/Arclight 4+6), all renames display-only/token-safe. Open questions for owner in the audit §11. |
-| 2B Colour parity → 5 | v0.20.0 | ⬜ | 16 bundled faces sit at 3 ColorOptions; **Arclight-Pulsar has ZERO**; Collection-3's 25 already have 5 baked themes (leave). |
-| 2C Bundle the 25 | v0.21.0 | ⬜ | 18 → 43. Icon-labels first, then allowlist + SERIES_META + M2 real complication chips. Absorbs old Phase 7. |
-| 2D Collections IA | v0.22.0 | ⬜ | Home = collection cards, no paywall; free faces; `config/catalog.json`; coming-soon tiles + Chrome-rendered art. |
-| 2E Showcase & motion | v0.23.0 | ⬜ | F2 shared-element expand + collection covers; `frontend-design`/`impeccable` skills. |
-| 2F Gap builds | v0.24.0+ | ⬜ | Rolling. Start with "The Art of Motion" (15, best-prepared handoff). |
-| 3 Billing | v0.25.0 | ⬜ | Must end the release paywall no-op (see Phase 3 §4). |
-| 4 Store | v0.26.0 | ⬜ | owner gates: Play account/products/upload; verify `com.dialed.app` is free FIRST |
-| 5 Default face | v0.27.0 | ⬜ | closes R4 UNVERIFIEDs on device |
-| 6 Living gallery | v0.28.0 | ⬜ | 6b = emulator WebP, optional |
+| **2C Bundle the 25** | v0.21.0 | ✅ **SHIPPED** 2026-07-16 (commit `140c263`) | Store **18 → 43**. Two of five scoped items dissolved on contact with the files (the icon-label rollout was a **NO-OP** — those faces have no hardcoded label at all; the two Terra renames were **SKIPPED** — the names are painted into the dial art, and the spec + on-watch `app_name` agree with them). Delivered: `BUNDLED_FACES` 18→43 + `SERIES_META` ×5 + a new `FACE_META` (without it the store read "Eclat"/"MeridianLine"/"PetiteSeconde"); **M2 fixed** — chips now derive from each face's real `<ComplicationSlot>`s, and the old series-level guesses were not vague but *false* (Aether advertised "Weather" with no weather provider). **Two unscoped defects found and fixed:** Home's filter row was a non-scrolling `Row` that would have made half the store unfilterable at 11 chips (now scrollable; **2D replaces the surface**), and CI could silently ship a stale generated catalog (now re-runs the generator, fails on drift, asserts 43/43 + one APK+token per facepack). Full detail: `CLAUDE.md` → "Phase 2C findings that contradict the plan". **Still open (owner):** Terra-Compass's leaked `COMPASS · ROSE IS STATIC` dial note (audit §11-q5). |
+| **— VAKT complications** | v0.22.0 | ✅ **SHIPPED** 2026-07-17 (commit `a1d8dc1`) | **Out-of-band, not a planned phase — this is the ship that took 2D's reserved number** (see the renumbering note under the Phase map). Faces-only, submodule bump, **zero app code**. Assigning any provider to a VAKT register used to paint an opaque flat disc over the machined dial; a slot is now a **FRAME** (permanent dial art) + swappable **CONTENT**, with the empty-state scale/needle in a `<Complication type="EMPTY">` block the platform swaps out. All 8 types render. VAKT is the **first WFF v2** face family (GOAL_PROGRESS + WEIGHTED_ELEMENTS); CI reads the version per-face from the manifest so this needed no CI change. ⚠ The facepack template hardcodes `minSdk = 33` while a v2 face wants 34 — inert (WFP is Wear OS 6 only) but revisit if faces are ever sold standalone. Detail: `faces/collection3-tools/VAKT-COMPLICATIONS-PLAN.md` §7. |
+| **2D Collections IA** | v0.23.0 | 🔜 **NEXT** — blocked on 2A sign-off | Home = collection cards, no paywall; free faces; `config/catalog.json`; coming-soon tiles + Chrome-rendered art. Keep the `:wear` diff at **zero**. |
+| 2B Colour parity → 5 | v0.24.0 | ⬜ | 16 bundled faces sit at 3 ColorOptions; **Arclight-Pulsar has ZERO** (owner call, audit §11-q2); Collection-3's 25 already have 5 baked themes (leave). ⚠ Renumbered from the dead `v0.20.0` slot. |
+| 2E Showcase & motion | v0.25.0 | ⬜ | F2 shared-element expand + collection covers; `frontend-design`/`impeccable` skills. |
+| 2F Gap builds | *rolling* | ⬜ | No reserved range — each slice takes the next free tag. Start with "The Art of Motion" (15, best-prepared handoff). |
+| 3 Billing | v0.26.0 | ⬜ | Must end the release paywall no-op (see Phase 3 §4). |
+| 4 Store | v0.27.0 | ⬜ | owner gates: Play account/products/upload; verify `com.dialed.app` is free FIRST |
+| 5 Default face | v0.28.0 | ⬜ | closes R4 UNVERIFIEDs on device |
+| 6 Living gallery | v0.29.0 | ⬜ | 6b = emulator WebP, optional |
 | ~~7 Collection 3~~ | — | ➡️ **MOVED** | Absorbed into 2C (the faces are already built — it's the cheapest big win). |
-| 8 Wear polish | v0.29.0 | ⬜ | face-size = owner call |
+| 8 Wear polish | v0.30.0 | ⬜ | face-size = owner call |
 
 ---
 

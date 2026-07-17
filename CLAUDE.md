@@ -3,7 +3,7 @@
 Dialed is a **native Kotlin/Compose Watch Face Push (WFP) marketplace** for Wear OS 6 — a **living
 hub** that bundles the fablecollection watch-face collection, pushes faces to the watch via WFP, and
 doubles as the developer's **laptop-free test harness**. Repo: **github.com/aucksy/dialed** (live; CI
-green; shipped **`dialed-v0.19.0`**). Build guide: `watchface-marketplace-build-guide.md`.
+green; shipped **`dialed-v0.22.0`**). Build guide: `watchface-marketplace-build-guide.md`.
 
 **▶ ACTIVE ROADMAP: `docs/ASSESSMENT.md` + `docs/IMPLEMENTATION-PLAN.md`** (2026-07-15 end-to-end
 Fable assessment of both apps). **Start there.** The plan is 8 dependency-sliced phases —
@@ -92,7 +92,8 @@ Edit → compile-review → **adversarial logic review** → fix → commit → 
 - ✅ **v0.19.0 hygiene** (plan Phase 1) — release paywall can no longer grant a free unlock; push-job race + cancellation hygiene; uninstall errors surfaced; honest unsupported-watch path (`RESPONSE_UNSUPPORTED` + query sentinel); restored-detail crash guard; `singleTask`; 48dp targets; dead code/controls removed.
 - ✅ **v0.21.0 = plan Phase 2C** — store 18 → **43** faces (Collection 3 bundled). M2 fixed: detail chips now derived from each face's real `<ComplicationSlot>`s. Home's filter row made scrollable (see below). CI gained a generator-drift gate, a 43/43 count gate, and asset/APK size logging.
 - ✅ **v0.22.0 = VAKT complications** (submodule bump; face-side only, no app code). Assigning any provider to a VAKT register used to paint an opaque flat disc over the machined dial. A slot is now a FRAME (permanent dial art) plus swappable CONTENT, with the empty-state scale/needle in a `<Complication type="EMPTY">` block the platform swaps out; all 8 types render; VAKT is the **first WFF v2** face family (GOAL_PROGRESS + WEIGHTED_ELEMENTS; CI reads the version per-face from the manifest, so this needed no CI change). ⚠ **The facepack template hardcodes `minSdk = 33`** while a v2 face wants 34 — inert because WFP is Wear OS 6 only, but revisit if these are ever sold standalone. Full detail + the traps: `faces/collection3-tools/VAKT-COMPLICATIONS-PLAN.md` §7.
-- ⏭️ **Next: plan Phase 2D** — collections IA + `config/catalog.json` + free faces + coming-soon tiles. (2B, colour parity, is still open and keeps the `v0.20.0` slot.) Then Billing (3), store (4), default face (5), living gallery (6), gap builds (2F), wear polish (8).
+- ⏭️ **Next: plan Phase 2D = `dialed-v0.23.0`** — collections IA + `config/catalog.json` + free faces + coming-soon tiles. Then 2B colour parity (v0.24.0), 2E showcase (v0.25.0), Billing (v0.26.0), store (v0.27.0), default face (v0.28.0), living gallery (v0.29.0), wear polish (v0.30.0); 2F gap builds roll alongside.
+- ⚠ **Tag numbers are assigned at SHIP time, never reserved** (renumbered 2026-07-17). `v0.20.0` was held for 2B and never tagged — it is now **permanently unusable** (versionCode is 22; an APK at code 20 can't install over it). `v0.22.0` was reserved for 2D and got spent by the out-of-band VAKT ship. Don't hold a number for a future phase.
 
 ## ⚠ Phase 2C findings that contradict the plan (read before re-attempting them)
 - **The "icon-label rollout to the 25" is a NO-OP — do not redo it.** 2C step 1 assumed the 25 needed the

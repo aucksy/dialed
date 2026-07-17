@@ -911,7 +911,7 @@
       "hasAod": true,
       "proposedCollection": "VAKT",
       "proposedName": "Compass",
-      "notes": "WF-C3. *** REAL DEFECT — SHIPPED ART CARRIES A LEAKED SPEC ANNOTATION *** The silkscreened dial subtitle reads 'COMPASS · ROSE IS STATIC' instead of just 'COMPASS'. Verified by cropping the native 900x900 PNGs, NOT from the downscaled preview: the string is baked into ALL SIX dial assets (dial_t0..t"
+      "notes": "WF-C3. DEFECT FIXED in dialed-v0.23.0 (2026-07-17), closing audit S11-q5. The silkscreened dial subtitle used to read 'COMPASS · ROSE IS STATIC' — a designer's note about the concept (WFF has no heading sensor, so the rose is honest decoration; the spec's own `concept` field already says this verbatim) that had leaked out of the spec and been baked into all six dial assets. Now reads just 'COMPASS', matching the sibling convention (TERRA + face name; Terra-MeridianLine uses identical geometry, size 8/weight 600/muted, +15px below the wordmark). Fixed at source in spec/cat-c.js and re-baked via `node gen/build-all.mjs WF-C3` — art only; watchface.xml/strings.xml/watch_face_info.xml were byte-identical after the re-bake, so no schema or validator surface. A sweep of every text literal across all five spec files confirmed this was the ONLY leaked note."
     },
     {
       "id": "terra_altimeter",

@@ -76,28 +76,41 @@ per chat, without re-deriving context.
 
 ## Phase map (dependency-sliced)
 
-> ⚠ **Tag numbers below are INDICATIVE ORDER, NOT RESERVATIONS.** Renumbered 2026-07-17 after the
-> original reservations collided with reality: `v0.20.0` was held for 2B but never tagged, and
-> `v0.22.0` — reserved for 2D — was spent by an unplanned faces-only ship (VAKT complications).
-> **`v0.20.0` is now permanently unusable**: versionCode is already 22, and an APK at code 20 cannot
-> install over it. **Rule going forward: a phase claims its tag at SHIP time = the next free number.**
-> Never hold a number for a future phase — an out-of-band ship will take it.
+> ## ⚠ TAG NUMBERS ARE NEVER RESERVED — a phase claims its tag at SHIP time = the next free number.
+>
+> **This rule is written in blood; it has now bitten three times.** The plan originally *reserved* a
+> tag per phase. Reality does not respect reservations:
+> - `v0.20.0` was held for 2B and never tagged. It is now **permanently unusable** — versionCode is
+>   past 20, and an APK at a lower code cannot install over a higher one. The slot is simply dead.
+> - `v0.22.0` was reserved for 2D and got spent by an out-of-band faces-only ship (VAKT complications).
+> - `v0.23.0` was then reassigned to 2D on 2026-07-17 and spent **the same day** by another
+>   out-of-band face fix (Terra-Compass).
+>
+> So the unshipped phases below **deliberately carry no tag number.** Only shipped rows name a tag.
+> Sequence the phases; number them when they ship. An out-of-band fix can then never strand a
+> reservation again — which is the only reason this kept happening.
 
 | Phase | Tag | Theme | Depends on |
 |---|---|---|---|
 | 1 | `dialed-v0.19.0` ✅ | Correctness & hygiene batch (C1 guard, H2, H3, H4, M1–M6, docs refresh) | — |
-| **2A** | — (docs) | **Catalog census & curation plan** — every face we have built vs only designed; collections of ≥10; renames/collisions; colour audit. **Owner sign-off gate.** | 1 |
+| **2A** | — (docs) | **Catalog census & curation plan** — every face we have built vs only designed; collections of ≥10; renames/collisions; colour audit. **Owner sign-off gate — still open.** | 1 |
 | **2C** | `dialed-v0.21.0` ✅ | **Bundle the 25 built-but-unbundled faces** (Aurum/Halo/Meridian/Terra/Vakt) — 18 → 43 | 2A |
-| — | `dialed-v0.22.0` ✅ | **VAKT any-provider complications** (out-of-band, faces-only; not a planned phase — this is the ship that took 2D's reserved number) | — |
-| **2D** | `dialed-v0.23.0` | **Collections IA + `config/catalog.json` + free faces + coming-soon tiles** (app) | 2A, 2C |
-| **2B** | `dialed-v0.24.0` | **Colour parity → 5+ options on every face** (faces repo). Moved after 2D: it never blocked the IA, and its `v0.20.0` slot is dead. | 2A |
-| **2E** | `dialed-v0.25.0` | **Showcase & motion** — the collection experience (design skills, animation) | 2D |
-| **2F** | *rolling* | **Gap builds** — build the designed-but-unbuilt faces each collection still needs. **No reserved range** — each slice takes the next free tag when it ships. | 2A, rolling |
-| 3 | `dialed-v0.26.0` | Play Billing per-collection + entitlement v2 + paywall v2 (code-complete) | 2D |
-| 4 | `dialed-v0.27.0` | Store readiness: release lane, AAB, privacy policy, listing kit (billing e2e here) | 3 |
-| 5 | `dialed-v0.28.0` | Default watch face + system-gallery discoverability (R4 recipe) | 1 (independent) |
-| 6 | `dialed-v0.29.0` | Living gallery — real face animation (R7 E-LITE + WebP delivery) | 1 |
-| 8 | `dialed-v0.30.0` | Wear polish: Home face size, W3 coaching motion, receive thumbnail, optional tile | 1 |
+| — | `dialed-v0.22.0` ✅ | **VAKT any-provider complications** (out-of-band, faces-only) | — |
+| — | `dialed-v0.23.0` ✅ | **Terra-Compass leaked-note fix** (out-of-band, art-only) | — |
+| **2D** | *next free* | **Collections IA + `config/catalog.json` + free faces + coming-soon tiles** (app). ⚠ **BLOCKED** — needs the 2A map signed off (audit §11 q1/q4). | 2A, 2C |
+| **2B** | *next free* | **Colour parity → 5+ options on every face** (faces repo) | 2A |
+| **2E** | *next free* | **Showcase & motion** — the collection experience (design skills, animation) | 2D |
+| **2F** | *rolling* | **Gap builds** — build the designed-but-unbuilt faces each collection still needs | 2A, rolling |
+| 3 | *next free* | Play Billing per-collection + entitlement v2 + paywall v2 (code-complete) | 2D |
+| 4 | *next free* | Store readiness: release lane, AAB, privacy policy, listing kit (billing e2e here) | 3 |
+| 5 | *next free* | Default watch face + system-gallery discoverability (R4 recipe) | 1 (independent) |
+| 6 | *next free* | Living gallery — real face animation (R7 E-LITE + WebP delivery) | 1 |
+| 8 | *next free* | Wear polish: Home face size, W3 coaching motion, receive thumbnail, optional tile | 1 |
+
+> **Owner steer, 2026-07-17:** pricing and the commercial questions are explicitly **parked to last**
+> ("this will be last state") — the priority is **testing and perfecting the existing faces**. Phases 3
+> and 4 were already last in the order, so nothing moves; but 2D is now *blocked* (its shelves need the
+> parked map), and face-quality work (2B, defect fixes) comes forward.
 
 **Phase 7 (Collection-3 scale-out) is absorbed into 2C** — it was always the same work.
 3→4 order is fixed (billing e2e needs 4's Play upload, so 3 ships code-complete and 4 lights it up).
@@ -216,7 +229,7 @@ No version bump (docs only).
 
 ---
 
-## Phase 2B — `dialed-v0.24.0` · Colour parity → 5+ on every face
+## Phase 2B — *next free tag* · Colour parity → 5+ on every face
 
 **Scope (faces submodule):** bring every bundled face to **≥5** theme options, per 2A's theming
 decision. Known work: 16 faces at 3 `<ColorOption>`s → 5; **Arclight-Pulsar has no user config at
@@ -257,7 +270,8 @@ landed first); owner spot-checks 2–3 faces per series for taste, not just coun
 > ship a stale generated catalog silently — it now re-runs the generator and fails on drift, and asserts one
 > bundled APK + token per facepack, so "43/43" is enforced rather than assumed.
 >
-> **Still open (owner):** Terra-Compass's leaked `COMPASS · ROSE IS STATIC` dial note (audit §11-q5).
+> **~~Still open (owner)~~ → CLOSED:** Terra-Compass's leaked `COMPASS · ROSE IS STATIC` dial note
+> (audit §11-q5) was approved and **fixed in `dialed-v0.23.0`** (2026-07-17).
 
 **Scope:** the fastest large win in the whole program — 25 faces that already exist, already
 validate, and simply aren't in the app.
@@ -277,7 +291,7 @@ pushes and installs on-wrist; APK size recorded in the plan.
 
 ---
 
-## Phase 2D — `dialed-v0.23.0` · Collections IA + config + free faces + coming-soon
+## Phase 2D — *next free tag* · Collections IA + config + free faces + coming-soon
 
 **Scope:** the owner's product model, now with real stock behind it.
 - **Home = collection cards, no paywall anywhere on Home.** Tap a card → that collection's faces.
@@ -303,7 +317,7 @@ reaches the app after a refresh.
 
 ---
 
-## Phase 2E — `dialed-v0.25.0` · Showcase & motion
+## Phase 2E — *next free tag* · Showcase & motion
 
 **Goal (owner's words): "these collections should be showcased with nice design and interactive with
 nice animations."** This is the phase where Dialed stops looking like a grid and starts looking like
@@ -501,7 +515,7 @@ config afterwards, which is the whole point.
 
 ---
 
-## Phase 3 — `dialed-v0.26.0` · Play Billing (per-collection) — code-complete
+## Phase 3 — *next free tag* · Play Billing (per-collection) — code-complete
 
 **Goal:** real money. `BillingManager` on billing-ktx 9.1.0 (already a dep), per-collection INAPP
 + optional all-access, restore, acknowledge, price display from `ProductDetails`. Ships
@@ -551,7 +565,7 @@ official docs during the phase (pinned facts move); do not bump the dep version 
 
 ---
 
-## Phase 4 — `dialed-v0.27.0` · Store readiness (and billing e2e)
+## Phase 4 — *next free tag* · Store readiness (and billing e2e)
 
 **Goal:** a Play-uploadable, properly-signed release lane, and the owner-facing kit. This is where
 Phase 3's billing gets its real end-to-end test.
@@ -592,7 +606,7 @@ launch reconcile.
 
 ---
 
-## Phase 5 — `dialed-v0.28.0` · Default watch face + gallery discoverability
+## Phase 5 — *next free tag* · Default watch face + gallery discoverability
 
 **Goal:** execute the R4 recipe (`docs/research/R4-carousel-slot-model.md` — execution-ready):
 a branded "Dialed" default face seeds the system watch-face gallery at install time, and
@@ -624,7 +638,7 @@ must take the update path (it already does: `installOrUpdate` checks `remainingS
 
 ---
 
-## Phase 6 — `dialed-v0.29.0` · Living gallery (R7 phase 1: E-LITE + WebP delivery)
+## Phase 6 — *next free tag* · Living gallery (R7 phase 1: E-LITE + WebP delivery)
 
 **Goal:** real, per-face motion in the phone app — no fake hands — per
 `docs/research/R7-face-animation-in-app.md` Phase-1 scope.
@@ -677,7 +691,7 @@ L3 — Coil from Phase 6 mitigates; make the grid use size-aware requests here a
 
 ---
 
-## Phase 8 — `dialed-v0.30.0` · Wear polish batch
+## Phase 8 — *next free tag* · Wear polish batch
 
 **Goal:** the remaining wear-side comfort items, sized by owner feedback.
 
@@ -700,16 +714,17 @@ face; coaching plays.
 | **2A Census & curation** | — (docs) | 🟡 **DOCS DELIVERED 2026-07-16 — awaiting owner sign-off** | `docs/CATALOG-AUDIT.md` + `config/catalog-inventory.json` (102-agent census + deterministic merge + judged curation panel + 3-refuter adversarial pass, every count re-verified from disk). **Findings that revise this plan's hypotheses:** 192 distinct designs total (43 built / 149 designed-unbuilt — plan guessed ~46 designed, off ~3×); ⭐**Collection 5 "Meridian" = 70 faces with 170 finished SVGs**, not 5 sketches (nearly half the backlog); Collection 4 = 32 not 6; the "Second Movement" proposals (25) are the owner-REJECTED direction — excluded; TwelveSixty already folded (16 of the 18 bundled ARE its designs) → archive, harvest only FIELD-Splitline. **Colour audit corrected:** not "16 at 3" but 16-at-3 + Pulsar-at-ZERO + **9 placed coming-soon designs also at 3** (FIELD×5, Aether ×3, Settype Spoken); the 25 unbundled already have 5 baked themes. **Theming decision: do NOT converge** — bring the 18 to 5 swatches (8 rich = cheap, 8 low-wiring = ½-day each, Pulsar = owner call), leave the 25 baked-theme faces alone. **Map: 7 collections all ≥10** (Vespera 10/10 built = pilot; Vakt 15; Atelier/Kinetik/Halo 5+5; Settype/Arclight 4+6), all renames display-only/token-safe. Open questions for owner in the audit §11. |
 | **2C Bundle the 25** | v0.21.0 | ✅ **SHIPPED** 2026-07-16 (commit `140c263`) | Store **18 → 43**. Two of five scoped items dissolved on contact with the files (the icon-label rollout was a **NO-OP** — those faces have no hardcoded label at all; the two Terra renames were **SKIPPED** — the names are painted into the dial art, and the spec + on-watch `app_name` agree with them). Delivered: `BUNDLED_FACES` 18→43 + `SERIES_META` ×5 + a new `FACE_META` (without it the store read "Eclat"/"MeridianLine"/"PetiteSeconde"); **M2 fixed** — chips now derive from each face's real `<ComplicationSlot>`s, and the old series-level guesses were not vague but *false* (Aether advertised "Weather" with no weather provider). **Two unscoped defects found and fixed:** Home's filter row was a non-scrolling `Row` that would have made half the store unfilterable at 11 chips (now scrollable; **2D replaces the surface**), and CI could silently ship a stale generated catalog (now re-runs the generator, fails on drift, asserts 43/43 + one APK+token per facepack). Full detail: `CLAUDE.md` → "Phase 2C findings that contradict the plan". **Still open (owner):** Terra-Compass's leaked `COMPASS · ROSE IS STATIC` dial note (audit §11-q5). |
 | **— VAKT complications** | v0.22.0 | ✅ **SHIPPED** 2026-07-17 (commit `a1d8dc1`) | **Out-of-band, not a planned phase — this is the ship that took 2D's reserved number** (see the renumbering note under the Phase map). Faces-only, submodule bump, **zero app code**. Assigning any provider to a VAKT register used to paint an opaque flat disc over the machined dial; a slot is now a **FRAME** (permanent dial art) + swappable **CONTENT**, with the empty-state scale/needle in a `<Complication type="EMPTY">` block the platform swaps out. All 8 types render. VAKT is the **first WFF v2** face family (GOAL_PROGRESS + WEIGHTED_ELEMENTS); CI reads the version per-face from the manifest so this needed no CI change. ⚠ The facepack template hardcodes `minSdk = 33` while a v2 face wants 34 — inert (WFP is Wear OS 6 only) but revisit if faces are ever sold standalone. Detail: `faces/collection3-tools/VAKT-COMPLICATIONS-PLAN.md` §7. |
-| **2D Collections IA** | v0.23.0 | 🔜 **NEXT** — blocked on 2A sign-off | Home = collection cards, no paywall; free faces; `config/catalog.json`; coming-soon tiles + Chrome-rendered art. Keep the `:wear` diff at **zero**. |
-| 2B Colour parity → 5 | v0.24.0 | ⬜ | 16 bundled faces sit at 3 ColorOptions; **Arclight-Pulsar has ZERO** (owner call, audit §11-q2); Collection-3's 25 already have 5 baked themes (leave). ⚠ Renumbered from the dead `v0.20.0` slot. |
-| 2E Showcase & motion | v0.25.0 | ⬜ | F2 shared-element expand + collection covers; `frontend-design`/`impeccable` skills. |
-| 2F Gap builds | *rolling* | ⬜ | No reserved range — each slice takes the next free tag. Start with "The Art of Motion" (15, best-prepared handoff). |
-| 3 Billing | v0.26.0 | ⬜ | Must end the release paywall no-op (see Phase 3 §4). |
-| 4 Store | v0.27.0 | ⬜ | owner gates: Play account/products/upload; verify `com.dialed.app` is free FIRST |
-| 5 Default face | v0.28.0 | ⬜ | closes R4 UNVERIFIEDs on device |
-| 6 Living gallery | v0.29.0 | ⬜ | 6b = emulator WebP, optional |
+| **— Terra-Compass leaked note** | v0.23.0 | ✅ **SHIPPED** 2026-07-17 | **Out-of-band, art-only** (audit §11-q5 closed). The dial silkscreen read `COMPASS · ROSE IS STATIC` on all five themes — the second half was a designer's note about the concept (WFF has no heading sensor, so the rose is honest decoration) that belongs in the spec's `concept` field, where it already sits verbatim. Now reads `COMPASS`, matching the sibling convention (`TERRA` + face name; Terra-MeridianLine uses identical geometry). **Swept every text literal in all 5 spec files — this was the only leaked note**; the other all-caps strings are real silkscreen (`AUTOMATIC · 41`, `TITANIUM`, `INSTRUMENT`) or units (`PWR`, `SEC`, `STEPS ×1000`). Scope: `spec/cat-c.js` 1 line + 8 re-baked PNGs; `watchface.xml`/`strings.xml`/`watch_face_info.xml` byte-identical after the re-bake ⇒ **no schema or validator surface**. Re-baked with `node gen/build-all.mjs WF-C3`. |
+| **2D Collections IA** | *next free* | 🚧 **BLOCKED** on the 2A map | Home = collection cards, no paywall; free faces; `config/catalog.json`; coming-soon tiles + Chrome-rendered art. Keep the `:wear` diff at **zero**. ⚠ **Cannot start**: the shelves are the collection map, and the map's shape questions (audit §11 **q1** Vakt 15-vs-10, **q4** card shows total vs split) were parked by the owner 2026-07-17. Pricing is *not* a blocker (the paywall is a stub until Phase 3) — the **map** is. |
+| 2B Colour parity → 5 | *next free* | ⬜ **← the live candidate** | 16 bundled faces sit at 3 ColorOptions; **Arclight-Pulsar has ZERO** (owner call, audit §11-q2, parked); Collection-3's 25 already have 5 baked themes (leave). Fits the owner's "perfect the faces first" steer; needs no parked decision except Pulsar's. |
+| 2E Showcase & motion | *next free* | ⬜ | F2 shared-element expand + collection covers; `frontend-design`/`impeccable` skills. Depends on 2D. |
+| 2F Gap builds | *rolling* | ⬜ | Each slice takes the next free tag. Start with "The Art of Motion" (15, best-prepared handoff). |
+| 3 Billing | *next free* | ⬜ | Must end the release paywall no-op (see Phase 3 §4). Owner: pricing is "the last state". |
+| 4 Store | *next free* | ⬜ | owner gates: Play account/products/upload; verify `com.dialed.app` is free FIRST |
+| 5 Default face | *next free* | ⬜ | closes R4 UNVERIFIEDs on device |
+| 6 Living gallery | *next free* | ⬜ | 6b = emulator WebP, optional |
 | ~~7 Collection 3~~ | — | ➡️ **MOVED** | Absorbed into 2C (the faces are already built — it's the cheapest big win). |
-| 8 Wear polish | v0.30.0 | ⬜ | face-size = owner call |
+| 8 Wear polish | *next free* | ⬜ | face-size = owner call |
 
 ---
 

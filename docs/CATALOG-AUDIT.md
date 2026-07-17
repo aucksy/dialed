@@ -130,7 +130,9 @@ The full face-by-face membership is in `config/catalog-inventory.json` (`propose
 | Two Terra faces, only to avoid clashes | Terra *Solstice* → **Daylight**; Terra *Meridian Line* → **Longitude** | Display | **No** — ⚠️ *one check first, see below* |
 | A designed (unbuilt) face | Arclight *Meridian* → **Transit** | Rename before build | No (not built yet) |
 
-**⚠️ The one thing to check before the two Terra renames:** the 25 built faces have their name *painted into the dial artwork* in some cases (we caught one face, Terra-Compass, whose art literally reads `COMPASS · ROSE IS STATIC` — a design note that leaked into the picture). So before renaming Terra-Solstice to "Daylight" on the storefront, someone should glance at its dial art to make sure "SOLSTICE" isn't painted on it. If it is, we skip that rename (or re-bake the art). Low effort, worth doing.
+**⚠️ The two Terra renames — checked, and the answer was no.** *(Updated 2026-07-17; this section originally posed it as an open check.)* The worry was that the 25 built faces have their name *painted into the dial artwork*. **Phase 2C did the check and the renames FAILED it:** `TERRA SOLSTICE` and `TERRA · MERIDIAN LINE` really are painted into the dial art of every theme, and three independent sources agree the current names are right — the art, the handoff spec (`faces/collection3-tools/spec/cat-c.js`), and each face's own on-watch label (`app_name`). **Renaming them in the storefront would contradict the watch on the wrist, so both renames were skipped.**
+
+The face that prompted the worry — Terra-Compass, whose art read `COMPASS · ROSE IS STATIC` — **was fixed in `dialed-v0.23.0`** (§11-q5). ⭐ **That fix reopens the renames as a cheap option:** it proved a re-bake is a one-line spec edit plus one command (`node gen/build-all.mjs WF-C3`), so "the name is painted on" is no longer a *cost* argument against renaming — it's a one-face re-bake each. The renames stay skipped on **taste**, not effort: the names are good and the shelf reads fine. Revisit only if the owner wants them.
 
 **Every rename here is display-only. Nothing in this proposal re-mints a WFP token or forces anyone to re-install a face.**
 
@@ -190,7 +192,7 @@ These are genuine judgement calls the proposal deliberately did **not** make for
 2. **Arclight-Pulsar's missing colours.** Build it a colour system (~1 day), ship it honestly as a one-look face, or pull it from the collection? It's 1 of only 4 built faces in Arclight, so pulling it hurts.
 3. **⭐ The big one — how to sell part-built collections.** Only Vespera is 10-of-10 built. Settype and Arclight launch at 4-built-of-10. Options: (a) full price, coming-soon tiles count as promised value; (b) launch those two cheaper and raise the price as faces land; (c) hold them unlisted until they're 7+ built, and launch Vespera and Vakt first. **This is the biggest revenue decision in the map.**
 4. **What the store card advertises** — the total ("10 faces") or the split ("5 available · 5 coming")? Recommendation: show the split on the card, the total in the header. A buyer who pays for 10 and finds 4 will say so in a review.
-5. **Terra-Compass's leaked art** (`COMPASS · ROSE IS STATIC` painted into the dial). Re-bake it before this shelf faces buyers, or leave it? Recommend fix — it's a visible defect.
+5. ~~**Terra-Compass's leaked art**~~ — ✅ **ANSWERED 2026-07-17: fix it. Done, shipped in `dialed-v0.23.0`.** The dial now reads `COMPASS`. A sweep of all five spec files confirmed it was the only leaked note.
 6. **The Terra rename silkscreen check** (§6) — confirm "SOLSTICE"/"MERIDIAN LINE" aren't painted into the art before those two renames.
 7. **The 9 coming-soon faces at 3 colours** (§4) — accept a bit of extra colour work in Arclight/Settype/Halo when we build them, or label those specific tiles "3 colours"?
 8. **Ratify "Collection · Face" labels** (§7) — adopt it and most clashes vanish for free.

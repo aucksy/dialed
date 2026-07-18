@@ -2,8 +2,11 @@ package com.dialed.app.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,6 +30,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dialed.app.MainViewModel
 import com.dialed.app.ui.components.PushToWatchSheet
+import com.dialed.app.ui.components.isReducedMotion
 import com.dialed.app.ui.screens.CollectionScreen
 import com.dialed.app.ui.screens.FaceDetailScreen
 import com.dialed.app.ui.screens.HomeScreen
@@ -54,6 +58,15 @@ private fun Screen.parent(): Screen = when (this) {
     is Screen.Detail -> fromCollectionId?.let { Screen.Collection(it) } ?: Screen.Home
     is Screen.Paywall -> Screen.Home
     is Screen.Settings -> Screen.Home
+}
+
+/** Navigation depth — drives the F2-flavoured expand transition (deeper = scale up into view). */
+private fun Screen.depth(): Int = when (this) {
+    is Screen.Home -> 0
+    is Screen.Collection -> 1
+    is Screen.Settings -> 1
+    is Screen.Detail -> 2
+    is Screen.Paywall -> 2
 }
 
 @Composable
@@ -86,6 +99,7 @@ fun DialedApp(viewModel: MainViewModel) {
         var screen: Screen by rememberSaveable(
             stateSaver = ScreenSaver,
         ) { mutableStateOf(Screen.Home) }
+        val reduced = isReducedMotion()
 
         BackHandler(enabled = screen !is Screen.Home) { screen = screen.parent() }
 
@@ -102,8 +116,19 @@ fun DialedApp(viewModel: MainViewModel) {
             AnimatedContent(
                 targetState = screen,
                 transitionSpec = {
-                    fadeIn(animationSpec = DialedMotion.springStandard()) togetherWith
-                        fadeOut(animationSpec = DialedMotion.springStandard())
+                    if (reduced) {
+                        // Reduced motion (HANDOFF.md §5): shared-element → a plain 200ms crossfade.
+                        fadeIn(tween(DialedMotion.DUR_STD)) togetherWith fadeOut(tween(DialedMotion.DUR_FAST))
+                    } else {
+                        // F2-flavoured expand: going deeper (Home→Collection→Detail) scales up into
+                        // view; going back settles down. Circular clip stays intact per screen.
+                        val forward = targetState.depth() >= initialState.depth()
+                        val enter = fadeIn(DialedMotion.springStandard()) +
+                            scaleIn(DialedMotion.springExpressive(), initialScale = if (forward) 0.90f else 1.06f)
+                        val exit = fadeOut(tween(DialedMotion.DUR_FAST)) +
+                            scaleOut(DialedMotion.springExpressive(), targetScale = if (forward) 1.06f else 0.94f)
+                        enter togetherWith exit
+                    }
                 },
                 label = "screen",
             ) { target ->

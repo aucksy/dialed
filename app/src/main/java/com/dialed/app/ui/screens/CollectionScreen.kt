@@ -1,6 +1,9 @@
 package com.dialed.app.ui.screens
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +26,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,6 +43,7 @@ import com.dialed.app.ui.components.DialStatus
 import com.dialed.app.ui.components.FaceDial
 import com.dialed.app.ui.components.UninstallButton
 import com.dialed.app.ui.components.WatchStatusPill
+import com.dialed.app.ui.theme.DialedMotion
 import com.dialed.app.ui.theme.DialedSpacing
 import com.dialed.app.ui.theme.FaceSize
 import com.dialed.app.ui.theme.dialedColors
@@ -121,9 +128,19 @@ fun CollectionScreen(
         items(collection.faces, key = { it.id }) { face ->
             val installed = face.id in installedFaceIds
             val active = face.id == activeFaceId
+            val interaction = remember { MutableInteractionSource() }
+            val pressed by interaction.collectIsPressedAsState()
+            // F5 micro: press scale .96 (springFast).
+            val scale by animateFloatAsState(
+                targetValue = if (pressed) 0.96f else 1f,
+                animationSpec = DialedMotion.springFast(),
+                label = "facePress",
+            )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable { onFaceClick(face) },
+                modifier = Modifier
+                    .scale(scale)
+                    .clickable(interactionSource = interaction, indication = null) { onFaceClick(face) },
             ) {
                 FaceDial(
                     face = face,

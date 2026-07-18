@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -36,7 +35,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.dialed.app.R
 import com.dialed.app.catalog.FaceCollection
 import com.dialed.app.model.WatchStatus
@@ -49,10 +50,10 @@ import com.dialed.app.ui.theme.DialedSpacing
 import com.dialed.app.ui.theme.dialedColors
 
 /**
- * Collections Home (docs/DESIGN-ADDENDUM-COLLECTIONS.md §3): a scrolling list of collection cards.
- * No paywall, no prices, no lock badges — this is the browse spine; the commercial layer is parked
- * on the collection MAP (audit §11). Covers are clean previews; watch-state badges live on the
- * Collection face grid, not here.
+ * Collections Home (docs/DESIGN-ADDENDUM-COLLECTIONS.md §3) — Variant A "vitrine hero cards":
+ * one collection per card, a large overlapping trio of real faces (centre 132dp, flanks 96dp) over
+ * the collection name / style / count. Built from the spec's vitrine (§1e) + paywall trio language
+ * at their real sizes. No paywall, no prices, no lock badges — the commercial layer stays parked.
  */
 @Composable
 fun HomeScreen(
@@ -125,74 +126,71 @@ private fun CollectionCard(collection: FaceCollection, onClick: () -> Unit) {
         animationSpec = DialedMotion.springFast(),
         label = "cardPress",
     )
+    val shape = RoundedCornerShape(DialedRadius.lg)
 
-    Row(
+    Column(
         modifier = Modifier
             .scale(scale)
             .fillMaxWidth()
-            .shadow(4.dp, RoundedCornerShape(DialedRadius.lg), clip = false)
-            .clip(RoundedCornerShape(DialedRadius.lg))
+            .shadow(6.dp, shape, clip = false)      // lvl1 card
+            .clip(shape)
             .background(c.surfaceContainerHigh)
-            .border(1.dp, c.outlineVariant, RoundedCornerShape(DialedRadius.lg))
+            .border(1.dp, c.outlineVariant, shape)
             .clickable(interactionSource = interaction, indication = null, onClick = onClick)
-            .padding(DialedSpacing.cardPadding),
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(start = DialedSpacing.lg, end = DialedSpacing.lg, top = DialedSpacing.xl, bottom = DialedSpacing.xl),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CoverTrio(collection)
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = DialedSpacing.lg),
-        ) {
+        Spacer(Modifier.height(DialedSpacing.lg))
+        Text(
+            collection.title,
+            style = MaterialTheme.typography.headlineSmall,
+            color = c.onSurface,
+        )
+        if (collection.subtitle.isNotEmpty()) {
+            Spacer(Modifier.height(DialedSpacing.xs))
             Text(
-                collection.title,
-                style = MaterialTheme.typography.titleLarge,
-                color = c.onSurface,
-            )
-            if (collection.subtitle.isNotEmpty()) {
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    collection.subtitle.uppercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = c.onSurfaceVariant,
-                )
-            }
-            Spacer(Modifier.height(DialedSpacing.sm))
-            val n = collection.faces.size
-            Text(
-                if (n == 1) "1 face" else "$n faces",
-                style = MaterialTheme.typography.labelSmall,
-                color = c.onSurfaceVariant,
+                collection.subtitle.uppercase(),
+                style = MaterialTheme.typography.labelMedium,
+                color = c.primary,               // gold accent
+                textAlign = TextAlign.Center,
             )
         }
-        Icon(
-            painterResource(R.drawable.ic_chevron_right),
-            contentDescription = null,
-            tint = c.onSurfaceVariant,
-            modifier = Modifier.size(20.dp),
+        Spacer(Modifier.height(DialedSpacing.sm))
+        val n = collection.faces.size
+        Text(
+            if (n == 1) "1 face" else "$n faces",
+            style = MaterialTheme.typography.bodyMedium,
+            color = c.onSurfaceVariant,
         )
     }
 }
 
 /**
- * The vitrine cover language (spec §1e): the first three faces as overlapping circular previews,
- * fanned left-to-right with the first face on top. Clean covers — no lock/status badges.
+ * The vitrine/paywall cover language at its real size: the collection's first three faces as
+ * overlapping circular previews — centre 132dp on top, flanks 96dp behind. Clean covers, no badges.
+ * Gracefully handles collections with 1–2 faces (Aether, Arclight) — shows what exists.
  */
 @Composable
 private fun CoverTrio(collection: FaceCollection) {
     val cover = collection.cover
-    val coverSize = 60.dp
-    val peek = 24.dp
-    val width = coverSize + peek * (cover.size - 1).coerceAtLeast(0)
-    Box(Modifier.width(width).height(coverSize)) {
-        // Draw back-to-front so faces[0] lands on top (drawn last), fanned to the right.
-        cover.indices.reversed().forEach { i ->
-            FaceDial(
-                face = cover[i],
-                size = coverSize,
-                status = DialStatus.NONE,
-                modifier = Modifier.offset(x = peek * i),
-            )
+    when (cover.size) {
+        0 -> Unit
+        1 -> FaceDial(face = cover[0], size = 150.dp, status = DialStatus.NONE)
+        2 -> Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy((-16).dp),
+        ) {
+            FaceDial(cover[0], 120.dp, Modifier.zIndex(2f), status = DialStatus.NONE)
+            FaceDial(cover[1], 108.dp, Modifier.zIndex(1f), status = DialStatus.NONE)
+        }
+        else -> Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy((-18).dp),
+        ) {
+            FaceDial(cover[0], 96.dp, Modifier.zIndex(1f), status = DialStatus.NONE)
+            FaceDial(cover[1], 132.dp, Modifier.zIndex(2f), status = DialStatus.NONE)
+            FaceDial(cover[2], 96.dp, Modifier.zIndex(1f), status = DialStatus.NONE)
         }
     }
 }

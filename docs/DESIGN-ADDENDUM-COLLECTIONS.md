@@ -57,49 +57,58 @@ bundled catalog, so the grouping is always honest to what actually ships:
 > (Phase 2D proper) and the screens below feed off the config instead. The UI does not change; only
 > the data source does.
 
-## 3. Home — collection cards
+## 3. Home — collection cards · **Variant A "vitrine hero cards"** (owner-chosen 2026-07-18)
 
-Reuses the **vitrine cover language** from spec §1e (a cover of `FaceDial`s + name + count), laid
-out as a scrolling vertical list of cards (not the featured-hero variant).
+> ⚠️ **Fidelity lesson (why this section was rewritten).** The first attempt (v0.25.0) used a
+> cramped horizontal card with a 60dp cover trio — built from the *plan's prose*, not the spec's
+> actual pixels. The design shows faces **large** (150dp in the §1d grid, 224dp featured in §1e,
+> ~116dp overlapping trio in the paywall). The owner rejected it as too small. The corrected card
+> below uses those real sizes. **Read design `.dc.html` files in full (CSS included) — never
+> text-scrape them; the sizes live in the CSS.** A true-scale mock (real face art) is signed off
+> before coding.
+
+Reuses the **vitrine/paywall cover language** at its real size: one collection per full-width card,
+a large overlapping trio of real faces over the collection name / style / count. Scrolls like a
+boutique.
 
 **Structure (top → bottom), inside a `LazyColumn`, screen margin 24dp:**
 
 1. **Header row** — the `Wordmark` ("Dialed" + gold period) on the left; the settings gear inside a
-   48dp target on the right. *Unchanged from today's Home header.*
+   48dp target on the right. *Unchanged.*
 2. **`WatchStatusPill`** — unchanged, directly under the wordmark.
 3. **Section label** — `labelMedium`, uppercase, `onSurfaceVariant`: **"COLLECTIONS"**.
-4. **Collection cards** — one per collection, `sectionGap`/`lg` between them.
+4. **Collection cards** — one per collection, `lg` (16dp) between them.
 
-**Collection card:**
+**Collection card (vertical, centred):**
 
-| Property | Token |
+| Property | Token / value |
 |---|---|
 | Container | `surfaceContainerHigh`, radius `DialedRadius.lg` (20dp) |
-| Elevation | lvl1 card shadow — `shadow(4dp)`, subtle (dark theme leans on surface tone) |
-| Padding | `cardPadding` (16dp) |
-| Border | 1dp hairline `outlineVariant` (keeps the card readable on `background`) |
+| Elevation | lvl1 card shadow — `shadow(6dp)`, subtle |
+| Padding | `lg` sides (16), `xl` top+bottom (24) |
+| Border | 1dp hairline `outlineVariant` |
 | Press | scale .96 via `springFast` (F5 micro) |
 
-Card content, left → right:
+Card content, top → bottom, centre-aligned:
 
-- **Cover trio** — the first three faces as circular `FaceDial`s (§6 component), **overlapping**.
-  Front dial 64dp, the two behind it peek from underneath (offset ~26dp each, drawn back-to-front so
-  the first face sits on top). `locked = false`, `status = NONE` — covers are clean previews, never
-  badged (badges are watch-state, which belongs on the face grid, not the cover).
-  - If a collection has 1–2 faces (Aether, Arclight), show what exists — no placeholder circles.
-- **Text column** (weight 1, start-padded `lg`):
-  - **Title** — collection name, `titleLarge`, `onSurface`. No gold period (that is the app
-    wordmark's alone).
-  - **Subtitle** — `labelMedium`, uppercase, `onSurfaceVariant` (omitted if empty).
-  - **Count** — `labelSmall`, `onSurfaceVariant`: **"N faces"** (or "1 face").
-- **Chevron** — `ic_chevron` (or a 90°-rotated affordance) `onSurfaceVariant`, indicating tap-through.
+- **Cover trio** — the collection's first three faces as circular `FaceDial`s, **overlapping**,
+  drawn back-to-front so the centre sits on top (via `Modifier.zIndex`):
+  - **3+ faces:** flanks **96dp** (zIndex 1) · centre **132dp** (zIndex 2) · overlap −18dp
+    (mirrors the paywall's 92/116/92 trio at a slightly larger size).
+  - **2 faces** (Aether, Arclight): **120dp** + **108dp**, overlap −16dp.
+  - **1 face:** a single **150dp** hero (matches the §1d grid dial).
+  - `locked = false`, `status = NONE` — clean previews, never badged (badges are watch-state and
+    belong on the face grid, not the cover).
+- **Title** — collection name, `headlineSmall` (24/700), `onSurface`. No gold period (that's the
+  wordmark's alone).
+- **Subtitle** — `labelMedium`, uppercase, **gold** (`primary`) — omitted if empty.
+- **Count** — `bodyMedium`, `onSurfaceVariant`: **"N faces"** (or "1 face").
 
 **No paywall, no price, no "N free" pill, no OWNED badge on Home** (design decision D4 + parked map).
 Whole card is one tap target → `Collection(id)`.
 
-**States:** loading = existing shimmer treatment is out of scope for this slice (catalog is a bundled
-constant, so Home is never empty and never loads async). Empty/no-watch copy is unchanged from spec
-§1h and not reachable here.
+**Motion:** F5 press on the card; the screen transition into the collection is the F2-flavoured
+expand (§5). **States:** the catalog is a bundled constant, so Home never loads async or empties.
 
 ## 4. Collection screen (new)
 
@@ -142,9 +151,16 @@ Back routing (system back + on-screen back both use the same parent rule):
 any bundled collection falls back to Home — same crash-safety class as the existing `Detail`
 `firstOrNull` guard (`DialedApp.kt:114`).
 
-Transitions reuse the existing `AnimatedContent` fade (`springStandard`). The F2 shared-element
-expand (card → collection → detail) is **explicitly deferred to Phase 2E** — this slice is IA/layout
-only.
+**Transition — F2-flavoured expand.** `AnimatedContent` is direction-aware via `Screen.depth()`
+(Home 0 · Collection/Settings 1 · Detail/Paywall 2): going **deeper** the incoming screen
+`scaleIn(0.90 → 1, springExpressive) + fadeIn(springStandard)`; going **back** it settles down
+(`1.06 → 1`). Reduced motion (`ANIMATOR_DURATION_SCALE == 0`) → a plain 200ms crossfade. This gives
+the "expand into the collection / into the face" feel using only screen-level transforms — **no
+duplicate shared-element keys**, so it is safe across the Home-cover → Collection-grid → Detail
+chain (the same face id can appear as a cover AND in the grid). The **true F2 circular
+shared-element morph** (`SharedTransitionLayout`, key `"face/{id}"`) stays in **Phase 2E** because
+it needs on-device verification to avoid duplicate-key conflicts — shipping it blind is exactly the
+wasted-build risk this process avoids.
 
 ## 6. Deferred — owned by the parked map / later phases
 

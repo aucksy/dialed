@@ -132,8 +132,11 @@ fun HomeScreen(state: WearUiState, onSetActive: () -> Unit) {
                         home.active ->
                             Text("ACTIVE", style = MaterialTheme.typography.labelSmall, color = DialedWearColors.primary)
                         state.setByHandHint ->
+                            // The unattended set-active was refused (platform's once-ever budget spent).
+                            // The only path left is the system carousel long-press — say so plainly, in
+                            // the same words as the post-push guide (ConciergeScreen GuidedHandoff).
                             Text(
-                                "Touch & hold your watch face to pick it.",
+                                "Press & hold your watch face, then swipe to pick it.",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = DialedWearColors.onSurfaceVariant,
                                 textAlign = TextAlign.Center,

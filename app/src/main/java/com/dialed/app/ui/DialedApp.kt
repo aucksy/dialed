@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dialed.app.MainViewModel
 import com.dialed.app.ui.components.PushToWatchSheet
+import com.dialed.app.ui.screens.CollectionScreen
 import com.dialed.app.ui.screens.FaceDetailScreen
 import com.dialed.app.ui.screens.HomeScreen
 import com.dialed.app.ui.screens.OnboardingPager
@@ -39,9 +40,20 @@ import com.dialed.app.ui.theme.dialedColors
 /** Lightweight nav (no navigation-compose dep) — a screen state + AnimatedContent. */
 sealed interface Screen {
     data object Home : Screen
-    data class Detail(val faceId: String) : Screen
+    data class Collection(val collectionId: String) : Screen
+    /** [fromCollectionId] is the collection the face was opened from, so Back returns there. */
+    data class Detail(val faceId: String, val fromCollectionId: String? = null) : Screen
     data object Paywall : Screen
     data object Settings : Screen
+}
+
+/** The screen Back (system + on-screen) returns to. Home is the root. */
+private fun Screen.parent(): Screen = when (this) {
+    is Screen.Home -> Screen.Home
+    is Screen.Collection -> Screen.Home
+    is Screen.Detail -> fromCollectionId?.let { Screen.Collection(it) } ?: Screen.Home
+    is Screen.Paywall -> Screen.Home
+    is Screen.Settings -> Screen.Home
 }
 
 @Composable
@@ -75,7 +87,7 @@ fun DialedApp(viewModel: MainViewModel) {
             stateSaver = ScreenSaver,
         ) { mutableStateOf(Screen.Home) }
 
-        BackHandler(enabled = screen !is Screen.Home) { screen = Screen.Home }
+        BackHandler(enabled = screen !is Screen.Home) { screen = screen.parent() }
 
         // A failed uninstall must be visible: the button used to just stop spinning.
         val snackbarHostState = remember { SnackbarHostState() }
@@ -97,17 +109,30 @@ fun DialedApp(viewModel: MainViewModel) {
             ) { target ->
                 when (target) {
                     is Screen.Home -> HomeScreen(
-                        faces = viewModel.faces,
-                        entitled = entitled,
+                        collections = viewModel.collections,
                         watchStatus = watchStatus,
-                        installedFaceIds = installedFaceIds,
-                        activeFaceId = activeFaceId,
-                        uninstallingFaceId = uninstallingFaceId,
-                        onFaceClick = { screen = Screen.Detail(it.id) },
-                        onUninstall = viewModel::uninstallFace,
-                        onUnlock = { screen = Screen.Paywall },
+                        onCollectionClick = { screen = Screen.Collection(it.id) },
                         onSettings = { screen = Screen.Settings },
                     )
+                    is Screen.Collection -> {
+                        // A restored collection id can outlive the collection it names (catalog
+                        // changed across an update) — fall back Home rather than crash (M1 class).
+                        val collection = viewModel.collections.firstOrNull { it.id == target.collectionId }
+                        if (collection == null) {
+                            LaunchedEffect(target.collectionId) { screen = Screen.Home }
+                        } else {
+                            CollectionScreen(
+                                collection = collection,
+                                watchStatus = watchStatus,
+                                installedFaceIds = installedFaceIds,
+                                activeFaceId = activeFaceId,
+                                uninstallingFaceId = uninstallingFaceId,
+                                onFaceClick = { screen = Screen.Detail(it.id, fromCollectionId = collection.id) },
+                                onUninstall = viewModel::uninstallFace,
+                                onBack = { screen = Screen.Home },
+                            )
+                        }
+                    }
                     is Screen.Detail -> {
                         // firstOrNull, not first: a restored "detail:<id>" can outlive the face it
                         // names (catalog changed across an update), and that must not crash the app.
@@ -123,7 +148,7 @@ fun DialedApp(viewModel: MainViewModel) {
                                 isActive = face.id == activeFaceId,
                                 slotOccupied = installedFaceIds.isNotEmpty() && face.id !in installedFaceIds,
                                 uninstalling = uninstallingFaceId == face.id,
-                                onBack = { screen = Screen.Home },
+                                onBack = { screen = target.parent() },
                                 onUnlock = { screen = Screen.Paywall },
                                 onInstall = { viewModel.startPush(face) },
                                 onUninstall = { viewModel.uninstallFace(face) },
@@ -177,7 +202,10 @@ private val ScreenSaver = androidx.compose.runtime.saveable.Saver<Screen, String
             is Screen.Home -> "home"
             is Screen.Paywall -> "paywall"
             is Screen.Settings -> "settings"
-            is Screen.Detail -> "detail:${it.faceId}"
+            is Screen.Collection -> "collection:${it.collectionId}"
+            is Screen.Detail ->
+                if (it.fromCollectionId != null) "detail:${it.faceId}|from:${it.fromCollectionId}"
+                else "detail:${it.faceId}"
         }
     },
     restore = {
@@ -185,7 +213,17 @@ private val ScreenSaver = androidx.compose.runtime.saveable.Saver<Screen, String
             it == "home" -> Screen.Home
             it == "paywall" -> Screen.Paywall
             it == "settings" -> Screen.Settings
-            it.startsWith("detail:") -> Screen.Detail(it.removePrefix("detail:"))
+            it.startsWith("collection:") -> Screen.Collection(it.removePrefix("collection:"))
+            it.startsWith("detail:") -> {
+                val rest = it.removePrefix("detail:")
+                val marker = "|from:"
+                val idx = rest.indexOf(marker)
+                if (idx >= 0) {
+                    Screen.Detail(rest.substring(0, idx), rest.substring(idx + marker.length))
+                } else {
+                    Screen.Detail(rest)
+                }
+            }
             else -> Screen.Home
         }
     },

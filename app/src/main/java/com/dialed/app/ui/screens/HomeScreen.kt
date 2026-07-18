@@ -1,90 +1,77 @@
 package com.dialed.app.ui.screens
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dialed.app.R
-import com.dialed.app.catalog.Face
+import com.dialed.app.catalog.FaceCollection
 import com.dialed.app.model.WatchStatus
 import com.dialed.app.ui.components.DialStatus
 import com.dialed.app.ui.components.FaceDial
-import com.dialed.app.ui.components.FilterChip
-import com.dialed.app.ui.components.UninstallButton
-import com.dialed.app.ui.components.UnlockBanner
 import com.dialed.app.ui.components.WatchStatusPill
+import com.dialed.app.ui.theme.DialedMotion
+import com.dialed.app.ui.theme.DialedRadius
 import com.dialed.app.ui.theme.DialedSpacing
-import com.dialed.app.ui.theme.FaceSize
 import com.dialed.app.ui.theme.dialedColors
 
+/**
+ * Collections Home (docs/DESIGN-ADDENDUM-COLLECTIONS.md §3): a scrolling list of collection cards.
+ * No paywall, no prices, no lock badges — this is the browse spine; the commercial layer is parked
+ * on the collection MAP (audit §11). Covers are clean previews; watch-state badges live on the
+ * Collection face grid, not here.
+ */
 @Composable
 fun HomeScreen(
-    faces: List<Face>,
-    entitled: Boolean,
+    collections: List<FaceCollection>,
     watchStatus: WatchStatus,
-    installedFaceIds: Set<String>,
-    activeFaceId: String?,
-    uninstallingFaceId: String?,
-    onFaceClick: (Face) -> Unit,
-    onUninstall: (Face) -> Unit,
-    onUnlock: () -> Unit,
+    onCollectionClick: (FaceCollection) -> Unit,
     onSettings: () -> Unit,
-    price: String = "$11.99",
 ) {
     val c = dialedColors
-    val filters = remember(faces) { listOf("All") + faces.flatMap { it.styleTags }.distinct() }
-    var selected by remember { mutableStateOf("All") }
-    // Hoisted out of the grid's header item: state remembered inside a lazy item is disposed when
-    // that item scrolls off, which would silently rewind the filter row to "All" on the way back.
-    val filterScroll = rememberScrollState()
-    val shown = remember(selected, faces) {
-        if (selected == "All") faces else faces.filter { selected in it.styleTags }
-    }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier.fillMaxSize().statusBarsPadding(),
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth().statusBarsPadding(),
         contentPadding = PaddingValues(
             start = DialedSpacing.screenMargin, end = DialedSpacing.screenMargin,
             top = DialedSpacing.md, bottom = DialedSpacing.xxl,
         ),
-        horizontalArrangement = Arrangement.spacedBy(DialedSpacing.gridGutter),
-        verticalArrangement = Arrangement.spacedBy(26.dp),
+        verticalArrangement = Arrangement.spacedBy(DialedSpacing.lg),
     ) {
-        item(span = { GridItemSpan(maxLineSpan) }) {
+        item(key = "header") {
             Column {
                 Row(
                     Modifier.fillMaxWidth().padding(top = DialedSpacing.md),
@@ -92,10 +79,8 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Wordmark()
-                    // 22dp gear inside a 48dp target (HANDOFF.md §8) — and a gear, not the filter
-                    // glyph this used to borrow. The offset pushes the oversized target's slack past
-                    // the screen margin so the GLYPH still lines up with the 24dp margin (and with
-                    // the grid below it); without it, centring 22dp in 48dp visibly indents the gear.
+                    // 22dp gear inside a 48dp target (HANDOFF.md §8); the offset pushes the target's
+                    // slack past the screen margin so the glyph still lines up with the 24dp margin.
                     Box(
                         modifier = Modifier
                             .offset(x = 13.dp)
@@ -113,67 +98,101 @@ fun HomeScreen(
                 }
                 Spacer(Modifier.height(DialedSpacing.md))
                 WatchStatusPill(watchStatus)
-                Spacer(Modifier.height(DialedSpacing.lg))
-                // Must scroll: a plain Row neither wraps nor scrolls, so any chip past the screen
-                // width is clipped and permanently unreachable. v0.21.0 took the series count 5 -> 10
-                // (filters 6 -> 11, ~900dp of chips against ~312dp of usable width), which would have
-                // hidden half the store behind an unusable filter. Phase 2D replaces this with
-                // collection cards; until then, scrolling keeps every series reachable.
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(DialedSpacing.sm),
-                    modifier = Modifier.horizontalScroll(filterScroll),
-                ) {
-                    filters.forEach { f ->
-                        FilterChip(text = f, selected = f == selected, onClick = { selected = f })
-                    }
-                }
-                if (!entitled) {
-                    Spacer(Modifier.height(DialedSpacing.lg))
-                    UnlockBanner(faceCount = faces.size, price = price, onUnlock = onUnlock)
-                }
-                Spacer(Modifier.height(DialedSpacing.sm))
+                Spacer(Modifier.height(DialedSpacing.xl))
+                Text(
+                    "COLLECTIONS",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = c.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(DialedSpacing.xs))
             }
         }
 
-        items(shown, key = { it.id }) { face ->
-            val installed = face.id in installedFaceIds
-            val active = face.id == activeFaceId
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable { onFaceClick(face) },
-            ) {
-                FaceDial(
-                    face = face,
-                    size = FaceSize.grid,
-                    locked = !entitled,
-                    status = when {
-                        active -> DialStatus.ACTIVE
-                        installed -> DialStatus.INSTALLED
-                        else -> DialStatus.NONE
-                    },
-                )
-                Spacer(Modifier.height(DialedSpacing.sm))
-                Text(face.displayName, style = MaterialTheme.typography.titleMedium, color = c.onSurface)
+        items(collections, key = { it.id }) { collection ->
+            CollectionCard(collection = collection, onClick = { onCollectionClick(collection) })
+        }
+    }
+}
+
+@Composable
+private fun CollectionCard(collection: FaceCollection, onClick: () -> Unit) {
+    val c = dialedColors
+    val interaction = remember { MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    // F5 micro: press scale .96 (springFast).
+    val scale by animateFloatAsState(
+        targetValue = if (pressed) 0.96f else 1f,
+        animationSpec = DialedMotion.springFast(),
+        label = "cardPress",
+    )
+
+    Row(
+        modifier = Modifier
+            .scale(scale)
+            .fillMaxWidth()
+            .shadow(4.dp, RoundedCornerShape(DialedRadius.lg), clip = false)
+            .clip(RoundedCornerShape(DialedRadius.lg))
+            .background(c.surfaceContainerHigh)
+            .border(1.dp, c.outlineVariant, RoundedCornerShape(DialedRadius.lg))
+            .clickable(interactionSource = interaction, indication = null, onClick = onClick)
+            .padding(DialedSpacing.cardPadding),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        CoverTrio(collection)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = DialedSpacing.lg),
+        ) {
+            Text(
+                collection.title,
+                style = MaterialTheme.typography.titleLarge,
+                color = c.onSurface,
+            )
+            if (collection.subtitle.isNotEmpty()) {
+                Spacer(Modifier.height(2.dp))
                 Text(
-                    face.tag, style = MaterialTheme.typography.labelSmall,
-                    color = c.onSurfaceVariant, textAlign = TextAlign.Center,
+                    collection.subtitle.uppercase(),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = c.onSurfaceVariant,
                 )
-                if (installed) {
-                    Spacer(Modifier.height(DialedSpacing.sm))
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(
-                            text = if (active) "Active" else "On watch",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (active) c.success else c.onSurfaceVariant,
-                        )
-                        UninstallButton(
-                            onClick = { onUninstall(face) },
-                            loading = uninstallingFaceId == face.id,
-                            compact = true,
-                        )
-                    }
-                }
             }
+            Spacer(Modifier.height(DialedSpacing.sm))
+            val n = collection.faces.size
+            Text(
+                if (n == 1) "1 face" else "$n faces",
+                style = MaterialTheme.typography.labelSmall,
+                color = c.onSurfaceVariant,
+            )
+        }
+        Icon(
+            painterResource(R.drawable.ic_chevron_right),
+            contentDescription = null,
+            tint = c.onSurfaceVariant,
+            modifier = Modifier.size(20.dp),
+        )
+    }
+}
+
+/**
+ * The vitrine cover language (spec §1e): the first three faces as overlapping circular previews,
+ * fanned left-to-right with the first face on top. Clean covers — no lock/status badges.
+ */
+@Composable
+private fun CoverTrio(collection: FaceCollection) {
+    val cover = collection.cover
+    val coverSize = 60.dp
+    val peek = 24.dp
+    val width = coverSize + peek * (cover.size - 1).coerceAtLeast(0)
+    Box(Modifier.width(width).height(coverSize)) {
+        // Draw back-to-front so faces[0] lands on top (drawn last), fanned to the right.
+        cover.indices.reversed().forEach { i ->
+            FaceDial(
+                face = cover[i],
+                size = coverSize,
+                status = DialStatus.NONE,
+                modifier = Modifier.offset(x = peek * i),
+            )
         }
     }
 }

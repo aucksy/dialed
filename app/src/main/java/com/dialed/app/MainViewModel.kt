@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dialed.app.catalog.Face
 import com.dialed.app.catalog.FaceCatalog
+import com.dialed.app.catalog.FaceCollection
+import com.dialed.app.catalog.collectionsOf
 import com.dialed.app.data.EntitlementStore
 import com.dialed.app.data.SettingsStore
 import com.dialed.app.model.WatchConnection
@@ -29,6 +31,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val entitlement = EntitlementStore(app)
 
     val faces: List<Face> = FaceCatalog.faces
+
+    /** Faces grouped into browsable collections (docs/DESIGN-ADDENDUM-COLLECTIONS.md §2). */
+    val collections: List<FaceCollection> = collectionsOf(faces)
 
     val themeMode: StateFlow<ThemeMode> =
         settings.themeMode.stateIn(viewModelScope, SharingStarted.Eagerly, ThemeMode.SYSTEM)

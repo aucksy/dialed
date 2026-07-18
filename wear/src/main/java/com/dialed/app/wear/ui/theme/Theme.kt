@@ -3,8 +3,13 @@ package com.dialed.app.wear.ui.theme
 import androidx.compose.animation.core.spring
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material3.ColorScheme
 import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.Typography
 
 /**
  * Dialed watch tokens — true-black AMOLED, one champagne-gold accent (HANDOFF-WATCH.md §2).
@@ -66,9 +71,26 @@ private val DialedWearColorScheme: ColorScheme = ColorScheme(
     onErrorContainer = DialedWearColors.onPrimaryContainer,
 )
 
+/**
+ * Dialed Wear type scale (HANDOFF-WATCH.md §3). Without this the screens rendered at the platform
+ * default sizes — headings undersized, overlines (ACTIVE/RECEIVING) with no tracking. Only the roles
+ * the app actually uses are overridden; every other Wear M3 role keeps its platform default.
+ * (Instrument Sans stays a later swap — sizes/weights/tracking now match the spec.)
+ */
+private val brand = FontFamily.Default
+private val DialedWearTypography = Typography(
+    displaySmall = TextStyle(fontFamily = brand, fontWeight = FontWeight.Bold, fontSize = 30.sp, lineHeight = 34.sp, letterSpacing = (-0.3).sp),
+    titleLarge = TextStyle(fontFamily = brand, fontWeight = FontWeight.Bold, fontSize = 24.sp, lineHeight = 28.sp, letterSpacing = (-0.2).sp),
+    titleMedium = TextStyle(fontFamily = brand, fontWeight = FontWeight.SemiBold, fontSize = 22.sp, lineHeight = 26.sp),
+    bodyLarge = TextStyle(fontFamily = brand, fontWeight = FontWeight.Normal, fontSize = 17.sp, lineHeight = 23.sp),
+    bodyMedium = TextStyle(fontFamily = brand, fontWeight = FontWeight.Normal, fontSize = 15.sp, lineHeight = 20.sp),
+    labelLarge = TextStyle(fontFamily = brand, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),
+    labelSmall = TextStyle(fontFamily = brand, fontWeight = FontWeight.SemiBold, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 2.sp),
+)
+
 @Composable
 fun DialedWearTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = DialedWearColorScheme, content = content)
+    MaterialTheme(colorScheme = DialedWearColorScheme, typography = DialedWearTypography, content = content)
 }
 
 /** Motion tokens (HANDOFF-WATCH.md §5), shared spring shapes with the phone. */

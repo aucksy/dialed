@@ -1,10 +1,16 @@
 package com.dialed.app.wear.ui.screens
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.border
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material3.MaterialTheme
@@ -30,6 +36,8 @@ fun FirstRunScreen(
         DialedScreen(
             edgeButton = { DialedEdgeButton("Open Settings", onOpenSettings, filled = false) },
         ) {
+            InfoBadge()
+            Spacer(Modifier.height(14.dp))
             Text(
                 "Permission needed",
                 style = MaterialTheme.typography.titleMedium,
@@ -39,7 +47,7 @@ fun FirstRunScreen(
             Spacer(Modifier.height(8.dp))
             Text(
                 "Turn on Watch faces for Dialed in Settings › Apps.",
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = DialedWearColors.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 22.dp),
@@ -61,11 +69,28 @@ fun FirstRunScreen(
             Spacer(Modifier.height(8.dp))
             Text(
                 "Allow Dialed to install the faces you push from your phone and set them as your watch face.",
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = DialedWearColors.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 22.dp),
             )
         }
+    }
+}
+
+/** Spec 1f — an info mark (dot over a stroke) in a hairline circle, above the denied copy. */
+@Composable
+private fun InfoBadge() {
+    val tint = DialedWearColors.onSurfaceVariant
+    Canvas(Modifier.size(56.dp).border(1.5.dp, DialedWearColors.outline, CircleShape)) {
+        val cx = size.width / 2f
+        drawCircle(color = tint, radius = size.minDimension * 0.035f, center = Offset(cx, size.height * 0.36f))
+        drawLine(
+            color = tint,
+            start = Offset(cx, size.height * 0.46f),
+            end = Offset(cx, size.height * 0.66f),
+            strokeWidth = size.minDimension * 0.06f,
+            cap = StrokeCap.Round,
+        )
     }
 }

@@ -121,6 +121,32 @@ jobs:
       - name: Build storefront (:app) with bundled faces
         run: gradle :app:assembleDebug --no-daemon --stacktrace
 
+      # The bundled Dialed DEFAULT face: build :watchface, validate it with the SAME WFP validator
+      # (reusing the jar the faces step already downloaded), then stage apk+token into :wear assets
+      # BEFORE the wear build so onboarding can install+activate it (own the slot) and uninstall can
+      # revert to it. STRICT: a validation failure fails the build — an unvalidated default face
+      # would break the ownership chain silently.
+      - name: Build + validate + bundle the default face into :wear
+        run: |
+          set -e
+          gradle :watchface:assembleRelease --no-daemon --stacktrace
+          WDIR=wear/src/main/assets
+          mkdir -p "$WDIR"
+          apk=$(ls watchface/build/outputs/apk/release/*.apk 2>/dev/null | head -1)
+          [ -n "$apk" ] || { echo "::error::no APK produced for :watchface"; exit 1; }
+          out=$(java -jar validator-cli.jar --apk_path="$apk" --package_name=com.dialed.app 2>&1) || true
+          token=$(printf '%s\n' "$out" | sed -n 's/.*generated token: //p' | head -1)
+          if printf '%s\n' "$out" | grep -qi 'Validation is successful' && [ -n "$token" ]; then
+            cp "$apk" "$WDIR/default_watchface.apk"
+            printf '%s' "$token" > "$WDIR/default_watchface.token"
+            echo "  ✓ default face bundled into :wear ($(du -h "$WDIR/default_watchface.apk" | cut -f1))"
+            echo "### Default face: bundled ($(du -h "$WDIR/default_watchface.apk" | cut -f1))" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::error::WFP validation failed for the default face (:watchface)"
+            printf '%s\n' "$out" | grep -i 'Failed check' || printf '%s\n' "$out" | tail -20
+            exit 1
+          fi
+
       # Wear companion: WFP bridge. Both :app and :wear sign with the committed STABLE key
       # (dialed-app-debug.keystore), so every release shares one cert + applicationId
       # (com.dialed.app) — upgrades install in place and the Data Layer pairs the two APKs.

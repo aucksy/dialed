@@ -13,6 +13,7 @@ import com.dialed.app.wear.common.WearConstants
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
+import java.io.FileInputStream
 
 /**
  * Thin wrapper over androidx.wear.watchfacepush 1.0.0 (the Kotlin suspend API — NOT the
@@ -141,6 +142,55 @@ class WatchFacePushRepository(private val context: Context) {
         InstalledState(emptyList(), null)
     }
 
+    /**
+     * Install (or update to) the bundled Dialed default face and report whether it is now in the
+     * slot. Used at onboarding — the caller then spends the one-shot [setActive] to claim the active
+     * slot (the start of the ownership chain). Returns false (never throws) if the default isn't
+     * bundled or the WFP install fails.
+     */
+    suspend fun installDefault(): Boolean {
+        val staged = DefaultFaceProvider(context).stage() ?: return false
+        return try {
+            FileInputStream(staged.apk).use { stream ->
+                installOrUpdate(ParcelFileDescriptor.dup(stream.fd), staged.token)
+            }
+        } finally {
+            staged.apk.delete()
+        }
+    }
+
+    /**
+     * Replace the slot's face with the bundled Dialed default (Google's documented default-face
+     * chain). Returns false if the default isn't bundled or the update fails, so the uninstall caller
+     * can fall back to a real remove. `updateWatchFace` to a DIFFERENT package is a full replace, and
+     * it keeps the slot active if it was — so if the removed face was the live one, the default
+     * becomes active and ownership survives.
+     */
+    private suspend fun updateSlotToDefault(slotId: String): Boolean {
+        val staged = DefaultFaceProvider(context).stage() ?: return false
+        return try {
+            withTimeoutOrNull(INSTALL_TIMEOUT_MS) {
+                FileInputStream(staged.apk).use { stream ->
+                    manager().updateWatchFace(slotId, ParcelFileDescriptor.dup(stream.fd), staged.token)
+                }
+                true
+            } ?: run {
+                Log.w(TAG, "revert-to-default updateWatchFace timed out")
+                false
+            }
+        } catch (e: WatchFacePushManager.UpdateWatchFaceException) {
+            Log.w(TAG, "revert-to-default updateWatchFace failed: ${e.message}", e)
+            false
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "revert-to-default unexpected ${e.javaClass.simpleName}: ${e.message}", e)
+            false
+        } finally {
+            staged.apk.delete()
+        }
+    }
+
     /** Remove the watch face in [slotId] (uninstalls it). Returns true on success; never throws. */
     suspend fun removeWatchFace(slotId: String): Boolean = try {
         manager().removeWatchFace(slotId)
@@ -155,15 +205,25 @@ class WatchFacePushRepository(private val context: Context) {
 
     /**
      * Uninstall by package name. The phone knows the target package (from its catalog) but NOT the
-     * volatile slotId, so we re-query slotId at call time (slot ids are never persisted) and remove.
+     * volatile slotId, so we re-query slotId at call time (slot ids are never persisted).
+     *
+     * ⭐ Instead of emptying the slot, we REVERT it to the bundled Dialed default (Google's
+     * documented default-face chain): this keeps Dialed owning the active slot, so the NEXT push
+     * still auto-applies with no set-active/permission/long-press. The user's chosen face is gone
+     * (the phone's catalog doesn't list the default, so it correctly shows "nothing installed"),
+     * which is what REMOVED means to them. Only if the default can't be loaded/updated do we fall
+     * back to a real [removeWatchFace] — the uninstall still succeeds, just without the chain.
      */
     suspend fun removeByPackage(packageName: String): WatchFaceUninstallResult {
         return try {
             val details = manager().listWatchFaces().installedWatchFaceDetails
             val slot = details.firstOrNull { it.packageName == packageName }
                 ?: return WatchFaceUninstallResult.NOT_FOUND
-            if (removeWatchFace(slot.slotId)) WatchFaceUninstallResult.REMOVED
-            else WatchFaceUninstallResult.FAILED
+            if (updateSlotToDefault(slot.slotId) || removeWatchFace(slot.slotId)) {
+                WatchFaceUninstallResult.REMOVED
+            } else {
+                WatchFaceUninstallResult.FAILED
+            }
         } catch (e: Exception) {
             Log.w(TAG, "removeByPackage unexpected ${e.javaClass.simpleName}: ${e.message}", e)
             WatchFaceUninstallResult.FAILED

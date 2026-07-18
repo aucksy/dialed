@@ -18,6 +18,11 @@ captures/
 app/src/main/assets/faces/
 app/src/main/assets/tokens/
 
+# CI-generated bundle: the :watchface default-face APK + its validation token, staged into
+# :wear assets each build (token matched to that build's APK bytes) — never commit them.
+wear/src/main/assets/default_watchface.apk
+wear/src/main/assets/default_watchface.token
+
 # IDE
 .idea/*
 !.idea/icon.png

@@ -26,10 +26,12 @@
             android:name="com.google.android.wearable.standalone"
             android:value="false" />
 
-        <!-- Phase 5 will add a bundled default face + its token here:
-             <meta-data android:name="com.google.android.wearable.marketplace.DEFAULT_WATCHFACE_VALIDATION_TOKEN"
-                        android:value="@string/default_wf_token" />
-             (paired with assets/default_watchface.apk). Omitted until that face exists. -->
+        <!-- The bundled Dialed DEFAULT face ships in assets/default_watchface.apk (+ .token),
+             staged by CI from :watchface. Dialed installs + activates it during onboarding (the
+             ownership chain) and reverts to it on uninstall — an explicit, in-context path, so the
+             marketplace DEFAULT_WATCHFACE_VALIDATION_TOKEN auto-install meta-data is intentionally
+             NOT used (it would need a CI-injected @string token and installs blindly at app-install
+             instead of at the "Make Dialed your watch face" moment). -->
 
         <activity
             android:name=".MainActivity"

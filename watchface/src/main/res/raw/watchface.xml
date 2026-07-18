@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DIALED — the bundled default face (Watch Face Format v1, Wear OS 4+).
+
+  Purpose: this is the face Dialed installs + activates during onboarding so the marketplace
+  OWNS the active slot. Once owned, every pushed face updates the slot IN PLACE and stays active
+  (no set-active, no permission, no long-press). It is also the face the slot reverts to on
+  uninstall, so ownership is never surrendered. It must therefore be instantly recognisable as
+  "Dialed" in the system watch-face gallery — hence the wordmark + gold accent + Dialed launcher icon.
+
+  Deliberately minimal + drawn (no baked art, one font): a clean champagne-on-black digital dial.
+  Authored at 480 (fleet-max canvas, per the polish skill) so it is pixel-native on the biggest
+  watches and a crisp down-sample on the rest. Centre = (240, 240).
+  Everything here is v1-legal (no letterSpacing/isAutoSize/blend/group-tint).
+-->
+<WatchFace width="480" height="480" clipShape="CIRCLE">
+
+    <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+    <Metadata key="PREVIEW_TIME" value="10:09:00" />
+
+    <Scene backgroundColor="#FF000000">
+
+        <!-- Interactive content. Hidden in ambient (Variant alpha 0); the always-on group below
+             takes over so WO-P7 (<=15% lit pixels) is met with only a thin dim readout. -->
+        <Group name="interactive" x="0" y="0" width="480" height="480">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+
+            <!-- Hairline champagne ring at the very edge — the "dial". -->
+            <PartDraw name="ring" x="0" y="0" width="480" height="480">
+                <Arc centerX="240" centerY="240" width="466" height="466"
+                    startAngle="0" endAngle="360" direction="CLOCKWISE">
+                    <Stroke color="#59D8BC7A" thickness="3" cap="ROUND" />
+                </Arc>
+            </PartDraw>
+
+            <!-- Quarter ticks — a restrained nod to a real dial. -->
+            <PartDraw name="ticks" x="0" y="0" width="480" height="480">
+                <Ellipse x="237" y="14" width="6" height="6"><Fill color="#8B857A" /></Ellipse>
+                <Ellipse x="460" y="237" width="6" height="6"><Fill color="#8B857A" /></Ellipse>
+                <Ellipse x="237" y="460" width="6" height="6"><Fill color="#8B857A" /></Ellipse>
+                <Ellipse x="14" y="237" width="6" height="6"><Fill color="#8B857A" /></Ellipse>
+            </PartDraw>
+
+            <!-- Time hero: champagne-white h:mm, filling the central band. -->
+            <DigitalClock x="50" y="158" width="380" height="150">
+                <TimeText format="h:mm" x="0" y="0" width="380" height="150" align="CENTER">
+                    <Font family="spacegrotesk_700" size="116" color="#F4F2ED" />
+                </TimeText>
+            </DigitalClock>
+
+            <!-- am/pm marker, hidden in 24h mode. -->
+            <Group name="ampm" x="223" y="150" width="34" height="22">
+                <Transform target="alpha" value="[IS_24_HOUR_MODE] ? 0 : 255" />
+                <PartText x="0" y="0" width="34" height="22">
+                    <Text align="CENTER">
+                        <Font family="spacegrotesk_700" size="15" color="#8B857A"><Template>%s<Parameter expression="[AMPM_STRING_SHORT]" /></Template></Font>
+                    </Text>
+                </PartText>
+            </Group>
+
+            <!-- Wordmark + gold accent dot: the brand signature in the gallery. The wordmark is a
+                 baked bitmap (a static text run needs a numeric <Template>/<Parameter>, so a literal
+                 can't be a PartText). BARE resource name — the memory-footprint validator can't
+                 resolve the non-canonical @drawable/ prefix (same rule as the facepacks). -->
+            <PartImage name="wordmark" x="140" y="316" width="200" height="28">
+                <Image resource="wordmark" />
+            </PartImage>
+            <PartDraw name="accent" x="0" y="0" width="480" height="480">
+                <Ellipse x="235" y="352" width="10" height="10"><Fill color="#D8BC7A" /></Ellipse>
+            </PartDraw>
+        </Group>
+
+        <!-- Always-on: a thin dim readout only. Off in interactive (alpha 0), on in ambient. -->
+        <Group name="aod" x="0" y="0" width="480" height="480" alpha="0">
+            <Variant mode="AMBIENT" target="alpha" value="255" />
+            <DigitalClock x="105" y="182" width="270" height="120">
+                <TimeText format="h:mm" x="0" y="0" width="270" height="120" align="CENTER">
+                    <Font family="spacegrotesk_500" size="82" color="#8B857A" />
+                </TimeText>
+            </DigitalClock>
+        </Group>
+
+    </Scene>
+</WatchFace>

@@ -32,6 +32,15 @@ class WfpStateStore(private val context: Context) {
     val permissionDenied: Flow<Boolean> =
         context.wfpDataStore.data.map { it[KEY_PERM_DENIED] == true }
 
+    /**
+     * True once the "Make Dialed your watch face" onboarding step has been resolved — either the user
+     * set up the default (claiming the active slot / ownership chain) or skipped it, or a Dialed face
+     * was already installed when we first looked (an upgrade past this step). Gates the one-time
+     * default-face setup screen so it is never shown twice.
+     */
+    val onboardingComplete: Flow<Boolean> =
+        context.wfpDataStore.data.map { it[KEY_ONBOARDED] == true }
+
     val lastFaceName: Flow<String?> =
         context.wfpDataStore.data.map { it[KEY_LAST_FACE] }
 
@@ -46,6 +55,9 @@ class WfpStateStore(private val context: Context) {
     suspend fun setPermissionDenied(value: Boolean) =
         context.wfpDataStore.edit { it[KEY_PERM_DENIED] = value }.let {}
 
+    suspend fun setOnboardingComplete(value: Boolean) =
+        context.wfpDataStore.edit { it[KEY_ONBOARDED] = value }.let {}
+
     suspend fun setLastFace(name: String, packageName: String?) =
         context.wfpDataStore.edit {
             it[KEY_LAST_FACE] = name
@@ -55,6 +67,7 @@ class WfpStateStore(private val context: Context) {
     private companion object {
         val KEY_ACTIVE_USED = booleanPreferencesKey("setActiveUsed")
         val KEY_PERM_DENIED = booleanPreferencesKey("permissionDenied")
+        val KEY_ONBOARDED = booleanPreferencesKey("onboardingComplete")
         val KEY_LAST_FACE = stringPreferencesKey("lastFaceName")
         val KEY_LAST_PACKAGE = stringPreferencesKey("lastFacePackage")
     }

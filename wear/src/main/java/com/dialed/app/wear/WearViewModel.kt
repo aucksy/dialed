@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dialed.app.wear.common.WatchFaceActivationStrategy
 import com.dialed.app.wear.ui.components.WatchLink
+import com.dialed.app.wear.wfp.DefaultFace
 import com.dialed.app.wear.wfp.FacePreviewExtractor
 import com.dialed.app.wear.wfp.ReceiveState
 import com.dialed.app.wear.wfp.TransferSession
@@ -33,6 +34,14 @@ sealed interface HomeFaceState {
     data class Installed(val name: String, val preview: Bitmap?, val active: Boolean) : HomeFaceState
 }
 
+/** Internal fold of the Home-related flows so the ui-state combine stays within its typed-arg limit. */
+private data class HomeBundle(
+    val face: HomeFaceState,
+    val hint: Boolean,
+    val onboarded: Boolean,
+    val loaded: Boolean,
+)
+
 /** Everything the watch UI needs to pick a screen and render it. */
 data class WearUiState(
     val supported: Boolean = true,
@@ -41,6 +50,13 @@ data class WearUiState(
     val link: WatchLink = WatchLink.CONNECTING,
     val home: HomeFaceState = HomeFaceState.None,
     val setByHandHint: Boolean = false, // an in-app set-active attempt was refused → teach long-press
+    // True once the one-time "Make Dialed your watch face" step is resolved. Default true = don't
+    // show it (safe until the real value loads / for existing setups).
+    val onboardingComplete: Boolean = true,
+    // True once the GENUINE installed-face state has been queried at least once. The default-face
+    // setup screen waits for this so it never flashes over an existing user's face during the
+    // (up to ~1s) first WFP query.
+    val homeLoaded: Boolean = false,
     val receive: ReceiveState = ReceiveState.Idle,
 )
 
@@ -55,6 +71,7 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
     private val link = MutableStateFlow(WatchLink.CONNECTING)
     private val homeFace = MutableStateFlow<HomeFaceState>(HomeFaceState.None)
     private val setByHandHint = MutableStateFlow(false)
+    private val homeLoaded = MutableStateFlow(false)
 
     private val capabilityClient by lazy { Wearable.getCapabilityClient(getApplication<Application>()) }
     // Live "is the phone app there?" — re-query reachability whenever the Data Layer reports the
@@ -66,16 +83,21 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
     val uiState: StateFlow<WearUiState> =
         combine(
             pushGranted, pushDenied, link, TransferSession.state,
-            // Fold the two Home-related flows into one so the outer combine stays at 5 typed args.
-            combine(homeFace, setByHandHint) { face, hint -> face to hint },
+            // Fold the Home-related flows + onboarding flag + loaded flag into one so the outer
+            // combine stays at 5 typed args.
+            combine(homeFace, setByHandHint, store.onboardingComplete, homeLoaded) { face, hint, onb, loaded ->
+                HomeBundle(face, hint, onb, loaded)
+            },
         ) { granted, denied, l, receive, home ->
             WearUiState(
                 supported = supported,
                 pushGranted = granted,
                 pushPermanentlyDenied = denied,
                 link = l,
-                home = home.first,
-                setByHandHint = home.second,
+                home = home.face,
+                setByHandHint = home.hint,
+                onboardingComplete = home.onboarded,
+                homeLoaded = home.loaded,
                 receive = receive,
             )
         }.stateIn(
@@ -131,6 +153,29 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
         pushDenied.value = !granted
     }
 
+    /**
+     * Onboarding "Make Dialed your watch face": install the bundled Dialed default face and spend the
+     * one-shot set-active HERE, in context — the best possible moment — so Dialed OWNS the active
+     * slot. From then on every pushed face updates the slot in place and stays active (no set-active,
+     * no permission, no long-press). If set-active is refused (permission denied / budget spent) the
+     * default is still installed; Home then offers the manual "Set as your face" for that one step.
+     * Either way the step is resolved and never shown again.
+     */
+    fun makeDefaultFaceActive() {
+        viewModelScope.launch {
+            if (repo.installDefault()) {
+                if (repo.setActive()) store.setActiveApiUsed(true)
+            }
+            store.setOnboardingComplete(true)
+            loadHome()
+        }
+    }
+
+    /** Onboarding "Not now": resolve the step without installing the default (shown once, then never). */
+    fun skipDefaultFaceSetup() {
+        viewModelScope.launch { store.setOnboardingComplete(true) }
+    }
+
     /** Concierge one-tap: the set-active permission result came back. Spend it here (one-shot). */
     fun onSetActivePermissionResult(granted: Boolean) {
         viewModelScope.launch {
@@ -166,6 +211,12 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
     private suspend fun loadHome() {
         val snapshot = repo.installedState()
         val installedPkg = snapshot.installedPackages.firstOrNull()
+        // An already-installed Dialed face means the user is past first-run setup (an upgrade, or
+        // they pushed before onboarding finished) — resolve the one-time step silently so the
+        // "Make Dialed your watch face" screen is never shown over an existing face.
+        if (installedPkg != null && !store.onboardingComplete.first()) {
+            store.setOnboardingComplete(true)
+        }
         homeFace.value = if (installedPkg == null) {
             HomeFaceState.None
         } else {
@@ -174,11 +225,14 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
             val preview = if (matchesCache) FacePreviewExtractor.loadCached(getApplication()) else null
             HomeFaceState.Installed(name = name, preview = preview, active = snapshot.activePackage == installedPkg)
         }
+        homeLoaded.value = true // the genuine slot state is now known — safe to gate onboarding on it
     }
 
-    /** Fallback display name from a WFP package (com.dialed.app.watchfacepush.<series>.<face>). */
+    /** Fallback display name from a WFP package (com.dialed.app.watchfacepush.<series>.<face>).
+     *  The bundled default reads as its brand name "Dialed", not the derived "Classic". */
     private fun deriveFaceName(pkg: String): String =
-        pkg.substringAfterLast('.').replaceFirstChar { it.uppercase() }
+        if (pkg == DefaultFace.PACKAGE) DefaultFace.DISPLAY_NAME
+        else pkg.substringAfterLast('.').replaceFirstChar { it.uppercase() }
 
     /**
      * "Connected" means the Dialed PHONE APP is reachable — a node that advertises

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The name shown for this face in the system watch-face gallery. Must read "Dialed" so a
+     user can find + pick it if the ownership chain ever breaks. -->
+<resources>
+    <string name="app_name">Dialed</string>
+</resources>

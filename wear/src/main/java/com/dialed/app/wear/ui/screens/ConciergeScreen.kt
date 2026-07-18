@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,6 +43,7 @@ import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.Text
 import com.dialed.app.wear.common.WatchFaceActivationStrategy
 import com.dialed.app.wear.ui.components.DialedEdgeButton
+import com.dialed.app.wear.ui.components.DialedHeroScreen
 import com.dialed.app.wear.ui.components.DialedScreen
 import com.dialed.app.wear.ui.components.FaceDial
 import com.dialed.app.wear.ui.theme.DialedWearColors
@@ -164,21 +166,44 @@ private fun isReducedMotionWear(): Boolean {
  * a single tap either applies the face (→ Celebration) or, if the platform refuses, hands off to
  * [GuidedHandoff] via the strategy the caller re-maps. We never re-map a spent-budget install here —
  * the listener already sends those straight to LONG_PRESS_TO_SET so this button is never a dead tap.
+ *
+ * The boutique big-face treatment: the freshly-installed face is the hero (108dp), anchored high on
+ * a full-screen hero layout — NOT a small preview squeezed above a centred column. The single gold
+ * EdgeButton carries the one action.
  */
 @Composable
 private fun OneTapApply(state: ReceiveState.Success, onSetActive: () -> Unit) {
-    DialedScreen(
+    DialedHeroScreen(
         edgeButton = { DialedEdgeButton("Set as my face", onSetActive, filled = true) },
     ) {
-        FaceDial(preview = state.preview, size = 80.dp, faceName = state.faceName)
-        Spacer(Modifier.height(16.dp))
-        Text(
-            "Make it your watch face?",
-            style = MaterialTheme.typography.titleMedium,
-            color = DialedWearColors.onSurface,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp),
+        val h = maxHeight
+        FaceDial(
+            preview = state.preview,
+            size = 108.dp,
+            faceName = state.faceName,
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = h * 0.16f),
         )
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = h * 0.63f)
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                state.faceName,
+                style = MaterialTheme.typography.titleMedium,
+                color = DialedWearColors.onSurface,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                "Make it your watch face",
+                style = MaterialTheme.typography.bodyMedium,
+                color = DialedWearColors.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
 
@@ -215,9 +240,9 @@ private fun GuidedHandoff(state: ReceiveState.Success, onExit: () -> Unit) {
                 .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Spacer(Modifier.height(8.dp))
-            FaceDial(preview = state.preview, size = 50.dp, faceName = state.faceName)
             Spacer(Modifier.height(10.dp))
+            FaceDial(preview = state.preview, size = 84.dp, faceName = state.faceName)
+            Spacer(Modifier.height(14.dp))
             Text(
                 "Set it on your watch",
                 style = MaterialTheme.typography.titleMedium,
@@ -225,11 +250,19 @@ private fun GuidedHandoff(state: ReceiveState.Success, onExit: () -> Unit) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "One long-press and it's yours.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = DialedWearColors.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 22.dp),
+            )
+            Spacer(Modifier.height(16.dp))
             CoachStep(1, "Press & hold your face", highlighted = activeStep == 1)
             CoachStep(2, "Swipe to ${state.faceName}", highlighted = activeStep == 2)
             CoachStep(3, "Tap to wear it", highlighted = activeStep == 3)
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(10.dp))
         }
     }
 }

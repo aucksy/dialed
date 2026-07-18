@@ -13,6 +13,7 @@ import com.dialed.app.wear.common.WatchFaceActivationStrategy
 import com.dialed.app.wear.ui.screens.ConciergeScreen
 import com.dialed.app.wear.ui.screens.FirstRunScreen
 import com.dialed.app.wear.ui.screens.HomeScreen
+import com.dialed.app.wear.ui.screens.MakeDefaultScreen
 import com.dialed.app.wear.ui.screens.ReceiveScreen
 import com.dialed.app.wear.ui.screens.ReceiveSuccess
 import com.dialed.app.wear.ui.screens.UnsupportedScreen
@@ -35,6 +36,14 @@ fun WearApp(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val receive = state.receive
 
+    // The one-time "Make Dialed your watch face" step: only on a fresh watch (permission granted, no
+    // Dialed face yet, not already resolved). Gating on `home == None` means it never replaces an
+    // existing face, and the ViewModel resolves it silently the moment a face is observed installed.
+    val needsDefaultSetup = state.pushGranted &&
+        state.homeLoaded &&
+        !state.onboardingComplete &&
+        state.home is com.dialed.app.wear.HomeFaceState.None
+
     AppScaffold {
         when {
             !state.supported -> UnsupportedScreen(onOk = onExit)
@@ -52,6 +61,12 @@ fun WearApp(
                     permanentlyDenied = state.pushPermanentlyDenied,
                     onAllow = onAllow,
                     onOpenSettings = onOpenSettings,
+                )
+
+            needsDefaultSetup ->
+                MakeDefaultScreen(
+                    onMakeDefault = viewModel::makeDefaultFaceActive,
+                    onSkip = viewModel::skipDefaultFaceSetup,
                 )
 
             else -> HomeScreen(state, onSetActive = viewModel::setInstalledFaceActive)

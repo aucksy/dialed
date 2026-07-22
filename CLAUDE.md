@@ -138,6 +138,36 @@ Edit → compile-review → **adversarial logic review** → fix → commit → 
   deny/deny-forever paths; push-before-setup → phone sheet → watch "{Face} is waiting" → allow →
   re-push auto-applies; upgrade path (granted, no default) shows setup once; celebration exits to
   the face.
+- ✅ **v0.30.0 = ONBOARDING STABILIZATION** (owner: "the v0.29.0 first-run journey is heavily broken on
+  real devices"; the device-report field arrived EMPTY, so this was a full **code-path audit against a
+  20-scenario state matrix**, not a fix of named symptoms — ⚠ **no finding is wrist-confirmed; if the
+  owner's actual symptoms aren't in the list, they are still open**). Matrix + root cause + fix for
+  every defect: `docs/ONBOARDING-REDESIGN.md` **§13**. **Transport provably untouched** —
+  `TransferSession`/`WatchFacePushRepository`/`FacePreviewExtractor`/`ReceiveScreen`/`ConciergeScreen`
+  and the channel path are byte-identical; `DialedListenerService` gained one `withTimeoutOrNull`
+  (it was the ONE op in `onRequest` breaking the timeout-every-binder-call rule); `:wear-common`
+  gained ONE appended path. **Headline fixes — watch:** a single Deny no longer dead-ends in Settings
+  (`shouldShowRequestPermissionRationale` now splits soft vs permanent); granting in Settings
+  un-sticks the app; **"Later" was a ONE-WAY DOOR** — it resolved the gate so `needsSetup` went false
+  forever while the phone still said "tap Set up Dialed on your watch", a button that then rendered
+  NOWHERE (wear Home now carries it whenever the permission is missing); the setup chain has a
+  working state + re-entrancy guard + watchdog (it used to sit unchanged and re-tappable through the
+  install, racing a second `installDefault`); a setup that activates nothing now says "You're set."
+  instead of silently becoming Home; `refresh()` no longer cancels the "Dialed in." celebration on
+  every screen wake. **Phone:** "No watch is paired" over a paired watch (one empty
+  `getConnectedNodes()` races the Data-Layer sync → now needs consecutive misses AND a settle
+  window); "needs the Dialed watch app" stuck over an installed one (⭐ `OnCapabilityChangedListener`
+  does NOT re-fire for a capability already present at subscribe time → explicit re-query);
+  single-flight query-state (a 3s poll against a 12s RPC let stale replies land last and flap the
+  card); Setup no longer flashes on every cold start (`onboarded` is tri-state); the starter card is
+  no longer retired by the bundled DEFAULT face (not a catalog face). ⭐ **`{Face} is waiting` now
+  actually delivers that face:** the watch promised "allow, and it goes on now" then installed the
+  *default* and dropped the name. New **`PATH_SETUP_COMPLETE`** (appended, one-way watch→phone) fires
+  once the whole chain is done and the phone re-pushes the held face automatically.
+  ⭐⭐ **Why a nudge and NOT a poll — reusable rule: the phone must never push while the watch is
+  mid-setup.** `pushGranted` flips true at the FIRST dialog, so a poll-triggered push arrives while
+  the set-active dialog is up; `wakeAndLaunchUi()` starts MainActivity over it and **cancels it —
+  permanently burning the once-ever `SET_PUSHED_WATCH_FACE_AS_ACTIVE` request.**
 - ⚠ **TAG NUMBERS ARE NEVER RESERVED — claim the next free number at SHIP time.** This has bitten 3×: `v0.20.0` was held for 2B, never tagged, and is now **permanently unusable** (versionCode is past 20; a lower code can't install over a higher one). `v0.22.0` was reserved for 2D → spent by the out-of-band VAKT ship. `v0.23.0` was reassigned to 2D → spent the SAME DAY by the Terra-Compass fix. **The unshipped phases in the plan therefore carry no numbers at all** — sequence them, number them when they ship.
 - ⏭️ **Next: still gated on the parked MAP for the *commercial* 2D layer.** v0.25.0 shipped the **visual** browse spine (collection cards + collection screen) without pre-empting the map — but the rest of 2D (which faces are FREE, per-collection product ids, coming-soon tiles, `config/catalog.json`, entitlement-v2) still needs the owner to sign off the 2A collection map (audit §11 q1 Vakt 15-vs-10, q3 part-built pricing, q4 card total-vs-split). Pricing itself is parked to last. **Live candidates that need no parked decision:** (a) **2B colour parity** (16 faces at 3 ColorOptions → 5, except Pulsar's §11-q2); (b) **2E showcase/motion** on top of the new spine (F2 shared-element card→collection→detail expand — already specced, never built); (c) owner **on-wrist testing / perfecting faces** (the standing steer). The map sign-off unblocks the commercial 2D layer whenever the owner is ready.
 

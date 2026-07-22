@@ -418,6 +418,153 @@ return NEEDS_SETUP` (+ store pending face name). Phone `WatchBridge.pushFace` ma
 (No analytics pipeline exists; these are the *design* targets and the owner's manual-test rubric —
 instrument only if/when a privacy-clean counter is ever wanted.)
 
+---
+
+# 13. Stabilization audit (2026-07-22, shipped `dialed-v0.30.0`)
+
+**Trigger:** the owner reported the v0.29.0 first-run journey as "heavily broken on real devices".
+The device-report field in the brief arrived **empty**, so this pass carries **no reproduction
+evidence** — it is a full code-path audit against the scenario matrix below, not a fix of named
+symptoms. ⚠ **Every finding here is reasoned from the code; none is confirmed on a wrist.** If the
+owner's actual symptoms are not in §13.2, they are still open and need re-reporting with steps.
+
+**Scope guard honoured:** `TransferSession.kt`, `WatchFacePushRepository.kt`,
+`FacePreviewExtractor.kt`, `ReceiveScreen.kt`, `ConciergeScreen.kt` and the whole channel path are
+**byte-identical**. `DialedListenerService` changed by one `withTimeoutOrNull` (a CLAUDE.md rule it
+was violating). `wear-common` gained **one appended path constant** — no ordinal moved, no existing
+value changed.
+
+## 13.1 Scenario matrix — spec vs. what the code did
+
+`✗` = defect found (id in §13.2). `✓` = walked and correct as shipped.
+
+| # | Scenario | Spec says | v0.29.0 code actually did |
+|---|---|---|---|
+| S1 | Fresh install, both sides | Setup → one tap → both dialogs → default installs + activates → "Dialed in." → exit to face | ✗ W4 (screen frozen + re-tappable through the install), ✗ W6 (Home flashes first), ✗ P1 (Setup flashes on phone) |
+| S2 | Deny the install permission once | Same screen, note + "Allow" (re-request) | ✗ **W1** — jumped straight to the Settings dead-end, no re-ask anywhere |
+| S3 | Deny both / "don't ask again" | Settings route | ✓ route correct, ✗ **W2** (grant in Settings → still stuck on "Permission needed"), ✗ W7b (no way off that screen) |
+| S4 | Tap "Later", come back | Ask returns at the first pushed face | ✗ **W3** — phone said "open Dialed on your watch and tap Set up Dialed"; that button existed **nowhere** once Later had resolved the gate |
+| S5 | **Push a face BEFORE watch setup** | NEEDS_SETUP → remember name → "{Face} is waiting" → **face goes on** | ✗ **P5** — the watch installed the *bundled default*, cleared the name, and the chosen face was never sent again. The screen's promise was false |
+| S6 | Push after setup (ownership chain) | Swaps in place, no tap | ✓ unchanged and correct |
+| S7 | set-active one-shot already spent | GuidedHandoff, never a false success | ✓ unchanged and correct |
+| S8 | Setup succeeds but nothing activates | (unspecified) | ✗ **W5** — no confirmation at all; two granted permissions looked like a no-op |
+| S9 | Phone with no watch paired | NO_WATCH after a ~2 s CHECKING beat | ✗ **P2** — one empty `getConnectedNodes()` at launch races the Data Layer sync → "No watch is paired" over a paired watch |
+| S10 | Watch paired, Dialed watch app missing | WATCH_APP_MISSING + guide | ✗ **P3** — capability queried once, listener never re-fires for an already-present capability → stuck on "needs the Dialed watch app" over an installed app |
+| S11 | Unsupported watch (no WFP) | Honest note + browse anyway | ✓ correct (`RESPONSE_UNSUPPORTED` + query sentinel) |
+| S12 | Open-app-on-watch prompt path | OPEN_ON_WATCH → auto-advance | ✗ **P4** (overlapping RPCs flap the card), ✗ **P6** (stuck on CHECKING forever if the watch never answers) |
+| S13 | BT drop / watch reboot mid-transfer | Lock released, phone told | ✓ walked in full: `timeoutJob` + `claimTerminal()` + finalize-in-`finally`; phone 120 s > watch 60 s + 30 s install. **No change made** |
+| S14 | Process death / rotation, every screen | State survives | ✓ phone `rememberSaveable` + `ScreenSaver`; watch beats are in-memory by design (a fresh VM starts clean) |
+| S15 | Both apps reinstalled after uninstall | Setup detects READY fast | ✓ (helped by P2/P3) |
+| S16 | Upgrade from v0.28.0 (perm granted, no default face) | Setup shown once | ✓ gate correct; ✗ W4/W5 apply to it too |
+| S17 | Upgrade with the default face already active | Never shown | ✓ `loadHome()` resolves it silently |
+| S18 | Old phone ↔ new watch | Degrade safely | ✓ `RESPONSE_NEEDS_SETUP=3` → generic busy copy; `!setup:` line → `mapNotNull` drops it; **new** `PATH_SETUP_COMPLETE` → no listener → ignored |
+| S19 | New phone ↔ old watch | Degrade safely | ✓ no flag → `pushGranted=null` → `?: true` (never nag); no nudge → manual Retry |
+| S20 | Home starter card lifetime | Retires after the FIRST CHOSEN face | ✗ **P7** — retired by the bundled default face at setup, before the user picked anything |
+
+## 13.2 Defects, root causes, fixes
+
+**W1 · One denial = a Settings dead-end.** `pushDenied` was a single flag set on *any* denial and
+wired to a screen named `permanentlyDenied`. Android's first denial is re-askable.
+→ `MainActivity` now reads `shouldShowRequestPermissionRationale` **after** the denial and splits
+`pushSoftDenied` (offer "Allow" on the same screen) from `pushPermanentlyDenied` (Settings).
+
+**W2 · Granting in Settings didn't un-stick it.** `refresh()` re-read the permission but never
+cleared the denial flags. → `refresh()` clears both whenever `hasPushPermission()` is true.
+
+**W3 · "Later" was a one-way door.** `skipDefaultFaceSetup()` set `onboardingComplete`, which made
+`needsSetup` false forever, while the phone kept instructing the user to tap a button that no
+longer rendered. → wear `HomeScreen` carries **"Set up Dialed"** whenever the install permission is
+missing, with an honest caption ("Not set up yet · Dialed needs your OK…").
+
+**W4 · No progress, and the button stayed live.** Between the last dialog and the end of
+`installDefault()` (seconds) the setup screen was unchanged; a second tap re-entered the chain and
+raced a second install. → `setupBusy` + `SetupWorkingScreen` + a `setupRunning` re-entrancy guard +
+a 45 s watchdog (a working state with no exit is the worst failure mode on a watch).
+
+**W5 · Silent success.** `activated == false` (set-active refused, or no bundled default) produced
+no beat at all — the screen just became Home's "No face yet". → `SetupSettledScreen` ("You're set.")
+— honest, and it never claims an activation that didn't happen.
+
+**W6 · Home flashed before Setup on first run.** `WearUiState`'s defaults deliberately mean "don't
+show setup"; rendering before the DataStore answered showed Home for a beat. → a `booted` gate with
+a 700 ms ceiling.
+
+**W7 · Celebration cancelled by `onResume`.** `refresh()` cleared `setupCelebrate` on every screen
+wake, swapping "Dialed in." for Home and skipping the exit-to-face. → the clear is removed (the flag
+is in-memory and its own screen clears it on dismiss). **W7b:** the permanently-denied screen had no
+exit at all → "Not now" added, and `skipDefaultFaceSetup()` clears the denial flags (otherwise the
+denial *is* the reason the screen shows, so Later was a dead button).
+
+**W8 · Unbounded DataStore write on the binder thread.** The NEEDS_SETUP pending-face write was the
+one op in `onRequest` with no timeout, against an explicit CLAUDE.md rule. → `withTimeoutOrNull(3 s)`.
+
+**P5 ⭐ · "{Face} is waiting" never delivered that face.** The watch promised "allow, and it goes on
+now", then installed the **bundled default** and cleared the pending name; the phone's sheet told the
+user to push again by hand. → the watch sends **`PATH_SETUP_COMPLETE`** (appended, one-way) once
+every dialog is closed and the default is installed; the phone re-pushes the held face
+automatically, and the watch shows **"Bringing {Face} over…"** instead of celebrating a default the
+user never chose.
+⭐ **Why a message and not a poll — this is the load-bearing decision.** The phone learns
+`pushGranted` from the query flag, which flips true the instant the *first* dialog is granted, i.e.
+while the **set-active dialog is still on screen**. A push arriving then calls `wakeAndLaunchUi()`,
+which starts `MainActivity` over the system dialog and **cancels it — permanently burning the
+once-ever `SET_PUSHED_WATCH_FACE_AS_ACTIVE` request**. Polling `pushGranted` was therefore rejected
+outright. The nudge fires exactly once, only after the whole chain is finished.
+
+**P1 · Setup flashed on every cold start.** `onboarded` defaulted to `false` while DataStore loaded.
+→ tri-state (`Boolean?`); nothing renders until it is known (the splash background covers it).
+
+**P2 · "No watch is paired" over a paired watch.** One empty `getConnectedNodes()` was treated as
+proof. → NO_WATCH needs `EMPTY_PROBES_BEFORE_NONE` consecutive misses **and** a 2.5 s settle window
+(both are needed: the probe fires from two places at once at launch).
+
+**P3 · "Needs the Dialed watch app" over an installed watch app.** The capability was queried once;
+`OnCapabilityChangedListener` does **not** re-fire for a capability already present at subscribe
+time. → `requestCapabilityRefresh()` re-queries on the Setup poll and on `ON_RESUME`.
+
+**P4 · Setup card flapped.** 3 s poll against a 12 s query = up to four overlapping RPCs; a stale
+reply landing last reverted a fresh one. → single-flight with a one-deep queue.
+
+**P6 · Stranded on "Looking for your watch…".** A live capability plus an unanswered query left
+`watchSetupDone` null forever, which renders as CHECKING with a disabled CTA. → after two misses the
+phone assumes OK and lets the user through (pushing is the real test, and the sheet is honest).
+
+**P7 · Starter card retired by the default face.** `installedPackages.isNotEmpty()` counted the
+bundled default, which is not a catalog face. → gate on the catalog-mapped set.
+
+**P8 · "Installing on your watch…" latched forever.** → resets when the state moves on, and times
+out after 120 s.
+
+**P9 · Dishonest states elsewhere.** Home's pill said "Connected" for a watch that would refuse every
+push; Detail said "Connect a Wear OS 6 watch to install" with the watch sitting right there.
+→ new `WatchConnection.NEEDS_SETUP`, plus APP_MISSING/NEEDS_SETUP copy in the pill, Detail and
+Settings.
+
+## 13.3 Defects found in the fix itself (second adversarial pass)
+
+Six, all fixed before tagging: "Later" trapped the user on the denied variants (the denial was
+itself the reason the screen showed); the working state could outlive its chain (watchdog added);
+Home flashed for one frame between the working state and the closing beat (outcome flags are now set
+*before* the busy flag is released); dismissing a received face re-showed "Bringing {Face} over…"
+for the face that had just landed (any transfer now supersedes the one-shot beats); Home's
+permission prompt outranked "Set as your face" for an installed-but-inactive face; the nudge was not
+timeout-bounded.
+
+## 13.4 Still open / deliberately not done
+
+- **Nothing wakes the watch on a NEEDS_SETUP answer.** A refused push leaves the watch screen dark;
+  the phone says to open Dialed. Waking a watch to report a *refusal* was judged intrusive. Revisit
+  only if on-wrist testing says the hand-off is missed.
+- **The auto re-push needs the phone app alive.** The listener is a live `MessageClient` listener
+  (no manifest service, matching the existing finalize listener). If the phone app was killed, the
+  sheet's Retry is the fallback. A manifest `WearableListenerService` on the phone would close this
+  and is the natural next step if it ever bites.
+- **Reliable first auto-apply remains impossible** (researched to ground truth 2026-07-18). Nothing
+  here attempts it; every path still degrades to the honest `GuidedHandoff`.
+- **On-wrist verification is outstanding for all of it** — see the release's test script.
+
+---
+
 ## 12. Kickoff prompt for the implementing session (copy verbatim)
 
 > Implement Slice 1 of `docs/ONBOARDING-REDESIGN.md` in D:\Apps\WearOS Apps\WatchFaces\Dialed App —

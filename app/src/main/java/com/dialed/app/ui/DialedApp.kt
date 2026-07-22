@@ -77,7 +77,12 @@ fun DialedApp(viewModel: MainViewModel) {
     val c = dialedColors
 
     Surface(modifier = Modifier.fillMaxSize().background(c.background), color = c.background) {
-        if (!onboarded) {
+        // null = the stored flag hasn't been read yet. Rendering ANYTHING here is a guess, and the
+        // old default ("not onboarded") meant every cold start flashed the Setup screen before
+        // snapping to Home. The splash background carries these few frames instead.
+        if (onboarded == null) return@Surface
+
+        if (onboarded == false) {
             SetupScreen(
                 setup = viewModel.watchSetup.collectAsStateWithLifecycle().value,
                 starterFaces = viewModel.starterFaces,

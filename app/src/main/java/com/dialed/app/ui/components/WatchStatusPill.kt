@@ -47,6 +47,10 @@ fun WatchStatusPill(status: WatchStatus, modifier: Modifier = Modifier) {
             c.primary, c.primary, c.primary.copy(alpha = 0.08f), c.primary.copy(alpha = 0.3f),
             "${status.deviceName ?: "Watch"} · needs the Dialed watch app",
         )
+        WatchConnection.NEEDS_SETUP -> PillStyle(
+            c.primary, c.primary, c.primary.copy(alpha = 0.08f), c.primary.copy(alpha = 0.3f),
+            "${status.deviceName ?: "Watch"} · finish setup on the watch",
+        )
         WatchConnection.DISCONNECTED -> PillStyle(
             c.locked, c.onSurfaceVariant, Color.Transparent, c.outline, "No watch connected",
         )

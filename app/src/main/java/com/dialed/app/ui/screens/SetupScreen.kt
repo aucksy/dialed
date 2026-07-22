@@ -80,6 +80,18 @@ fun SetupScreen(
     var installStarted by rememberSaveable { mutableStateOf(false) }
     var showGuide by remember { mutableStateOf(false) }
 
+    // The wait state must be able to end. It used to latch forever: a user who tapped "Set up my
+    // watch" and then didn't install anything was left staring at "Installing on your watch…" with
+    // no way back to the real CTA. Reset it whenever the state moves on, and time it out otherwise.
+    LaunchedEffect(setup.state, installStarted) {
+        if (setup.state != WatchSetupState.WATCH_APP_MISSING) {
+            installStarted = false
+        } else if (installStarted) {
+            delay(INSTALL_WAIT_MS)
+            installStarted = false
+        }
+    }
+
     // READY beat: when the watch turns ready, hold the CTA disabled for a moment so the state
     // change never yanks the screen mid-read (spec: auto-advance never yanks).
     var readyArmed by remember { mutableStateOf(false) }
@@ -313,3 +325,6 @@ private fun GuideStep(number: Int, text: String) {
 
 private const val POLL_MS = 3_000L
 private const val READY_BEAT_MS = 600L
+
+/** How long "Installing on your watch…" waits before offering the real CTA again. */
+private const val INSTALL_WAIT_MS = 120_000L

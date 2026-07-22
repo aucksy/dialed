@@ -53,6 +53,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SetupScreen(
     pendingFaceName: String?,
+    softDenied: Boolean,
     permanentlyDenied: Boolean,
     onSetUp: () -> Unit,
     onSkip: () -> Unit,
@@ -88,7 +89,11 @@ fun SetupScreen(
         scrollInfoProvider = ScrollInfoProvider(scrollState),
         edgeButton = {
             DialedEdgeButton(
-                text = if (pendingFaceName != null) "Allow and install" else "Set up Dialed",
+                text = when {
+                    softDenied -> "Allow"
+                    pendingFaceName != null -> "Allow and install"
+                    else -> "Set up Dialed"
+                },
                 onClick = onSetUp,
                 filled = true,
             )
@@ -103,10 +108,14 @@ fun SetupScreen(
             verticalArrangement = Arrangement.Center,
         ) {
             Spacer(Modifier.height(6.dp))
-            DialMark(size = if (pendingFaceName != null) 72.dp else 96.dp)
+            DialMark(size = if (pendingFaceName != null || softDenied) 72.dp else 96.dp)
             Spacer(Modifier.height(14.dp))
             Text(
-                pendingFaceName?.let { "$it is waiting" } ?: "Make Dialed your watch face",
+                when {
+                    softDenied -> "One permission short"
+                    pendingFaceName != null -> "$pendingFaceName is waiting"
+                    else -> "Make Dialed your watch face"
+                },
                 style = MaterialTheme.typography.titleMedium,
                 color = DialedWearColors.onSurface,
                 textAlign = TextAlign.Center,
@@ -114,10 +123,15 @@ fun SetupScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                if (pendingFaceName != null) {
-                    "Allow Dialed to install it, and it goes on now."
-                } else {
-                    "One tap: Dialed can install the faces you pick, and your first face goes on now."
+                when {
+                    // Denied once — the OS WILL ask again, so offer exactly that, not Settings.
+                    softDenied -> "Dialed can't put faces on your watch without it. Tap Allow to try again."
+                    // Honest about the mechanism: the phone re-sends this face the moment setup is
+                    // done. Saying "it goes on now" while installing a DIFFERENT (default) face was
+                    // the lie this screen used to tell.
+                    pendingFaceName != null ->
+                        "Allow Dialed to install faces and it comes over from your phone right away."
+                    else -> "One tap: Dialed can install the faces you pick, and your first face goes on now."
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = DialedWearColors.onSurfaceVariant,
@@ -137,6 +151,105 @@ fun SetupScreen(
             )
             Spacer(Modifier.height(8.dp))
         }
+    }
+}
+
+/**
+ * The setup chain is working: permissions are answered and the default face is installing (a WFP
+ * install is seconds, not milliseconds). Without this beat the setup screen simply sat there,
+ * unchanged, with a live button the user could tap again — re-entering the whole chain.
+ */
+@Composable
+fun SetupWorkingScreen() {
+    DialedScreen(showTimeText = false) {
+        DialMark(size = 72.dp, alpha = 0.6f)
+        Spacer(Modifier.height(16.dp))
+        Text(
+            "Setting Dialed up…",
+            style = MaterialTheme.typography.titleMedium,
+            color = DialedWearColors.onSurface,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            "A moment.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = DialedWearColors.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+/**
+ * Setup finished while a face was waiting on the phone. The phone has been nudged to send it, so
+ * name it and hand over — the incoming transfer's own Receive/celebration screens take this one's
+ * place the moment it lands. [onTimeout] falls through to Home if nothing arrives (the phone app
+ * may not be running any more), so this can never become a spinner with no exit.
+ */
+@Composable
+fun AwaitingFaceScreen(faceName: String, onTimeout: () -> Unit) {
+    LaunchedEffect(faceName) {
+        delay(AWAIT_FACE_TIMEOUT_MS)
+        onTimeout()
+    }
+    DialedScreen(showTimeText = false) {
+        DialMark(size = 72.dp, alpha = 0.6f)
+        Spacer(Modifier.height(16.dp))
+        Text(
+            "Bringing $faceName over…",
+            style = MaterialTheme.typography.titleMedium,
+            color = DialedWearColors.onSurface,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 20.dp),
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            "Keep your phone close.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = DialedWearColors.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+/**
+ * Setup worked, but nothing became the live face (the platform refused the one-shot set-active, or
+ * no default face is bundled). Confirm the part that DID happen — the previous build dropped the
+ * user straight onto Home's "No face yet", so two granted permissions looked like a no-op — and
+ * never claim an activation that didn't occur.
+ */
+@Composable
+fun SetupSettledScreen(onDone: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    LaunchedEffect(Unit) { haptic.performHapticFeedback(HapticFeedbackType.Confirm) }
+    DialedScreen(
+        showTimeText = false,
+        edgeButton = { DialedEdgeButton("Got it", onDone, filled = true) },
+    ) {
+        DialMark(size = 72.dp)
+        Spacer(Modifier.height(14.dp))
+        Text(
+            "You're set.",
+            style = MaterialTheme.typography.titleMedium,
+            color = DialedWearColors.onSurface,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            "Push a face from your phone and it lands here.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = DialedWearColors.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 22.dp),
+        )
+    }
+}
+
+/** The quiet first frames while the durable state loads — never a wrong screen, just the mark. */
+@Composable
+fun BootScreen() {
+    DialedScreen(showTimeText = false) {
+        DialMark(size = 72.dp, alpha = 0.45f)
     }
 }
 
@@ -170,6 +283,13 @@ fun SetupDoneScreen(onDone: () -> Unit) {
         )
     }
 }
+
+/**
+ * How long the "Bringing {Face} over…" beat waits for the phone's re-push before falling through to
+ * Home. Comfortably longer than a normal push (the phone answers the nudge in ~1s and the transfer
+ * itself takes a few seconds), short enough that a phone which never answers isn't a dead screen.
+ */
+private const val AWAIT_FACE_TIMEOUT_MS = 25_000L
 
 /** Spec 1f — an info mark (dot over a stroke) in a hairline circle, above the denied copy. */
 @Composable

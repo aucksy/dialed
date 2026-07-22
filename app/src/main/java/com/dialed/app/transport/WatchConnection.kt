@@ -21,7 +21,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
@@ -111,33 +113,89 @@ class WatchBridge(context: Context) {
     private val nodeClient = Wearable.getNodeClient(appContext)
     private val assets = FaceAssetProvider(appContext)
 
+    /**
+     * Nudges [connectedWatch] to re-query the capability right now. FILTER_REACHABLE is a transient
+     * snapshot that races the Data Layer's own initial sync, and OnCapabilityChangedListener does
+     * NOT re-fire for a capability that was already present when we started listening — so a single
+     * unlucky first query left the phone convinced the Dialed watch app was missing for the whole
+     * session ("{watch} needs the Dialed watch app" over an installed watch app). The wear side
+     * already self-heals its half of the link this way; this is the phone's.
+     */
+    private val capabilityRefresh = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
+    fun requestCapabilityRefresh() {
+        capabilityRefresh.tryEmit(Unit)
+    }
+
     /** Live set of reachable Dialed-capable watches (null = none / API unavailable). */
     val connectedWatch: Flow<ConnectedWatch?> = callbackFlow {
         var listener: CapabilityClient.OnCapabilityChangedListener? = null
         if (WearableApiAvailability.isAvailable(nodeClient)) {
-            try {
-                val reachable = capabilityClient
-                    .getCapability(WearConstants.CAPABILITY_WEAR, CapabilityClient.FILTER_REACHABLE)
-                    .await()
-                trySend(select(reachable.nodes))
-            } catch (e: CancellationException) {
-                throw e // the collector went away — don't fake a "no watch" emission on the way out
-            } catch (e: Exception) {
-                trySend(null)
-            }
+            trySend(queryCapability())
 
             listener = CapabilityClient.OnCapabilityChangedListener { info ->
                 trySend(select(info.nodes))
             }
             capabilityClient.addListener(listener, WearConstants.CAPABILITY_WEAR)
+
+            // Re-query on demand (screen visible / app resumed / setup poll tick).
+            launch {
+                capabilityRefresh.collect { trySend(queryCapability()) }
+            }
         } else {
             trySend(null)
         }
         awaitClose { listener?.let { capabilityClient.removeListener(it) } }
     }
 
+    /**
+     * One capability snapshot. A failure yields null (= not reachable) rather than throwing, but a
+     * genuine cancellation still propagates so a torn-down collector never gets a fake "no watch".
+     */
+    private suspend fun queryCapability(): ConnectedWatch? = try {
+        select(
+            capabilityClient
+                .getCapability(WearConstants.CAPABILITY_WEAR, CapabilityClient.FILTER_REACHABLE)
+                .await().nodes,
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Log.w(TAG, "capability query failed", e)
+        null
+    }
+
     private fun select(nodes: Set<Node>): ConnectedWatch? =
         nodes.firstOrNull()?.let { ConnectedWatch(it.id, it.displayName) }
+
+    /**
+     * The watch's one-way "setup just finished" nudge ([WearConstants.PATH_SETUP_COMPLETE]),
+     * carrying the name of the face it was holding (empty = none). The phone uses it to re-send a
+     * face it had to refuse with RESPONSE_NEEDS_SETUP, so the user never has to push twice.
+     *
+     * A live MessageClient listener, exactly like the finalize listener in [pushFace] — no manifest
+     * service, so it exists only while the phone app is running, which is precisely when there is a
+     * push sheet to act on. An older watch simply never sends this.
+     */
+    val setupCompleteSignals: Flow<String> = callbackFlow {
+        val listener = MessageClient.OnMessageReceivedListener { event ->
+            if (event.path == WearConstants.PATH_SETUP_COMPLETE) {
+                val faceName = String(event.data, Charsets.UTF_8)
+                Log.i(TAG, "watch reported setup complete (waiting face='$faceName')")
+                trySend(faceName)
+            }
+        }
+        try {
+            messageClient.addListener(listener).await()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "setup-complete listener registration failed", e)
+        }
+        awaitClose {
+            runCatching { messageClient.removeListener(listener) }
+        }
+    }
 
     /**
      * Display name of ANY paired + reachable watch node — Dialed watch app or not — or null when

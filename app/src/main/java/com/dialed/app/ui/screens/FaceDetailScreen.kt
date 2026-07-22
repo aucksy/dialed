@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dialed.app.R
 import com.dialed.app.catalog.Face
+import com.dialed.app.model.WatchConnection
 import com.dialed.app.model.WatchStatus
 import com.dialed.app.ui.components.DialStatus
 import com.dialed.app.ui.components.FaceDial
@@ -141,6 +142,12 @@ fun FaceDetailScreen(
                 // Before !isConnected: an unsupported watch IS present, it just can't ever install.
                 watchStatus.isUnsupported ->
                     "${watchStatus.deviceName ?: "Your watch"} needs Wear OS 6 to install faces."
+                // Both of these are "not connected" by the isConnected flag, but the watch IS right
+                // there — "Connect a Wear OS 6 watch" was simply wrong about what to do next.
+                watchStatus.connection == WatchConnection.NEEDS_SETUP ->
+                    "Open Dialed on ${watchStatus.deviceName ?: "your watch"} and tap “Set up Dialed” first."
+                watchStatus.connection == WatchConnection.APP_MISSING ->
+                    "${watchStatus.deviceName ?: "Your watch"} needs the Dialed watch app first."
                 !watchStatus.isConnected -> "Connect a Wear OS 6 watch to install"
                 slotOccupied -> "Replaces the Dialed face on ${watchStatus.deviceName} — one face at a time."
                 else -> "Installs to ${watchStatus.deviceName} · Connected"

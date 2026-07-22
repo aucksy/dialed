@@ -107,8 +107,14 @@ class DialedListenerService : WearableListenerService() {
         // can). Remember the face so the setup screen asks with it as the context.
         if (!repo.hasPushPermission()) {
             Log.w(TAG, "initiate before watch setup t=${request.transferId}")
-            runCatching { runBlocking { store.setPendingFaceName(request.faceName) } }
-                .onFailure { Log.w(TAG, "pending-face store failed", it) }
+            // Bounded like every other op on this binder thread: a contended/slow DataStore must
+            // never hold the reply past the phone's own SETUP_TIMEOUT_MS. Losing the name only
+            // costs the "{Face} is waiting" wording, never the answer itself.
+            runCatching {
+                runBlocking {
+                    withTimeoutOrNull(PENDING_STORE_TIMEOUT_MS) { store.setPendingFaceName(request.faceName) }
+                }
+            }.onFailure { Log.w(TAG, "pending-face store failed", it) }
             return Tasks.forResult(byteArrayOf(WearConstants.RESPONSE_NEEDS_SETUP))
         }
         val canProceed = TransferSession.tryBegin()
@@ -304,6 +310,9 @@ class DialedListenerService : WearableListenerService() {
         /** Watch-side budget for a query/uninstall op; kept below the phone's QUERY_STATE_TIMEOUT_MS
          *  so the binder thread never blocks past the phone's own wait. */
         const val QUERY_OP_TIMEOUT_MS = 10_000L
+
+        /** Budget for the pending-face note written on the binder thread (a local DataStore edit). */
+        const val PENDING_STORE_TIMEOUT_MS = 3_000L
 
         /**
          * Process-scoped (NOT bound to this service's lifecycle): GMS may unbind + destroy an idle

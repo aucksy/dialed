@@ -48,12 +48,17 @@ import com.dialed.app.wear.ui.theme.DialedWearColors
  * EdgeButton overlays the bottom bezel. Fractions hold at 192 dp and 225 dp+.
  */
 @Composable
-fun HomeScreen(state: WearUiState, onSetActive: () -> Unit) {
+fun HomeScreen(state: WearUiState, onSetActive: () -> Unit, onSetUp: () -> Unit) {
     val context = LocalContext.current
     val remoteHelper = remember { RemoteActivityHelper(context) }
     var showOpenOnPhone by remember { mutableStateOf(false) }
     val home = state.home
     val reachable = state.link != WatchLink.UNREACHABLE
+    // Setup was skipped ("Later") or never finished: Dialed cannot install anything yet. Home is
+    // the ONLY screen left in that state, so it must carry the way back — the phone's setup screen
+    // says "open Dialed on your watch and tap Set up Dialed", and before this there was no such
+    // button anywhere once "Later" had resolved the one-time gate.
+    val needsPermission = !state.pushGranted
     // Actually launch the phone app; drop the "check your phone" confirmation only on a real failure.
     val openOnPhone: () -> Unit = {
         showOpenOnPhone = true
@@ -66,6 +71,8 @@ fun HomeScreen(state: WearUiState, onSetActive: () -> Unit) {
     DialedHeroScreen(
         edgeButton = {
             when {
+                // Nothing else on this screen can work without the install permission.
+                needsPermission -> DialedEdgeButton(text = "Set up Dialed", onClick = onSetUp, filled = true)
                 inactiveFace -> DialedEdgeButton(text = "Set as your face", onClick = onSetActive, filled = true)
                 reachable -> DialedEdgeButton(
                     text = if (home is HomeFaceState.Installed) "Browse on phone" else "Open on phone",
@@ -97,9 +104,17 @@ fun HomeScreen(state: WearUiState, onSetActive: () -> Unit) {
                         .padding(horizontal = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text("No face yet", style = MaterialTheme.typography.titleMedium, color = DialedWearColors.onSurface)
                     Text(
-                        "Push one from the Dialed app.",
+                        if (needsPermission) "Not set up yet" else "No face yet",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = DialedWearColors.onSurface,
+                    )
+                    Text(
+                        if (needsPermission) {
+                            "Dialed needs your OK to put faces on this watch."
+                        } else {
+                            "Push one from the Dialed app."
+                        },
                         style = MaterialTheme.typography.bodyMedium,
                         color = DialedWearColors.onSurfaceVariant,
                         textAlign = TextAlign.Center,

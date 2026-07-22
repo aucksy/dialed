@@ -24,6 +24,22 @@ object WearConstants {
     /** Phone -> watch RPC (sendRequest): "uninstall this face". Payload = target package name (UTF-8). */
     const val PATH_UNINSTALL = "/dialed/uninstall"
 
+    /**
+     * Watch -> phone one-way message (sendMessage, no reply): "watch-side setup just finished —
+     * the install permission is granted and the default face step is resolved". APPENDED path, so
+     * it degrades safely both ways: an older phone registers no listener for it and simply ignores
+     * the message; an older watch never sends it and the phone falls back to its manual Retry.
+     *
+     * Why a message and not a poll: the phone must NOT re-push while the watch is mid-setup. A push
+     * arriving between the two permission dialogs launches the receive UI over the system dialog,
+     * which cancels it — and `SET_PUSHED_WATCH_FACE_AS_ACTIVE` can be REQUESTED ONLY ONCE EVER, so
+     * that would permanently burn the user's single activation. This fires exactly once, only after
+     * every dialog is closed and the default face is installed.
+     *
+     * Payload: the name of the face the watch was waiting for (empty = none).
+     */
+    const val PATH_SETUP_COMPLETE = "/dialed/setup_complete"
+
     /** CapabilityClient capability the WATCH advertises when WFP is supported (res/values/wear.xml). */
     const val CAPABILITY_WEAR = "dialed_wfp_install"
 

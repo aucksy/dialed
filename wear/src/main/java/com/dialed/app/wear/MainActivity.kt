@@ -28,7 +28,12 @@ class MainActivity : ComponentActivity() {
      */
     private val requestPushPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            viewModel.onPushPermissionResult(granted)
+            // AFTER a denial, shouldShowRequestPermissionRationale tells us whether the OS will ever
+            // prompt again. True = re-askable (offer "Allow"); false = only Settings can fix it.
+            // Without this every denial was treated as permanent and dead-ended in Settings.
+            val canAskAgain = !granted &&
+                shouldShowRequestPermissionRationale(WearConstants.PERMISSION_PUSH)
+            viewModel.onPushPermissionResult(granted, canAskAgain)
             if (granted) requestSetupSetActive.launch(WearConstants.PERMISSION_SET_ACTIVE)
         }
 
@@ -59,7 +64,12 @@ class MainActivity : ComponentActivity() {
             DialedWearTheme {
                 WearApp(
                     viewModel = viewModel,
-                    onSetUp = { requestPushPermission.launch(WearConstants.PERMISSION_PUSH) },
+                    onSetUp = {
+                        // Hold a working state across the dialog chain so the setup screen can't sit
+                        // there re-tappable while the install runs (that re-entered the whole chain).
+                        viewModel.beginSetup()
+                        requestPushPermission.launch(WearConstants.PERMISSION_PUSH)
+                    },
                     onSetActive = { requestSetActivePermission.launch(WearConstants.PERMISSION_SET_ACTIVE) },
                     onOpenSettings = ::openAppSettings,
                     onExit = ::finish,

@@ -1,6 +1,7 @@
 package com.dialed.app
 
 import android.app.Application
+import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dialed.app.catalog.Face
@@ -18,6 +19,7 @@ import com.dialed.app.transport.WatchBridge
 import com.dialed.app.transport.WatchSetup
 import com.dialed.app.transport.WatchSetupState
 import com.dialed.app.ui.theme.ThemeMode
+import com.dialed.app.wear.common.QueryStateResult
 import com.dialed.app.wear.common.WatchFaceUninstallResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,8 +44,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val themeMode: StateFlow<ThemeMode> =
         settings.themeMode.stateIn(viewModelScope, SharingStarted.Eagerly, ThemeMode.SYSTEM)
 
-    val onboarded: StateFlow<Boolean> =
-        settings.onboarded.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    /**
+     * null = not read yet. DataStore answers a frame or two after launch, and defaulting to `false`
+     * meant EVERY cold start rendered the Setup screen for that beat before snapping to Home — the
+     * onboarding appeared to come back on every launch. The UI renders nothing until this is known.
+     */
+    val onboarded: StateFlow<Boolean?> =
+        settings.onboarded.map { it as Boolean? }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     /** Home's "Put your first face on" starters (docs/ONBOARDING-REDESIGN.md §5.2). */
     val starterFaces: List<Face> = STARTER_IDS.mapNotNull { id -> faces.firstOrNull { it.id == id } }
@@ -92,9 +99,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Real reachable-watch detection via CapabilityClient (dialed_wfp_install) + the node probe. */
     val watchStatus: StateFlow<WatchStatus> =
-        combine(connectedWatch, watchSupported, pairedProbe) { watch, supported, probe ->
+        combine(connectedWatch, watchSupported, pairedProbe, watchSetupDone) { watch, supported, probe, setupDone ->
             when {
                 watch != null && !supported -> WatchStatus(WatchConnection.UNSUPPORTED, watch.displayName)
+                // The watch app is there but its one-time setup was never done, so every push will
+                // be refused. Saying "Connected" was true about the link and useless about the
+                // outcome — the pill now names the actual blocker, everywhere Home shows it.
+                watch != null && setupDone == false -> WatchStatus(WatchConnection.NEEDS_SETUP, watch.displayName)
                 watch != null -> WatchStatus(WatchConnection.CONNECTED, watch.displayName)
                 probe is PairedProbe.Found -> WatchStatus(WatchConnection.APP_MISSING, probe.name)
                 probe is PairedProbe.Unknown -> WatchStatus(WatchConnection.CONNECTING)
@@ -174,6 +185,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 if (watch != null) {
                     watchSupported.value = true // optimistic until this watch says otherwise
                     watchSetupDone.value = null // this watch will say via the next query
+                    queryMisses = 0             // a new watch gets a fresh chance to answer
                     refreshInstalledState()
                 } else {
                     _installedPackages.value = emptyList()
@@ -185,17 +197,59 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
         }
+
+        // The watch finished its setup and told us so. If we are holding a face it refused
+        // (RESPONSE_NEEDS_SETUP), send it now — the watch screen promised the user their face would
+        // come over, and making them walk back to the phone and press Retry breaks that promise.
+        //
+        // Only the sheet's OWN face is re-sent, and only while that sheet is still open on the
+        // NeedsWatchSetup state, so this can never fire a push the user didn't ask for.
+        viewModelScope.launch {
+            watchBridge.setupCompleteSignals.collect {
+                val face = _pushingFace.value ?: return@collect
+                if (_pushStatus.value !is PushStatus.NeedsWatchSetup) return@collect
+                watchSetupDone.value = true
+                startPush(face)
+            }
+        }
     }
 
-    /** Re-probe for any paired watch node (drives APP_MISSING vs NO_WATCH). */
+    /**
+     * Re-probe for any paired watch node (drives APP_MISSING vs NO_WATCH).
+     *
+     * A single empty `getConnectedNodes()` is NOT proof that no watch is paired: right after launch
+     * it races the Data Layer's own sync and comes back empty for a paired, present watch — which
+     * showed "No watch is paired with this phone yet" within a second of opening the app. So an
+     * empty answer only counts after [EMPTY_PROBES_BEFORE_NONE] consecutive misses; a hit resets
+     * the count instantly. (Same reasoning as the wear side's REACH_ATTEMPTS.)
+     */
+    private var emptyProbes = 0
+
+    /** Wall-clock anchor for the settle window below (monotonic; unaffected by clock changes). */
+    private val createdAt = SystemClock.elapsedRealtime()
+
     private suspend fun refreshPairedProbe() {
         val name = watchBridge.pairedWatchName()
-        pairedProbe.value = if (name != null) PairedProbe.Found(name) else PairedProbe.None
+        if (name != null) {
+            emptyProbes = 0
+            pairedProbe.value = PairedProbe.Found(name)
+            return
+        }
+        emptyProbes++
+        // Both guards are needed: the probe fires from two places at once at launch (the capability
+        // collector AND the Setup screen's first tick), so a count alone can be satisfied inside a
+        // few milliseconds — before the Data Layer has synced anything.
+        val settled = SystemClock.elapsedRealtime() - createdAt >= PROBE_SETTLE_MS
+        if (emptyProbes >= EMPTY_PROBES_BEFORE_NONE && settled) pairedProbe.value = PairedProbe.None
+        // else: hold the previous value (Unknown = still CHECKING, Found = don't flap it away)
     }
 
-    /** The Setup screen's poll tick: refresh the node probe + the watch's own answers. */
+    /** The Setup screen's poll tick: refresh the node probe, the capability, and the watch's answers. */
     fun refreshWatchSetup() {
         viewModelScope.launch { refreshPairedProbe() }
+        // The capability listener does not re-fire for a capability that was already present when
+        // we subscribed, so re-ask explicitly or a missed first query never heals.
+        watchBridge.requestCapabilityRefresh()
         refreshInstalledState()
     }
 
@@ -230,10 +284,51 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /**
+     * Guards [refreshInstalledState] to ONE in-flight query. The Setup screen polls every 3 s while
+     * a query may take up to 12 s, so without this up to four overlapped RPCs raced each other and
+     * a stale reply landing last could revert a fresh answer — the setup card flapped between
+     * "open Dialed on your watch" and "ready".
+     */
+    private var queryInFlight = false
+
+    /** A refresh asked for while one was already running — run exactly one more when it lands. */
+    private var queryQueued = false
+
+    /** Consecutive query-state RPCs the watch didn't answer (resets on any reply / reconnect). */
+    private var queryMisses = 0
+
     /** Re-read the watch's installed/active snapshot. No-op (keeps prior state) if unreachable. */
     fun refreshInstalledState() {
+        if (queryInFlight) {
+            queryQueued = true
+            return
+        }
+        queryInFlight = true
         viewModelScope.launch {
-            val state = watchBridge.queryInstalledState() ?: return@launch
+            var state: QueryStateResult? = null
+            try {
+                state = watchBridge.queryInstalledState()
+            } finally {
+                queryInFlight = false
+                if (queryQueued) {
+                    queryQueued = false
+                    refreshInstalledState()
+                }
+            }
+            if (state == null) {
+                // The watch didn't answer. With a live capability that leaves watchSetupDone at
+                // null, which the Setup screen renders as CHECKING — so a watch whose listener is
+                // slow to wake stranded the screen on "Looking for your watch…" with a disabled CTA
+                // and no way forward. After a couple of misses, assume it's fine and let the user
+                // move on: pushing is the real test, and the push sheet is honest about NEEDS_SETUP.
+                queryMisses++
+                if (queryMisses >= QUERY_MISSES_BEFORE_ASSUME_OK && watchSetupDone.value == null) {
+                    watchSetupDone.value = true
+                }
+                return@launch
+            }
+            queryMisses = 0
             watchSupported.value = state.supported
             // A reply WITHOUT the setup flag (older wear app) counts as done — never nag on unknown.
             watchSetupDone.value = state.pushGranted ?: true
@@ -244,8 +339,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             }
             _installedPackages.value = state.installedPackages
             _activePackage.value = state.activePackage
-            // Any observed install retires Home's starter card, forever (write-once).
-            if (state.installedPackages.isNotEmpty() && !settings.firstInstallDone.first()) {
+            // Any observed install of a CATALOG face retires Home's starter card, forever
+            // (write-once). Deliberately not "any package": watch-side setup installs the bundled
+            // Dialed DEFAULT face, which is not in the catalog — counting it retired the
+            // "Put your first face on" card before the user had chosen a single face.
+            if (state.installedPackages.any { pkgToFaceId.containsKey(it) } &&
+                !settings.firstInstallDone.first()
+            ) {
                 settings.setFirstInstallDone(true)
             }
         }
@@ -321,5 +421,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private companion object {
         /** Home's first-face starters (owner-picked 2026-07-22; revisit when the free map lands). */
         val STARTER_IDS = listOf("arclight_solstice", "vakt_gt", "aurum_guilloche")
+
+        /** Consecutive empty node probes before we believe "no watch is paired" (see the probe). */
+        const val EMPTY_PROBES_BEFORE_NONE = 2
+
+        /** …and no sooner than this after launch, so the Data Layer has had time to sync. */
+        const val PROBE_SETTLE_MS = 2_500L
+
+        /** Unanswered query-state RPCs before the Setup screen stops waiting and lets the user on. */
+        const val QUERY_MISSES_BEFORE_ASSUME_OK = 2
     }
 }

@@ -161,6 +161,10 @@ private fun ErrorContent(face: Face, message: String, onRetry: () -> Unit, onDis
  * The watch app hasn't been set up yet (its install permission was never granted). "Busy — retry"
  * would be a lie retrying can't fix; the honest fix is one tap on the watch, so say exactly that.
  * The watch remembers this face and asks with it as the context when Dialed is opened there.
+ *
+ * Keep this sheet open and the face sends ITSELF: the watch reports back the moment its setup
+ * finishes (PATH_SETUP_COMPLETE) and the phone re-pushes automatically. Retry stays as the manual
+ * path for when the sheet was closed or the nudge never arrived.
  */
 @Composable
 private fun NeedsWatchSetupContent(face: Face, onRetry: () -> Unit, onDismiss: () -> Unit) {
@@ -175,7 +179,8 @@ private fun NeedsWatchSetupContent(face: Face, onRetry: () -> Unit, onDismiss: (
     Text("Finish setting up your watch", style = MaterialTheme.typography.titleMedium, color = c.onSurface)
     Spacer(Modifier.height(8.dp))
     Text(
-        "Open Dialed on your watch and tap “Set up Dialed”. Then push ${face.displayName} again.",
+        "Open Dialed on your watch and tap “Set up Dialed”. Leave this open — " +
+            "${face.displayName} sends itself the moment you're done.",
         style = MaterialTheme.typography.bodyMedium,
         color = c.onSurfaceVariant,
         textAlign = TextAlign.Center,

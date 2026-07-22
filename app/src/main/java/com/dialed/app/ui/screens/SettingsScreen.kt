@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dialed.app.BuildConfig
 import com.dialed.app.R
+import com.dialed.app.model.WatchConnection
 import com.dialed.app.model.WatchStatus
 import com.dialed.app.ui.theme.DialedRadius
 import com.dialed.app.ui.theme.DialedSpacing
@@ -76,9 +77,11 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.titleMedium, color = c.onSurface,
                 )
                 Text(
-                    when {
-                        watchStatus.isConnected -> "Connected · ready to receive faces"
-                        watchStatus.isUnsupported -> "Needs Wear OS 6 to receive faces"
+                    when (watchStatus.connection) {
+                        WatchConnection.CONNECTED -> "Connected · ready to receive faces"
+                        WatchConnection.UNSUPPORTED -> "Needs Wear OS 6 to receive faces"
+                        WatchConnection.NEEDS_SETUP -> "Open Dialed on the watch and tap “Set up Dialed”"
+                        WatchConnection.APP_MISSING -> "Needs the Dialed watch app"
                         else -> "Pair a Wear OS 6 watch to install faces"
                     },
                     style = MaterialTheme.typography.bodyMedium,

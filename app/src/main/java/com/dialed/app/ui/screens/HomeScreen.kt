@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.dialed.app.R
+import com.dialed.app.catalog.Face
 import com.dialed.app.catalog.FaceCollection
 import com.dialed.app.model.WatchStatus
 import com.dialed.app.ui.components.DialStatus
@@ -59,6 +60,9 @@ import com.dialed.app.ui.theme.dialedColors
 fun HomeScreen(
     collections: List<FaceCollection>,
     watchStatus: WatchStatus,
+    starterFaces: List<Face>,
+    showStarters: Boolean,
+    onStarterClick: (Face) -> Unit,
     onCollectionClick: (FaceCollection) -> Unit,
     onSettings: () -> Unit,
 ) {
@@ -109,8 +113,66 @@ fun HomeScreen(
             }
         }
 
+        // First-face nudge (docs/ONBOARDING-REDESIGN.md §5.2): shown until the first successful
+        // install is ever observed, then retired forever. Gives a brand-new user their first move
+        // instead of a wall of collection cards.
+        if (showStarters && starterFaces.isNotEmpty()) {
+            item(key = "starters") {
+                StarterCard(faces = starterFaces, onFaceClick = onStarterClick)
+            }
+        }
+
         items(collections, key = { it.id }) { collection ->
             CollectionCard(collection = collection, onClick = { onCollectionClick(collection) })
+        }
+    }
+}
+
+/** "Put your first face on" — three tappable starters in the vitrine card language. */
+@Composable
+private fun StarterCard(faces: List<Face>, onFaceClick: (Face) -> Unit) {
+    val c = dialedColors
+    val shape = RoundedCornerShape(DialedRadius.lg)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(6.dp, shape, clip = false)
+            .clip(shape)
+            .background(c.surfaceContainerHigh)
+            .border(1.dp, c.primary.copy(alpha = 0.35f), shape)
+            .padding(start = DialedSpacing.lg, end = DialedSpacing.lg, top = DialedSpacing.xl, bottom = DialedSpacing.lg),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            "Put your first face on",
+            style = MaterialTheme.typography.headlineSmall,
+            color = c.onSurface,
+        )
+        Spacer(Modifier.height(DialedSpacing.xs))
+        Text(
+            "THREE TO START WITH",
+            style = MaterialTheme.typography.labelMedium,
+            color = c.primary,
+        )
+        Spacer(Modifier.height(DialedSpacing.lg))
+        Row(horizontalArrangement = Arrangement.spacedBy(DialedSpacing.lg)) {
+            faces.take(3).forEach { face ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(DialedRadius.md))
+                        .clickable { onFaceClick(face) }
+                        .padding(DialedSpacing.xs),
+                ) {
+                    FaceDial(face, 88.dp, status = DialStatus.NONE)
+                    Spacer(Modifier.height(DialedSpacing.xs))
+                    Text(
+                        face.faceName,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = c.onSurfaceVariant,
+                    )
+                }
+            }
         }
     }
 }

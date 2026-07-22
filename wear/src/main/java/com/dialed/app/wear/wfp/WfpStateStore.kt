@@ -41,6 +41,15 @@ class WfpStateStore(private val context: Context) {
     val onboardingComplete: Flow<Boolean> =
         context.wfpDataStore.data.map { it[KEY_ONBOARDED] == true }
 
+    /**
+     * Name of a face the phone tried to push BEFORE watch-side setup (the listener answered
+     * NEEDS_SETUP). The setup screen uses it to ask with that face as the context ("{Face} is
+     * waiting"), the strongest possible permission moment. Cleared once setup resolves or any
+     * face actually lands.
+     */
+    val pendingFaceName: Flow<String?> =
+        context.wfpDataStore.data.map { it[KEY_PENDING_FACE] }
+
     val lastFaceName: Flow<String?> =
         context.wfpDataStore.data.map { it[KEY_LAST_FACE] }
 
@@ -58,6 +67,11 @@ class WfpStateStore(private val context: Context) {
     suspend fun setOnboardingComplete(value: Boolean) =
         context.wfpDataStore.edit { it[KEY_ONBOARDED] = value }.let {}
 
+    suspend fun setPendingFaceName(value: String?) =
+        context.wfpDataStore.edit {
+            if (value == null) it.remove(KEY_PENDING_FACE) else it[KEY_PENDING_FACE] = value
+        }.let {}
+
     suspend fun setLastFace(name: String, packageName: String?) =
         context.wfpDataStore.edit {
             it[KEY_LAST_FACE] = name
@@ -68,6 +82,7 @@ class WfpStateStore(private val context: Context) {
         val KEY_ACTIVE_USED = booleanPreferencesKey("setActiveUsed")
         val KEY_PERM_DENIED = booleanPreferencesKey("permissionDenied")
         val KEY_ONBOARDED = booleanPreferencesKey("onboardingComplete")
+        val KEY_PENDING_FACE = stringPreferencesKey("pendingFaceName")
         val KEY_LAST_FACE = stringPreferencesKey("lastFaceName")
         val KEY_LAST_PACKAGE = stringPreferencesKey("lastFacePackage")
     }

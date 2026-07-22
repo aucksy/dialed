@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dialed — Onboarding Redesign Walkthrough</title>
+<style>
+  :root{
+    --bg:#0B0B0D; --surface:#131316; --sc:#17171B; --sch:#1D1D22;
+    --ink:#F4F2ED; --muted:#A6A29A; --outline:#34343B; --outlineV:#232328;
+    --gold:#D8BC7A; --ongold:#221A06; --golddim:#2A2517; --goldtxt:#EFD9A2;
+    --ok:#7ECFA0; --err:#E5776C; --locked:#8B857A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,sans-serif;padding:0 0 90px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  h1{font-size:30px;letter-spacing:.2px;font-weight:700}
+  h1 .dot{color:var(--gold)}
+  h2{font-size:21px;margin:0 0 6px;font-weight:650}
+  h3{font-size:15px;color:var(--goldtxt);text-transform:uppercase;letter-spacing:.13em;font-weight:600;margin-bottom:10px}
+  p.lead{color:var(--muted);max-width:820px}
+  header{padding:44px 0 10px;border-bottom:1px solid var(--outlineV);margin-bottom:34px}
+  header .tag{display:inline-block;background:var(--golddim);color:var(--goldtxt);font-size:12px;letter-spacing:.1em;padding:4px 12px;border-radius:99px;margin:14px 0 18px;text-transform:uppercase}
+  section{margin:0 0 58px}
+  .panel{background:var(--surface);border:1px solid var(--outlineV);border-radius:18px;padding:26px 28px}
+  .cols{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+  .col{flex:1 1 340px;min-width:320px}
+
+  /* ---------- flow strips ---------- */
+  .strip{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 4px}
+  .step{background:var(--sch);border:1px solid var(--outline);border-radius:12px;padding:9px 14px;font-size:13px;color:var(--ink);white-space:nowrap}
+  .step.bad{border-color:#5a3230;color:#e0a49e}
+  .step.good{border-color:#3a5a48;color:#b9e2cb}
+  .step.gold{border-color:var(--gold);color:var(--goldtxt)}
+  .arrow{color:var(--locked);font-size:15px}
+  .stripLabel{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:16px}
+  .verdict{font-size:13px;color:var(--muted);margin-top:8px}
+  .verdict b{color:var(--ink)}
+
+  /* ---------- phone frame ---------- */
+  .phone{width:315px;height:645px;border-radius:38px;background:#050506;border:3px solid #26262c;box-shadow:0 22px 60px rgba(0,0,0,.55);padding:14px;position:relative;flex:none}
+  .phone .screen{background:var(--bg);border-radius:26px;height:100%;padding:24px 22px 20px;display:flex;flex-direction:column;overflow:hidden;position:relative}
+  .skip{position:absolute;top:18px;right:20px;font-size:13px;color:var(--muted)}
+  .wordmark{font-size:30px;font-weight:700;margin-top:34px}
+  .wordmark span{color:var(--gold)}
+  .oneline{color:var(--muted);font-size:14px;margin-top:6px}
+  .trio{display:flex;justify-content:center;align-items:center;margin:32px 0 8px;height:132px}
+  .dial{border-radius:50%;background:#000;border:1px solid var(--outline);overflow:hidden;flex:none;box-shadow:0 8px 26px rgba(0,0,0,.6)}
+  .dial img{width:100%;height:100%;object-fit:cover;display:block}
+  .dial.side{width:86px;height:86px;opacity:.92}
+  .dial.mid{width:118px;height:118px;z-index:2;margin:0 -16px}
+  .statusCard{background:var(--sch);border:1px solid var(--outline);border-radius:16px;padding:16px 16px;margin-top:auto}
+  .statusCard .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:1px}
+  .statusCard .l1{font-weight:650;font-size:14.5px}
+  .statusCard .l2{color:var(--muted);font-size:13px;margin-top:4px}
+  .cta{margin-top:14px;background:var(--gold);color:var(--ongold);text-align:center;border-radius:14px;padding:14px;font-weight:650;font-size:15px}
+  .cta.ghost{background:transparent;color:var(--muted);border:1px solid var(--outline);font-weight:500}
+  .trust{color:var(--locked);font-size:11.5px;text-align:center;margin-top:10px}
+
+  /* state switcher */
+  .switch{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+  .switch button{background:var(--sch);color:var(--muted);border:1px solid var(--outline);border-radius:99px;padding:7px 14px;font-size:12.5px;cursor:pointer;font-family:inherit}
+  .switch button.on{background:var(--golddim);color:var(--goldtxt);border-color:var(--gold)}
+  .note{font-size:13px;color:var(--muted);border-left:2px solid var(--gold);padding:2px 0 2px 14px;margin-top:16px;max-width:560px}
+  .note b{color:var(--ink)}
+
+  /* ---------- watch frame ---------- */
+  .watchWrap{display:flex;flex-direction:column;align-items:center;flex:none}
+  .watch{width:252px;height:252px;border-radius:50%;background:#050506;border:9px solid #1c1c21;box-shadow:0 18px 55px rgba(0,0,0,.6);position:relative;overflow:hidden}
+  .wface{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 30px 58px}
+  .dialmark{width:56px;height:56px;border-radius:50%;border:2px solid var(--gold);position:relative;margin:6px 0 8px;flex:none}
+  .dialmark:after{content:"";position:absolute;left:50%;top:50%;width:2px;height:19px;background:var(--gold);transform-origin:top center;transform:translate(-50%,0) rotate(215deg)}
+  .dialmark:before{content:"";position:absolute;left:50%;top:50%;width:2px;height:13px;background:var(--goldtxt);transform-origin:top center;transform:translate(-50%,0) rotate(120deg)}
+  .wtitle{font-size:14px;font-weight:650;line-height:1.25}
+  .wbody{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.35}
+  .wlater{font-size:11.5px;color:var(--locked);margin-top:7px}
+  .edgeBtn{position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:78%;padding:13px 0 17px;border-radius:99px 99px 0 0;background:var(--gold);color:var(--ongold);font-size:13.5px;font-weight:650;text-align:center}
+  .sysdialog{position:absolute;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:24px}
+  .sysdialog .box{background:#202024;border-radius:22px;padding:18px 16px 12px;text-align:center;width:100%}
+  .sysdialog .box p{font-size:12px;line-height:1.4}
+  .sysdialog .allow{margin-top:12px;background:#3a4d9e;color:#fff;border-radius:99px;padding:9px 0;font-size:12.5px;font-weight:600}
+  .sysdialog .deny{color:var(--muted);font-size:12px;margin-top:8px;padding-bottom:4px}
+  .celebrate .ring{width:120px;height:120px;border-radius:50%;border:2.5px solid var(--gold);margin:26px 0 14px;position:relative;flex:none;overflow:hidden}
+  .celebrate .ring img{width:104px;height:104px;border-radius:50%;object-fit:cover;position:absolute;inset:0;margin:auto}
+  .celebrate .din{font-size:19px;font-weight:700}
+  .wsteps{margin-top:22px;display:flex;gap:8px;justify-content:center}
+  .wsteps button{background:var(--sch);color:var(--muted);border:1px solid var(--outline);border-radius:99px;padding:7px 14px;font-size:12.5px;cursor:pointer;font-family:inherit}
+  .wsteps button.on{background:var(--golddim);color:var(--goldtxt);border-color:var(--gold)}
+  .wcap{font-size:12.5px;color:var(--muted);margin-top:12px;text-align:center;max-width:260px;min-height:52px}
+  .toggleRow{margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .toggleRow label{cursor:pointer}
+  .toggleRow input{accent-color:var(--gold);vertical-align:-2px;margin-right:6px}
+
+  /* ---------- sheets & misc ---------- */
+  .sheet{background:var(--sc);border:1px solid var(--outlineV);border-radius:22px 22px 16px 16px;padding:20px 22px 22px;width:315px;flex:none}
+  .sheet .handle{width:36px;height:4px;border-radius:99px;background:rgba(244,242,237,.2);margin:0 auto 18px}
+  .sheet .icon{width:66px;height:66px;border-radius:20px;background:var(--sch);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px}
+  .sheet h4{text-align:center;font-size:16.5px;font-weight:650}
+  .sheet p{text-align:center;font-size:13px;color:var(--muted);margin-top:7px}
+  .sheet .btn{margin-top:16px;background:var(--golddim);color:var(--goldtxt);border-radius:12px;text-align:center;padding:12px;font-size:14px;font-weight:600}
+  .sheet .quiet{text-align:center;color:var(--muted);font-size:13px;margin-top:10px}
+
+  .heroCard{background:var(--sch);border:1px solid var(--outline);border-radius:18px;padding:20px;width:315px;flex:none}
+  .heroCard h4{font-size:16px;font-weight:650;text-align:center}
+  .heroCard .sub{color:var(--muted);font-size:12.5px;text-align:center;margin-top:4px}
+  .heroCard .row{display:flex;justify-content:center;gap:14px;margin-top:16px}
+  .heroCard .row .dial{width:82px;height:82px}
+  .heroCard .names{display:flex;justify-content:center;gap:14px;margin-top:8px}
+  .heroCard .names span{width:82px;text-align:center;font-size:11px;color:var(--muted)}
+
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--outlineV);vertical-align:top}
+  th{color:var(--goldtxt);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  td:first-child{white-space:nowrap;color:var(--ink);font-weight:600}
+  td{color:var(--muted)}
+  .del{color:#e0a49e}
+  .keep{color:#b9e2cb}
+  footer{border-top:1px solid var(--outlineV);margin-top:20px;padding-top:26px}
+  footer .ask{background:var(--golddim);border:1px solid var(--gold);border-radius:14px;padding:18px 22px;color:var(--goldtxt);font-size:14.5px;max-width:820px}
+  .small{font-size:12px;color:var(--locked);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Dialed<span class="dot">.</span> &nbsp;Onboarding, redesigned</h1>
+  <div class="tag">Proposal · nothing built yet · 2026-07-22</div>
+  <p class="lead">Research first, then a hard audit of what ships today, then this. The goal is one
+  number: <b style="color:var(--ink)">minutes from installing Dialed to the first face the user chose being live on their
+  wrist.</b> Full detail lives in <b style="color:var(--ink)">docs/ONBOARDING-REDESIGN.md</b>; this page is the visual tour.</p>
+</header>
+
+<!-- ============ 1. BEFORE / AFTER ============ -->
+<section>
+  <h3>1 · The journey, before and after</h3>
+  <div class="panel">
+    <div class="stripLabel">Today (v0.28.0)</div>
+    <div class="strip">
+      <div class="step bad">3 pages of reading</div><span class="arrow">→</span>
+      <div class="step bad">wall of 10 collections, no guidance</div><span class="arrow">→</span>
+      <div class="step bad">watch app missing? &nbsp;“No watch connected” — wrong &amp; dead end</div><span class="arrow">→</span>
+      <div class="step bad">watch: 2 setup screens, 2 stacked permission dialogs</div>
+    </div>
+    <div class="stripLabel">Proposed</div>
+    <div class="strip">
+      <div class="step gold">ONE live setup screen that actually connects the watch</div><span class="arrow">→</span>
+      <div class="step gold">“Put your first face on” nudge</div><span class="arrow">→</span>
+      <div class="step gold">watch: ONE tap sets up everything</div><span class="arrow">→</span>
+      <div class="step good">face on wrist, under 3 minutes</div>
+    </div>
+    <p class="verdict"><b>What got deleted:</b> the whole 3-page tour, the permission-explainer page
+    (the phone never asks for any permission), and “Yours in one purchase” (wrong model — collections
+    unlock separately, and onboarding shouldn’t sell at all). <b>What stays untouched:</b> the entire
+    transfer engine and the post-push watch flow — they already match Google’s own prescribed pattern.</p>
+  </div>
+</section>
+
+<!-- ============ 2. PHONE SETUP ============ -->
+<section>
+  <h3>2 · Phone — one adaptive Setup screen (replaces the 3-page tour)</h3>
+  <p class="lead" style="margin-bottom:16px">It watches the real state of your watch and changes
+  itself, live. Tap the states to see every version of the screen:</p>
+  <div class="switch" id="stateSwitch"></div>
+  <div class="cols">
+    <div class="phone"><div class="screen">
+      <div class="skip" id="pSkip">Browse faces first ▸</div>
+      <div class="wordmark">Dialed<span>.</span></div>
+      <div class="oneline">Real faces for your watch.</div>
+      <div class="trio">
+        <div class="dial side"><img src="../../faces/Aurum-Guilloche/app/src/main/res/drawable-nodpi/preview.png" alt=""></div>
+        <div class="dial mid"><img src="../../faces/Vakt-GT/app/src/main/res/drawable-nodpi/preview.png" alt=""></div>
+        <div class="dial side"><img src="../../faces/Kinetik-Turbine/app/src/main/res/drawable-nodpi/preview.png" alt=""></div>
+      </div>
+      <div class="statusCard">
+        <div class="l1"><span class="dot" id="pDot"></span><span id="pL1"></span></div>
+        <div class="l2" id="pL2"></div>
+      </div>
+      <div class="cta" id="pCta"></div>
+      <div class="trust">Nothing leaves your phone.</div>
+    </div></div>
+    <div class="col">
+      <div class="note" id="pNote"></div>
+      <div class="note" style="margin-top:14px"><b>Why one screen beats three pages:</b> research on
+      first-run flows is blunt — feature tours are skipped or ignored; flows that <i>do the setup</i>
+      instead of describing it activate far more users. This screen performs the connection while the
+      brand moment plays, auto-advances when the watch responds, and always offers a way into the
+      store (“Browse faces first”) so nobody is ever held hostage by hardware.</div>
+      <div class="note" style="margin-top:14px"><b>The new ability underneath:</b> today the phone
+      literally cannot tell “no watch” apart from “watch there, Dialed watch app missing”. The fix
+      uses two signals the app already has (paired-watch list + Dialed-capability list) — their
+      difference <i>is</i> the missing-app state. Once Dialed is on the Play Store, the “Set up my
+      watch” button opens the Play install page <b>on the watch itself</b> (the same mechanism
+      Google’s Horologist library uses), and this screen watches the install complete and moves on
+      by itself.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. FIRST FACE NUDGE ============ -->
+<section>
+  <h3>3 · Phone — the first-face nudge (new, temporary)</h3>
+  <div class="cols">
+    <div class="heroCard">
+      <h4>Put your first face on</h4>
+      <div class="sub">Three to start with — every one is yours to try.</div>
+      <div class="row">
+        <div class="dial"><img src="../../faces/Arclight-Solstice/app/src/main/res/drawable/preview.png" alt=""></div>
+        <div class="dial"><img src="../../faces/Vakt-GT/app/src/main/res/drawable-nodpi/preview.png" alt=""></div>
+        <div class="dial"><img src="../../faces/Aurum-Guilloche/app/src/main/res/drawable-nodpi/preview.png" alt=""></div>
+      </div>
+      <div class="names"><span>Solstice</span><span>Vakt GT</span><span>Guilloché</span></div>
+    </div>
+    <div class="col">
+      <div class="note"><b>Purpose:</b> after setup, today’s Home is a wall of ten collection cards —
+      handsome, but it gives a brand-new user no first move. This card sits above the collections and
+      points at three starters. Tap one → its detail page → <i>Install to watch</i>. <b>It deletes
+      itself forever after the first successful install.</b> (Which three faces: your call — ideally
+      the free ones once the free-face map is signed off.)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. WATCH SETUP ============ -->
+<section>
+  <h3>4 · Watch — one moment instead of two screens</h3>
+  <p class="lead" style="margin-bottom:16px">Today the watch shows a permission screen, then a
+  separate “make Dialed your face” screen, and fires the two system dialogs stacked back-to-back with
+  no context. Proposed: <b style="color:var(--ink)">one screen, one tap does everything.</b> Step through it:</p>
+  <div class="cols">
+    <div class="watchWrap">
+      <div class="watch" id="watchFrame"></div>
+      <div class="wsteps" id="wSteps"></div>
+      <div class="wcap" id="wCap"></div>
+      <div class="toggleRow"><label><input type="checkbox" id="pendingToggle"> Show the “a face is
+      already waiting” variant</label></div>
+    </div>
+    <div class="col">
+      <div class="note"><b>Why this ordering matters:</b> the second dialog (“set the watch face
+      without asking”) is special — <b>Android lets us ask it exactly once, ever.</b> If it’s denied,
+      it can never be asked again on that watch. Today it fires as a surprise second dialog with zero
+      explanation — the worst possible framing for a one-shot question. Here it arrives one beat
+      after a tap that literally promised “your first face goes on now”, so saying Allow is the
+      obvious, natural answer.</div>
+      <div class="note" style="margin-top:14px"><b>“Later” is safe:</b> it just goes to the watch
+      Home. The ask then happens the next time a face actually arrives — with that face’s name on
+      screen (“Solstice is waiting — allow Dialed to install it”). That’s the strongest permission
+      moment in the whole design, and it happens automatically.</div>
+      <div class="note" style="margin-top:14px"><b>One honest fix in the plumbing:</b> today, if you
+      push a face before the watch app was ever opened, the phone says “your watch is busy — try
+      again”, which is false and unfixable by retrying. One new response code lets the phone say the
+      truth: <i>“Open Dialed on your watch and tap Set up, then push again.”</i> Everything else in
+      the hardened transfer path stays byte-for-byte identical.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. PUSH SHEET ============ -->
+<section>
+  <h3>5 · Phone — the push sheet gains one honest state</h3>
+  <div class="cols">
+    <div class="sheet">
+      <div class="handle"></div>
+      <div class="icon">⌚</div>
+      <h4>Finish setting up your watch</h4>
+      <p>Open Dialed on your watch and tap <b style="color:var(--ink)">Set up Dialed</b>.<br>Then push Vakt GT again.</p>
+      <div class="btn">Done</div>
+      <div class="quiet">Retry</div>
+    </div>
+    <div class="sheet">
+      <div class="handle"></div>
+      <div class="icon" style="color:var(--ok)">✓</div>
+      <h4>On your watch</h4>
+      <p>Vakt GT is installed. On your watch, follow the three steps shown — press and hold, swipe, tap.</p>
+      <div class="btn">Done</div>
+    </div>
+    <div class="col">
+      <div class="note"><b>Left — new:</b> replaces the false “watch is busy” answer when the watch
+      isn’t set up yet. <b>Right — copy fix only:</b> when a face needs one manual step, the phone now
+      says the exact same three words the watch is showing, so both devices feel like one product at
+      the hand-off moment.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. WHAT'S DELIBERATELY NOT THERE ============ -->
+<section>
+  <h3>6 · What onboarding deliberately does NOT contain</h3>
+  <div class="panel">
+    <table>
+      <tr><th>Missing on purpose</th><th>Why</th></tr>
+      <tr><td>Any paywall, price, or “PRO” badge</td><td>Evidence: paywalls after a real value moment convert ~2× better than upfront ones. Dialed’s value moment is a face on the wrist. The free faces <span class="keep">are</span> the trial; the paywall appears only when a locked face is tapped — always after value.</td></tr>
+      <tr><td>Account / sign-in</td><td>There is nothing to sign into. Absence is a feature.</td></tr>
+      <tr><td>Notification permission</td><td>Dialed sends no notifications. Never ask for what you don’t use.</td></tr>
+      <tr><td>Battery-optimization education</td><td>No background work on the phone. Nothing to educate about.</td></tr>
+      <tr><td>Phone permissions of any kind</td><td>The phone app needs none. One quiet line — “Nothing leaves your phone.” — says it all.</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 7. EDGE CASES ============ -->
+<section>
+  <h3>7 · Every failure has a designed answer</h3>
+  <div class="panel">
+    <table>
+      <tr><th>Situation</th><th>What the user sees</th></tr>
+      <tr><td>Watch on old Wear OS (5 or lower)</td><td>Found out gently <i>during setup</i>, not after a failed push: “runs an older Wear OS… everything on your watch stays as it is” + browse anyway.</td></tr>
+      <tr><td>No watch paired at all</td><td>Honest guidance to the pairing app + browse anyway. The store is never locked behind hardware.</td></tr>
+      <tr><td>Bluetooth off / watch rebooting</td><td>The setup card keeps watching and recovers by itself; no error unless the user asks.</td></tr>
+      <tr><td>Face pushed before the watch app was set up</td><td>The new honest sheet (section 5) + the watch shows “{Face} is waiting” when opened.</td></tr>
+      <tr><td>User denies the one-shot apply permission</td><td>Never re-asked (platform rule). Every path lands on the existing 3-step long-press guide.</td></tr>
+      <tr><td>Reinstalling the app when a face is already on the watch</td><td>Setup recognises it within ~2 seconds and gets out of the way. No tour replay.</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="ask"><b>Status (2026-07-22):</b> all four items approved and <b>implemented</b> —
+  phone setup screen, one-tap watch setup, the first-face card (Solstice · Vakt GT · Guilloché),
+  and the honest “finish setup on your watch” answer. On disk, not yet committed or shipped;
+  the watch-side flow needs on-wrist testing after the release build.</div>
+  <div class="small">Spec: docs/ONBOARDING-REDESIGN.md · Sources: Android Watch Face Push docs (2026-05), Androidify WFP case study (2025-12), Horologist DataLayer helpers, M3 Expressive research, Android permission best-practices, Adapty 2026 paywall benchmark.</div>
+</footer>
+
+</div>
+
+<script>
+/* ---------- phone setup states ---------- */
+const STATES = {
+  checking:   {label:"Looking…",       dot:"#8B857A", l1:"Looking for your watch…", l2:"This usually takes a moment.", cta:"One moment…", ghost:true,
+               note:"<b>First 2 seconds.</b> A quiet pulse, never a spinner takeover. If the watch answers fast, the user may never see this state at all."},
+  ready:      {label:"Watch ready",    dot:"#7ECFA0", l1:"Pixel Watch 4 is ready.", l2:"Faces you pick appear right on it.", cta:"Choose your first face",
+               note:"<b>The fast path.</b> Watch already set up → this whole screen lasts about five seconds and never appears again. A small ✓ beat plays before the button enables, so the auto-advance never yanks the screen away mid-read."},
+  missing:    {label:"Watch app missing", dot:"#D8BC7A", l1:"Pixel Watch 4 needs the Dialed watch app.", l2:"It takes one tap and about a minute.", cta:"Set up my watch",
+               note:"<b>The state that today shows a false “No watch connected”.</b> The button opens the Play Store install page on the watch itself (once Dialed is on Play; until then it opens a 3-step guide). The screen then monitors the install and advances by itself — no refresh button, no guessing."},
+  installing: {label:"Installing…",    dot:"#D8BC7A", l1:"Installing on your watch…", l2:"This screen will move on by itself.", cta:"Having trouble?", ghost:true,
+               note:"<b>Live monitoring.</b> The moment the watch app appears on the watch, this advances on its own — the exact pattern the best companion apps use."},
+  openwatch:  {label:"Open on watch",  dot:"#D8BC7A", l1:"Almost there — open Dialed on your watch.", l2:"Tap “Set up Dialed” on the watch screen.", cta:"I've done it", ghost:true,
+               note:"<b>The hand-off beat.</b> The watch app is installed but hasn’t been set up. One instruction, mirrored exactly by what the watch is showing. Advances automatically when the watch reports it’s done."},
+  nowatch:    {label:"No watch",       dot:"#8B857A", l1:"No watch is paired with this phone yet.", l2:"Pair one in the Watch app, then come back — Dialed will spot it.", cta:"Browse faces anyway", ghost:true,
+               note:"<b>Honest, not hostile.</b> The store stays open — window-shopping is allowed, and the pill on Home keeps watching for a watch."},
+  unsupported:{label:"Old Wear OS",    dot:"#E5776C", l1:"Galaxy Watch 5 runs an older Wear OS.", l2:"Dialed faces need Wear OS 6 — everything on your watch stays as it is.", cta:"Browse faces anyway", ghost:true,
+               note:"<b>Found out at the right time.</b> Today a Wear OS 5 owner discovers this only when their first push fails with a generic error. The watch already tells us on connection — setup just finally listens."},
+};
+const sw = document.getElementById("stateSwitch");
+Object.entries(STATES).forEach(([k,s],i)=>{
+  const b=document.createElement("button"); b.textContent=s.label; b.dataset.k=k;
+  if(k==="missing") b.classList.add("on");
+  b.onclick=()=>{ sw.querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); setState(k); };
+  sw.appendChild(b);
+});
+function setState(k){
+  const s=STATES[k];
+  document.getElementById("pDot").style.background=s.dot;
+  document.getElementById("pL1").textContent=s.l1;
+  document.getElementById("pL2").textContent=s.l2;
+  const c=document.getElementById("pCta"); c.textContent=s.cta; c.className="cta"+(s.ghost?" ghost":"");
+  document.getElementById("pNote").innerHTML=s.note;
+}
+setState("missing");
+
+/* ---------- watch walkthrough ---------- */
+const W_STEPS = [
+  {label:"1 · Setup screen", cap:"One screen. The button says exactly what will happen. “Later” is quiet and safe."},
+  {label:"2 · Allow faces",  cap:"System dialog #1 — allow Dialed to install watch faces. Asked one beat after a tap that promised exactly this."},
+  {label:"3 · Allow apply",  cap:"System dialog #2 — the once-ever “apply without asking”. Context makes Allow the natural answer."},
+  {label:"4 · Dialed in.",   cap:"The bundled Dialed face installs, applies, the gold ring sweeps once — and the app exits onto the new face. From now on every pushed face just appears."},
+];
+const q=new URLSearchParams(location.search);
+let wStep=Math.min(3,Math.max(0,parseInt(q.get("wstep")||"0",10)||0)), pending=q.get("pending")==="1";
+const wf=document.getElementById("watchFrame"), ws=document.getElementById("wSteps"), wc=document.getElementById("wCap");
+W_STEPS.forEach((s,i)=>{
+  const b=document.createElement("button"); b.textContent=(i+1);
+  b.title=s.label;
+  b.onclick=()=>{wStep=i; renderWatch();};
+  ws.appendChild(b);
+});
+const pt=document.getElementById("pendingToggle"); pt.checked=pending;
+pt.onchange=e=>{pending=e.target.checked; wStep=0; renderWatch();};
+function renderWatch(){
+  ws.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("on",i===wStep));
+  wc.textContent=W_STEPS[wStep].cap + (pending&&wStep===0 ? " (Variant: a pushed face is waiting — its name is the headline, so the benefit is literal.)" : "");
+  let html="";
+  if(wStep===0){
+    html = pending
+    ? `<div class="wface"><div class="dial" style="width:58px;height:58px;margin:8px 0 8px"><img src="../../faces/Arclight-Solstice/app/src/main/res/drawable/preview.png" alt=""></div>
+        <div class="wtitle">Solstice is waiting</div>
+        <div class="wbody">Allow Dialed to install it, and it goes on now.</div>
+        <div class="wlater">Later</div></div>
+       <div class="edgeBtn">Allow and install</div>`
+    : `<div class="wface"><div class="dialmark"></div>
+        <div class="wtitle">Make Dialed your watch face</div>
+        <div class="wbody">One tap: install the faces you pick — your first goes on now.</div>
+        <div class="wlater">Later</div></div>
+       <div class="edgeBtn">Set up Dialed</div>`;
+  } else if(wStep===1){
+    html = `<div class="wface" style="opacity:.35"><div class="dialmark"></div><div class="wtitle">Make Dialed your watch face</div></div>
+      <div class="sysdialog"><div class="box"><p>Allow <b>Dialed</b> to install and manage watch faces?</p><div class="allow">Allow</div><div class="deny">Don't allow</div></div></div>`;
+  } else if(wStep===2){
+    html = `<div class="wface" style="opacity:.35"><div class="dialmark"></div><div class="wtitle">Make Dialed your watch face</div></div>
+      <div class="sysdialog"><div class="box"><p>Allow <b>Dialed</b> to set the active watch face?</p><div class="allow">Allow</div><div class="deny">Don't allow</div></div></div>`;
+  } else {
+    html = `<div class="wface celebrate"><div class="ring"><img src="../../faces/Vakt-GT/app/src/main/res/drawable-nodpi/preview.png" alt=""></div>
+      <div class="din">Dialed in.</div></div>`;
+  }
+  wf.innerHTML=html;
+}
+renderWatch();
+</script>
+</body>
+</html>

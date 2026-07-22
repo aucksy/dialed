@@ -18,16 +18,26 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: WearViewModel by viewModels()
 
+    /**
+     * The single "Set up Dialed" tap chains: push permission -> one-shot set-active permission ->
+     * install + activate the bundled default face (WearViewModel.finishSetup). Both dialogs arrive
+     * in direct consequence of a tap whose label promised exactly this — the set-active ask is
+     * REQUESTABLE ONLY ONCE ever (platform rule), so it must carry its benefit, never fire as a
+     * context-free stacked prompt. On an upgrade path where a permission is already granted, the
+     * launcher returns granted immediately with no dialog, so the same tap serves every state.
+     */
     private val requestPushPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             viewModel.onPushPermissionResult(granted)
-            // Ask for the one-shot set-active permission UPFRONT (right after push is granted) so the
-            // FIRST pushed face applies automatically. SET_PUSHED_WATCH_FACE_AS_ACTIVE is a runtime
-            // permission (grantable once) — without it granted before the first install, that install
-            // lands as INSTALLED_NEEDS_ACTIVATION and requires a manual "Set as my face" tap (issue #2).
-            if (granted) requestSetActivePermission.launch(WearConstants.PERMISSION_SET_ACTIVE)
+            if (granted) requestSetupSetActive.launch(WearConstants.PERMISSION_SET_ACTIVE)
         }
 
+    private val requestSetupSetActive =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            viewModel.finishSetup(granted)
+        }
+
+    /** Concierge one-tap apply (post-push) — unchanged path. */
     private val requestSetActivePermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             viewModel.onSetActivePermissionResult(granted)
@@ -49,7 +59,7 @@ class MainActivity : ComponentActivity() {
             DialedWearTheme {
                 WearApp(
                     viewModel = viewModel,
-                    onAllow = { requestPushPermission.launch(WearConstants.PERMISSION_PUSH) },
+                    onSetUp = { requestPushPermission.launch(WearConstants.PERMISSION_PUSH) },
                     onSetActive = { requestSetActivePermission.launch(WearConstants.PERMISSION_SET_ACTIVE) },
                     onOpenSettings = ::openAppSettings,
                     onExit = ::finish,

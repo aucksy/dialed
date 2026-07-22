@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>face frame</title>
+<style>
+  html,body{ margin:0; padding:0; background:#000; overflow:hidden; }
+  #stage{ width:450px; height:450px; position:absolute; left:0; top:0; }
+  #stage svg{ display:block; }
+</style>
+<script>
+/* ── DETERMINISM ────────────────────────────────────────────────────────────
+   A visual diff is worthless if the two sides disagree about what time it is.
+   Freeze the clock BEFORE any renderer loads, so both the design's renderer and
+   ours draw the same instant. (Visual-regression rule 1: remove every source of
+   run-to-run variance — clocks, animation, random data — or you measure noise.) */
+(function () {
+  const FIXED = new URLSearchParams(location.search).get('t') || '2026-07-19T10:09:36';
+  const FIXED_MS = new Date(FIXED).getTime();
+  const RealDate = Date;
+  function FrozenDate(...args) {
+    if (!(this instanceof FrozenDate)) return new RealDate(FIXED_MS).toString();
+    return args.length ? new RealDate(...args) : new RealDate(FIXED_MS);
+  }
+  FrozenDate.prototype = RealDate.prototype;
+  FrozenDate.now = () => FIXED_MS;
+  FrozenDate.parse = RealDate.parse;
+  FrozenDate.UTC = RealDate.UTC;
+  window.Date = FrozenDate;
+  // no animation: a frame captured mid-transition is a false positive
+  window.requestAnimationFrame = () => 0;
+  const si = window.setInterval;
+  window.setInterval = () => 0;
+  window.__realSetInterval = si;
+})();
+</script>
+</head>
+<body>
+<div id="stage"></div>
+
+<script src="/vendor/react.js"></script>
+<script src="/vendor/react-dom.js"></script>
+<script src="/orig/faces/renderer.jsx"></script>
+<script type="module">
+import { loadFace, renderFace, fitText, DEFAULT_SAMPLE_FOR } from './current.js';
+
+const Q = new URLSearchParams(location.search);
+const SIDE = Q.get('side') || 'current';       // 'orig' | 'current'
+const FACE_ID = Q.get('face') || 'WF-A2';
+const FACE_DIR = Q.get('dir') || 'Vakt-GT';
+const SPEC = Q.get('spec') || 'cat-a2';
+const THEME = Q.get('theme') || 't0';
+const stage = document.getElementById('stage');
+
+if (SIDE === 'orig') {
+  const mod = await import(`/orig/faces/${SPEC}.js`);
+  const spec = mod.category.faces.find(f => f.id === FACE_ID);
+  const themeIdx = THEME === 'dark' ? 0 : +String(THEME).replace('t', '') || 0;
+  const host = document.createElement('div');
+  stage.appendChild(host);
+  ReactDOM.createRoot(host).render(
+    React.createElement(window.WatchFaceRenderer, { spec, size: 520, theme: themeIdx, mode: 'active' }));
+  // React renders async; wait for the SVG, then reduce it to the FACE ONLY.
+  await new Promise(r => setTimeout(r, 400));
+  const svg = host.querySelector('svg');
+  /* The design renders inside presentation hardware: a steel case behind the dial
+     and a glass crystal + reflections painted ON TOP. The case sits behind and is
+     covered by the dial; the glass is not part of the watch face and would smear
+     every pixel of the diff, so it is removed. The face group itself is untouched. */
+  const KEEP_GLASS = Q.get('glass') === '1';
+  const FULL = Q.get('box') === '520';
+  if (!KEEP_GLASS) {
+    [...svg.children].forEach(el => {
+      if (/-crystal\)/.test(String(el.getAttribute('fill')))) el.remove();
+      else if (el.tagName === 'ellipse' || (el.tagName === 'path' && el.getAttribute('stroke') === '#fff')) el.remove();
+    });
+  }
+  if (FULL) {                                      // whole watch, case included
+    svg.setAttribute('width', 520); svg.setAttribute('height', 520);
+    document.getElementById('stage').style.width = document.getElementById('stage').style.height = '520px';
+  } else {
+    svg.setAttribute('viewBox', '35 35 450 450');  // the 450 dial inside the 520 box
+    svg.setAttribute('width', 450);
+    svg.setAttribute('height', 450);
+  }
+} else {
+  const face = await loadFace(`/faces/${FACE_DIR}/app/src/main/res`);
+  /* Feed every slot the metric ITS OWN default provider supplies, at the design's own SIM
+     values (battery 68, steps 6203). Without this the harness pushed one global battery
+     value into every slot, so a step dial defaulting to STEP_COUNT was measured with a
+     battery number and its needle read as displaced — a data difference reported as a
+     design defect. Same principle as freezing the clock: both sides must draw the same
+     data before a pixel diff means anything. */
+  const data = {};
+  face.slots.forEach(s => { data[s.id] = DEFAULT_SAMPLE_FOR[s.provider] || 'batt'; });
+  /* `?types=0:EMPTY,1:EMPTY,3:EMPTY` measures the CLEARED state. That is the honest test of
+     "is the artwork untouched": with every dial cleared the build must be the design, needle
+     for needle. The first-install state is deliberately NOT the design any more — the owner
+     asked the dials to follow battery, steps and heart rate — so measuring that against the
+     design would be measuring a change that was requested. */
+  const types = {};
+  (Q.get('types') || '').split(',').filter(Boolean).forEach(pair => {
+    const [id, t] = pair.split(':'); if (id && t) types[id] = t;
+  });
+  stage.appendChild(renderFace(face, { theme: THEME, hands: true, seconds: true, types, data, size: 450 }));
+  fitText(stage);
+}
+document.title = 'ready';
+</script>
+</body>
+</html>

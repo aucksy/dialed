@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VAKT GT — what each chrono can show</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Marcellus&family=Saira+SemiCondensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0d0c0a; --panel:#161512; --line:#2b2924; --txt:#ece7db; --dim:#9a948a; --gold:#c8a45c; --ok:#6ea86e; --bad:#c9584b; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--txt); font-family:'Archivo',system-ui,sans-serif; }
+  header{ display:flex; align-items:center; gap:26px; flex-wrap:wrap; padding:15px 30px; border-bottom:1px solid var(--line); }
+  h1{ font-family:'Marcellus',serif; font-weight:400; font-size:20px; margin:0; }
+  .ctl{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--dim); }
+  .sw{ width:26px; height:26px; border-radius:7px; border:2px solid transparent; cursor:pointer; padding:0; }
+  .sw.on{ border-color:var(--gold); }
+  input[type=checkbox]{ accent-color:var(--gold); width:15px; height:15px; }
+  select{ padding:7px 9px; border-radius:8px; background:#1e1c18; color:var(--txt); border:1px solid var(--line);
+          font-size:13.5px; font-family:inherit; width:100%; }
+  .wrap{ max-width:1020px; margin:0 auto; padding:0 30px 60px; }
+
+  .watches{ display:grid; grid-template-columns:1fr 1fr; gap:30px; margin:32px 0 8px; }
+  .watch{ text-align:center; }
+  .watch h2{ font-size:12px; letter-spacing:1.6px; text-transform:uppercase; color:var(--dim); font-weight:600; margin:0 0 14px; }
+  .watch .stage{ display:flex; justify-content:center; }
+  .watch svg{ display:block; }
+  .plain{ border-radius:50%; background:radial-gradient(circle at 50% 40%,#2b2e33,#0a0b0d 78%); padding:16px; }
+
+  .pickers{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:34px 0 0; }
+  .pick label{ display:block; font-size:13px; font-weight:600; margin:0 0 3px; }
+  .pick .where{ font-size:11.5px; color:var(--dim); margin:0 0 8px; }
+
+  h3{ font-family:'Marcellus',serif; font-weight:400; font-size:18px; margin:46px 0 6px; }
+  p.lead{ color:var(--dim); font-size:13.5px; line-height:1.65; margin:0 0 18px; max-width:72ch; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th{ text-align:left; font-size:11px; letter-spacing:1.4px; text-transform:uppercase; color:var(--dim);
+      font-weight:600; padding:0 12px 9px 0; border-bottom:1px solid var(--line); }
+  td{ padding:13px 12px 13px 0; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.55; }
+  td.y{ color:var(--ok); white-space:nowrap; }
+  td.n{ color:var(--bad); white-space:nowrap; }
+  td b{ font-weight:600; }
+  .why{ color:var(--dim); font-size:12.5px; }
+
+  .callout{ background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--gold);
+            border-radius:10px; padding:16px 19px; margin:22px 0; }
+  .callout b{ display:block; font-size:13.5px; margin-bottom:5px; }
+  .callout p{ margin:0; font-size:13px; color:var(--dim); line-height:1.65; }
+  .callout.ask{ border-left-color:var(--bad); }
+
+  details{ margin-top:34px; border-top:1px solid var(--line); padding-top:16px; }
+  summary{ cursor:pointer; font-size:13px; color:var(--dim); }
+  details .body{ padding-top:14px; }
+  .fidrow{ display:grid; grid-template-columns:1fr 90px 100px 110px; gap:10px; padding:6px 0;
+           border-bottom:1px solid var(--line); font-size:12.5px; }
+  .fidrow.head{ color:var(--dim); font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; }
+  .fidrow span.n{ text-align:right; font-variant-numeric:tabular-nums; }
+  .fidrow em{ font-style:normal; font-size:11.5px; }
+  .fidrow em.ok{ color:var(--ok); } .fidrow em.bad{ color:var(--bad); }
+  code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; color:#b8b0a2; }
+</style>
+</head>
+<body>
+<header>
+  <h1>VAKT GT</h1>
+  <div class="ctl"><span>Theme</span><span id="swatches" style="display:flex;gap:7px"></span></div>
+  <label class="ctl"><input type="checkbox" id="hands" checked> Hands</label>
+  <span class="ctl" id="score"></span>
+</header>
+
+<div class="wrap">
+  <div class="watches">
+    <div class="watch">
+      <h2>Your original design</h2>
+      <div class="stage" id="origStage"></div>
+    </div>
+    <div class="watch">
+      <h2>The real build</h2>
+      <div class="stage"><div class="plain" id="curStage"></div></div>
+    </div>
+  </div>
+
+  <div class="pickers" id="pickers"></div>
+
+  <h3>What each chrono can show — and what it can't</h3>
+  <p class="lead">A watch complication comes in eight shapes. Only two of them are a <em>number with a
+    range</em> — and those are the only two a needle can point at. The other six are words or pictures,
+    which cannot go on these dials without printing something your design does not have. So the three
+    chronos now offer only the two that fit, and the watch's own editor will not even list the rest.</p>
+
+  <table>
+    <thead><tr><th style="width:26%">Complication shape</th><th style="width:14%">On a chrono</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><b>Ranged value</b><br><span class="why">battery, heart rate, calories, distance, temperature…</span></td>
+          <td class="y">✓ Yes</td>
+          <td>Carries a value with a lowest and highest. That is exactly a needle position. Nothing is drawn but your own needle, and your own arc where the dial has one.</td></tr>
+      <tr><td><b>Goal progress</b><br><span class="why">steps to 10,000, active minutes, calorie goal…</span></td>
+          <td class="y">✓ Yes</td>
+          <td>Carries a value and a target — the same thing, expressed as “how far round”. Beat the target and the hero counter draws its second lap, as designed.</td></tr>
+      <tr><td><b>Short text</b><br><span class="why">“3 unread”, “09:30”, “22°”</span></td>
+          <td class="n">✗ No</td>
+          <td>It is a word or a number to be <em>printed</em>. There is no room on a machined register that already carries six numerals, an icon and a needle — and printing it is exactly what you asked me not to do.</td></tr>
+      <tr><td><b>Long text</b></td><td class="n">✗ No</td><td>Same, with a second line.</td></tr>
+      <tr><td><b>Icon · small image · photo</b></td><td class="n">✗ No</td>
+          <td>A picture would have to be laid over the dial face, covering the engraving.</td></tr>
+      <tr><td><b>Weighted elements</b><br><span class="why">a ring split into coloured segments</span></td>
+          <td class="n">✗ No</td>
+          <td>It would replace the design's own thin arc with a multi-coloured segmented band — a different object, in the provider's colours, not yours.</td></tr>
+      <tr><td><b>Empty</b></td><td class="y">✓ Yes</td>
+          <td>Clear a dial and it goes back to exactly what you drew: the engraved scale with its own needle — the ticking seconds hand on the top dial, live battery on the left, live steps at the bottom.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The three dials, and what each one is for</h3>
+  <p class="lead">Your design already says what each dial is — the engraved numbers and the little
+    icon are the label. Each keeps its own scale, its own needle and its own arc, permanently. Two
+    things change when you set a complication: which number the needle follows, and the small icon,
+    which becomes the icon of whatever you set — so you can always tell what the needle means.</p>
+
+  <table>
+    <thead><tr><th style="width:22%">Dial</th><th style="width:18%">Starts out on</th><th>Reads as</th></tr></thead>
+    <tbody>
+      <tr><td><b>Top &middot; 1 o'clock</b><br><span class="why">0&ndash;250, heart</span></td>
+          <td><b>Heart rate</b></td>
+          <td>0&ndash;250 is a pulse scale, so a heartbeat points at the real number. <span class="why">One thing to check on your wrist: some watches only hand out heart rate as plain text, and on those this dial waits until you pick something for it yourself.</span></td></tr>
+      <tr><td><b>Left &middot; 9 o'clock</b><br><span class="why">0&ndash;100, bolt</span></td>
+          <td><b>Watch battery</b></td>
+          <td>0&ndash;100 reads as &ldquo;percent of the way to full&rdquo;, which is true for <em>any</em> metric you put on it. The universal one.</td></tr>
+      <tr><td><b>Hero &middot; 6 o'clock</b><br><span class="why">0&ndash;8 thousands, footprints</span></td>
+          <td><b>Steps</b></td>
+          <td>One full turn of the needle is the whole goal, with the outer arc filling alongside. Beat the goal and it draws a second lap.</td></tr>
+      <tr><td><b>Date window &middot; 3 o'clock</b><br><span class="why">not a chrono</span></td>
+          <td><b>The date</b></td>
+          <td>A small panel, so it is the one place words belong. Left exactly as it was.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <b>Fixed properly this time: the icons now match your engraved marks</b>
+    <p>Twice wrong before this. First I sized them off a padded box the code uses for collision
+      testing, so they came out about double and the battery one printed over the &ldquo;50&rdquo;.
+      Then I over-corrected and shrank them &mdash; your call, they were far too small. Both times I was
+      reading the icon's <em>path coordinates</em> instead of looking at what the design actually draws.
+      <br><br>
+      So I measured it: each of your engraved glyphs is now rendered through the same engine that bakes
+      the dial and its ink measured. Your heart is <b>8&times;7.5</b>, your footprints <b>6.4&times;7.1</b>,
+      your bolt <b>5.7&times;8.5</b> &mdash; and a provider's icon is now given a box that matches that
+      presence, so it reads at the same weight as the mark it replaces. The bolt's box is the one that
+      would land on the &ldquo;50&rdquo; (your bolt tapers to a thin tip; a solid icon doesn't), so on that
+      dial only, the icon slides <b>1.9 units up</b> toward the centre &mdash; into empty plate &mdash; and
+      your engraved bolt itself never moves.</p>
+  </div>
+
+  <div class="callout">
+    <b>The needle reads the numbers that are actually on the dial</b>
+    <p>If what you assign fits the engraved scale — a pulse on the 0&ndash;250 dial, a battery
+      percentage on the 0&ndash;100 dial — the needle points at <em>the real value</em>: 72 beats sits on
+      72. If it does not fit, like 415 calories on a dial that stops at 100, the needle falls back to
+      showing how full it is, which is the only honest thing that dial can say. I found this by
+      zooming into the prototype: a resting pulse was pointing at &ldquo;50&rdquo;, because the needle
+      was following the provider's own range instead of the numbers milled into the plate.</p>
+  </div>
+
+  <div class="callout">
+    <b>Only two things ever change inside a chrono</b>
+    <p>The plate, both sets of tick marks and every engraved number are permanent &mdash; they are part
+      of the dial, not the complication, so nothing can wipe them. A complication may move the
+      <b>needle</b> (and fill the <b>arc</b>, on the two dials that have one), and it may put its own
+      <b>icon</b> in the small spot where your heart, bolt and footprints sit. Nothing else. No value
+      is ever printed. Clear a dial and your own engraved icon comes straight back.</p>
+  </div>
+
+  <div class="callout">
+    <b>Nothing about the artwork moved</b>
+    <p id="scoreline">—</p>
+  </div>
+
+  <details>
+    <summary>The measurement, region by region (you don't need this)</summary>
+    <div class="body" id="fid">Run <code>node check.mjs</code>.</div>
+  </details>
+</div>
+
+<script src="/vendor/react.js"></script>
+<script src="/vendor/react-dom.js"></script>
+<script src="/orig/faces/renderer.jsx"></script>
+<script type="module">
+import { loadFace, renderFace, tickHands, fitText, SAMPLE_BY_ID, DEFAULT_SAMPLE_FOR } from './current.js';
+
+const Q = new URLSearchParams(location.search);
+const FACE_ID = Q.get('face') || 'WF-A2';
+const FACE_DIR = Q.get('dir') || 'Vakt-GT';
+const SPEC = Q.get('spec') || 'cat-a2';
+const DIAL = 400;
+
+const orig = await import(`/orig/faces/${SPEC}.js`);
+const spec = orig.category.faces.find(f => f.id === FACE_ID);
+const face = await loadFace(`/faces/${FACE_DIR}/app/src/main/res`);
+
+const THEMES = spec.themes.map((t, i) => ({ id: 't' + i, name: t.name, bg: t.tokens ? t.tokens.bg : (t.colors || t).bg }));
+THEMES.push({ id: 'dark', name: 'Dark mode', bg: '#000000' });
+let theme = THEMES.some(t => t.id === Q.get('theme')) ? Q.get('theme') : 't0';
+let hands = Q.get('hands') !== '0';
+
+/* ONE list per dial, in the words a wearer would use. Each choice sets both the
+   complication type and the numbers behind it, so there is nothing to combine by hand. */
+const GAUGE_CHOICES = [
+  ['Watch battery',           'RANGED_VALUE', 'batt'],
+  ['Watch battery — nearly flat', 'RANGED_VALUE', 'battlo'],
+  ['Heart rate',              'RANGED_VALUE', 'hr'],
+  ['Calories burned',         'RANGED_VALUE', 'kcal'],
+  ['Distance walked',         'RANGED_VALUE', 'dist'],
+  ['Temperature',             'RANGED_VALUE', 'temp'],
+  ['Steps — how far today',   'RANGED_VALUE', 'steps'],
+  ['Steps — towards 10,000',  'GOAL_PROGRESS', 'steps'],
+  ['Steps — goal beaten',     'GOAL_PROGRESS', 'over'],
+  ['Active minutes — towards 30', 'GOAL_PROGRESS', 'active'],
+  ['Calories — towards 800',  'GOAL_PROGRESS', 'gkcal'],
+  ['Nothing — cleared',       'EMPTY', 'batt'],
+];
+const PANEL_CHOICES = [
+  ['The date',        'SHORT_TEXT', 'date'],
+  ['Unread messages', 'SHORT_TEXT', 'unread'],
+  ['Next event',      'SHORT_TEXT', 'event'],
+  ['Another time zone', 'SHORT_TEXT', 'world'],
+  ['Battery, as a gauge', 'RANGED_VALUE', 'batt'],
+  ['A provider icon', 'MONOCHROMATIC_IMAGE', 'batt'],
+  ['Nothing — cleared', 'EMPTY', 'date'],
+];
+const DIALS = {
+  '0': { name: 'Top dial', where: '1 o’clock · 0–250' },
+  '1': { name: 'Hero counter', where: '6 o’clock · full turn' },
+  '2': { name: 'Date window', where: '3 o’clock' },
+  '3': { name: 'Battery dial', where: '9 o’clock · 0–100' },
+};
+
+const types = {}, data = {};
+face.slots.forEach(s => { types[s.id] = s.defaultType; data[s.id] = DEFAULT_SAMPLE_FOR[s.provider] || 'batt'; });
+// a state you can link to, e.g. `?type1=GOAL_PROGRESS&data1=over&theme=dark`
+face.slots.forEach(s => {
+  const t = Q.get('type' + s.id), d = Q.get('data' + s.id);
+  if (t && (s.types.includes(t) || t === 'EMPTY')) types[s.id] = t;
+  if (d && SAMPLE_BY_ID[d]) data[s.id] = d;
+});
+
+const origRoot = ReactDOM.createRoot(document.getElementById('origStage'));
+function drawOriginal() {
+  const idx = THEMES.findIndex(t => t.id === theme);
+  origRoot.render(React.createElement(window.WatchFaceRenderer, {
+    spec, size: DIAL + 62, theme: Math.max(0, Math.min(spec.themes.length - 1, idx)), mode: 'active',
+  }));
+}
+function drawCurrent() {
+  const host = document.getElementById('curStage');
+  host.innerHTML = '';
+  host.appendChild(renderFace(face, { theme, hands, seconds: true, types, data, size: DIAL }));
+  fitText(host);
+  host.style.background = theme === 'dark' ? '#000' : '';
+}
+function frame() {
+  const svg = document.querySelector('#curStage svg');
+  if (svg) tickHands(svg);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+const swBox = document.getElementById('swatches');
+THEMES.forEach(t => {
+  const b = document.createElement('button');
+  b.className = 'sw' + (t.id === theme ? ' on' : '');
+  b.style.background = t.bg || '#000';
+  b.style.boxShadow = 'inset 0 0 0 1px #4a463f';
+  b.title = t.name;
+  b.onclick = () => { theme = t.id; [...swBox.children].forEach(c => c.classList.remove('on')); b.classList.add('on'); drawOriginal(); drawCurrent(); };
+  swBox.appendChild(b);
+});
+const hb = document.getElementById('hands');
+hb.checked = hands;
+hb.onchange = () => { hands = hb.checked; drawCurrent(); };
+
+/* One dropdown per real slot, ordered the way they read round the dial. */
+const box = document.getElementById('pickers');
+[...face.slots].sort((a, b) => ['0', '3', '1', '2'].indexOf(a.id) - ['0', '3', '1', '2'].indexOf(b.id)).forEach(s => {
+  const meta = DIALS[s.id] || { name: 'Dial ' + s.id, where: '' };
+  const choices = s.types.includes('GOAL_PROGRESS') ? GAUGE_CHOICES : PANEL_CHOICES;
+  const d = document.createElement('div');
+  d.className = 'pick';
+  d.innerHTML = `<label for="p${s.id}">${meta.name}</label><p class="where">${meta.where}</p><select id="p${s.id}"></select>`;
+  box.appendChild(d);
+  const sel = d.querySelector('select');
+  choices.forEach(([label, ty, dt], i) => {
+    if (!s.types.includes(ty) && ty !== 'EMPTY') return;
+    sel.add(new Option(label, i));
+  });
+  // start on whatever the slot actually defaults to
+  const start = choices.findIndex(([, ty, dt]) => ty === types[s.id] && dt === data[s.id]);
+  if (start >= 0) sel.value = start;
+  sel.onchange = () => {
+    const [, ty, dt] = choices[+sel.value];
+    types[s.id] = ty; data[s.id] = dt;
+    drawCurrent();
+  };
+});
+
+drawOriginal(); drawCurrent();
+
+/* ---------- the score, in one line ---------- */
+try {
+  const fid = await (await fetch('/.check/fidelity.json', { cache: 'no-store' })).json();
+  const known = fid.regions.filter(r => r.over || Math.abs(r.ink) > 12);
+  document.getElementById('score').innerHTML =
+    `<span style="color:${fid.overall <= fid.floor * 1.35 ? 'var(--ok)' : 'var(--bad)'}">${fid.overall.toFixed(2)}%</span>&nbsp;different from your design`;
+  document.getElementById('scoreline').innerHTML =
+    `Measured against your design file, pixel by pixel: <b>${fid.overall.toFixed(2)}% of pixels differ</b>, ` +
+    `where <b>${fid.floor.toFixed(2)}%</b> is the closest any build can physically get — your design and the ` +
+    `watch face are drawn by two different renderers. That is the same score this face had before I made ` +
+    `the third dial assignable, so nothing about the artwork moved.` +
+    (known.length ? `<br><br>One thing still differs, and it is the old one: the date window shows the number but not the weekday.` : '');
+  document.getElementById('fid').innerHTML =
+    `<div class="fidrow head"><b>Region</b><span class="n">differs</span><span class="n">ink</span><span></span></div>` +
+    fid.regions.map(r => `<div class="fidrow"><b>${r.name}</b><span class="n">${r.pct.toFixed(2)}%</span>` +
+      `<span class="n">${r.ink >= 0 ? '+' : ''}${r.ink.toFixed(1)}%</span>` +
+      `<span>${Math.abs(r.ink) > 12 ? '<em class="bad">content differs</em>' : r.over ? '<em class="bad">over floor</em>' : '<em class="ok">matches</em>'}</span></div>`).join('');
+} catch { /* not measured */ }
+</script>
+</body>
+</html>

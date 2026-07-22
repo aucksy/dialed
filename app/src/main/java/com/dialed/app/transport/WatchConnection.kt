@@ -44,6 +44,12 @@ sealed interface PushStatus {
 
     /** The watch answered that it has no Watch Face Push at all (Wear OS < 6) — retrying can't help. */
     data object Unsupported : PushStatus
+
+    /**
+     * The watch app hasn't been set up yet (install permission never granted). The fix is on the
+     * watch — "open Dialed on your watch and tap Set up Dialed" — retrying without that can't help.
+     */
+    data object NeedsWatchSetup : PushStatus
 }
 
 /** Guards Data-Layer calls on devices without Google Play services / the Wearable API. */
@@ -132,6 +138,21 @@ class WatchBridge(context: Context) {
 
     private fun select(nodes: Set<Node>): ConnectedWatch? =
         nodes.firstOrNull()?.let { ConnectedWatch(it.id, it.displayName) }
+
+    /**
+     * Display name of ANY paired + reachable watch node — Dialed watch app or not — or null when
+     * none. The difference between this and the capability node is the "watch there, Dialed watch
+     * app missing" state (the capability alone reads that, falsely, as "no watch connected").
+     */
+    suspend fun pairedWatchName(): String? = try {
+        if (!WearableApiAvailability.isAvailable(nodeClient)) null
+        else nodeClient.connectedNodes.await().firstOrNull()?.displayName
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Log.w(TAG, "pairedWatchName failed", e)
+        null
+    }
 
     /**
      * The reachable Dialed-capable watch's nodeId, or null if none is reachable / API unavailable.
@@ -246,6 +267,13 @@ class WatchBridge(context: Context) {
                 WearConstants.RESPONSE_UNSUPPORTED -> {
                     Log.w(TAG, "watch reported UNSUPPORTED t=$transferId")
                     emit(PushStatus.Unsupported)
+                    return
+                }
+                // The watch app was never set up (no install permission) — the fix is on the watch,
+                // and "busy — try again" would be a lie that retrying can never repair.
+                WearConstants.RESPONSE_NEEDS_SETUP -> {
+                    Log.w(TAG, "watch reported NEEDS_SETUP t=$transferId")
+                    emit(PushStatus.NeedsWatchSetup)
                     return
                 }
                 else -> {

@@ -34,9 +34,9 @@ import com.dialed.app.ui.components.isReducedMotion
 import com.dialed.app.ui.screens.CollectionScreen
 import com.dialed.app.ui.screens.FaceDetailScreen
 import com.dialed.app.ui.screens.HomeScreen
-import com.dialed.app.ui.screens.OnboardingPager
 import com.dialed.app.ui.screens.PaywallScreen
 import com.dialed.app.ui.screens.SettingsScreen
+import com.dialed.app.ui.screens.SetupScreen
 import com.dialed.app.ui.theme.DialedMotion
 import com.dialed.app.ui.theme.DialedSpacing
 import com.dialed.app.ui.theme.dialedColors
@@ -78,8 +78,10 @@ fun DialedApp(viewModel: MainViewModel) {
 
     Surface(modifier = Modifier.fillMaxSize().background(c.background), color = c.background) {
         if (!onboarded) {
-            OnboardingPager(
-                faces = viewModel.faces,
+            SetupScreen(
+                setup = viewModel.watchSetup.collectAsStateWithLifecycle().value,
+                starterFaces = viewModel.starterFaces,
+                onRefresh = viewModel::refreshWatchSetup,
                 onFinish = viewModel::completeOnboarding,
             )
             return@Surface
@@ -92,9 +94,10 @@ fun DialedApp(viewModel: MainViewModel) {
         val uninstallingFaceId by viewModel.uninstallingFaceId.collectAsStateWithLifecycle()
         val uninstallError by viewModel.uninstallError.collectAsStateWithLifecycle()
 
-        // Re-read the watch's installed/active snapshot whenever the app returns to the foreground —
-        // the user may have switched or removed the face on the watch while we were backgrounded.
-        LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshInstalledState() }
+        // Re-read the watch's installed/active snapshot + the paired-node probe whenever the app
+        // returns to the foreground — the user may have switched/removed the face, or paired /
+        // unpaired a watch, while we were backgrounded (keeps the Home pill's APP_MISSING honest).
+        LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshWatchSetup() }
 
         var screen: Screen by rememberSaveable(
             stateSaver = ScreenSaver,
@@ -136,6 +139,9 @@ fun DialedApp(viewModel: MainViewModel) {
                     is Screen.Home -> HomeScreen(
                         collections = viewModel.collections,
                         watchStatus = watchStatus,
+                        starterFaces = viewModel.starterFaces,
+                        showStarters = !viewModel.firstInstallDone.collectAsStateWithLifecycle().value,
+                        onStarterClick = { screen = Screen.Detail(it.id) },
                         onCollectionClick = { screen = Screen.Collection(it.id) },
                         onSettings = { screen = Screen.Settings },
                     )

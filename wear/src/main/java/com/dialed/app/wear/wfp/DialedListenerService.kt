@@ -86,7 +86,9 @@ class DialedListenerService : WearableListenerService() {
                 return Tasks.forResult(runBlocking {
                     val s = withTimeoutOrNull(QUERY_OP_TIMEOUT_MS) { repo.installedState() }
                         ?: InstalledState(emptyList(), null)
-                    WearConstants.encodeQueryState(s.activePackage, s.installedPackages)
+                    // Also report whether watch-side setup is done (install permission granted) so
+                    // the phone's setup screen can guide "open Dialed on your watch" BEFORE a push.
+                    WearConstants.encodeQueryState(s.activePackage, s.installedPackages, repo.hasPushPermission())
                 })
             WearConstants.PATH_UNINSTALL ->
                 return Tasks.forResult(runBlocking {
@@ -100,6 +102,15 @@ class DialedListenerService : WearableListenerService() {
             return Tasks.forResult(null)
         }
         val request = WearConstants.decodeInitiate(data)
+        // Not set up yet (install permission never granted): every install would fail, so answer
+        // honestly — NEEDS_SETUP, not BUSY ("try again" can never fix this; opening the watch app
+        // can). Remember the face so the setup screen asks with it as the context.
+        if (!repo.hasPushPermission()) {
+            Log.w(TAG, "initiate before watch setup t=${request.transferId}")
+            runCatching { runBlocking { store.setPendingFaceName(request.faceName) } }
+                .onFailure { Log.w(TAG, "pending-face store failed", it) }
+            return Tasks.forResult(byteArrayOf(WearConstants.RESPONSE_NEEDS_SETUP))
+        }
         val canProceed = TransferSession.tryBegin()
         if (canProceed) {
             try {

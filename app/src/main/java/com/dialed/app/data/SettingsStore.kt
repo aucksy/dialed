@@ -14,6 +14,7 @@ private val Context.settingsDataStore by preferencesDataStore("dialed_settings")
 class SettingsStore(private val context: Context) {
     private val themeKey = stringPreferencesKey("theme_mode")
     private val onboardedKey = booleanPreferencesKey("onboarded")
+    private val firstInstallDoneKey = booleanPreferencesKey("first_install_done")
 
     val themeMode: Flow<ThemeMode> = context.settingsDataStore.data.map { prefs ->
         runCatching { ThemeMode.valueOf(prefs[themeKey] ?: ThemeMode.SYSTEM.name) }
@@ -28,5 +29,13 @@ class SettingsStore(private val context: Context) {
 
     suspend fun setOnboarded(value: Boolean) {
         context.settingsDataStore.edit { it[onboardedKey] = value }
+    }
+
+    /** True once ANY face has been observed installed on the watch — retires Home's starter card. */
+    val firstInstallDone: Flow<Boolean> =
+        context.settingsDataStore.data.map { it[firstInstallDoneKey] ?: false }
+
+    suspend fun setFirstInstallDone(value: Boolean) {
+        context.settingsDataStore.edit { it[firstInstallDoneKey] = value }
     }
 }

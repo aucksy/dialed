@@ -64,15 +64,18 @@ object WearConstants {
 
     /**
      * InitialResponse over MessageClient.sendRequest: single byte.
-     * 1 = proceed, 0 = busy, 2 = this watch cannot install faces at all (Wear OS < 6, no WFP).
+     * 1 = proceed, 0 = busy, 2 = this watch cannot install faces at all (Wear OS < 6, no WFP),
+     * 3 = the watch app has not been set up yet (install permission not granted) — the fix is on
+     *     the watch ("open Dialed and tap Set up"), so the phone must say THAT, never "busy".
      *
      * APPEND-ONLY (the byte IS the wire value). An older phone that only knows 0/1 reads
-     * [RESPONSE_UNSUPPORTED] as "not proceed" and shows its busy copy — degraded but never wrong
-     * about the outcome (the push genuinely cannot happen).
+     * [RESPONSE_UNSUPPORTED]/[RESPONSE_NEEDS_SETUP] as "not proceed" and shows its busy copy —
+     * degraded but never wrong about the outcome (the push genuinely cannot happen).
      */
     const val RESPONSE_PROCEED: Byte = 1
     const val RESPONSE_BUSY: Byte = 0
     const val RESPONSE_UNSUPPORTED: Byte = 2
+    const val RESPONSE_NEEDS_SETUP: Byte = 3
 
     /**
      * Query-state reply the WATCH sends when Watch Face Push is unavailable (Wear OS < 6), so the
@@ -107,13 +110,34 @@ object WearConstants {
     }
 
     /**
+     * Flag line appended to the query-state reply reporting whether the WATCH app's install
+     * permission is granted (i.e. whether the user has finished watch-side setup). The '!' prefix
+     * can never collide with a real package, and an OLDER phone's decoder maps unknown lines
+     * through its catalog where they resolve to nothing — appending is wire-safe both ways.
+     * An older WATCH simply never sends it, which decodes as null = unknown.
+     */
+    private const val SETUP_FLAG_GRANTED = "!setup:granted"
+    private const val SETUP_FLAG_NEEDED = "!setup:needed"
+
+    /**
      * Query-state reply, newline-separated UTF-8 (same shape as [encodeInitiate]):
      * line 0 = the active Dialed package (empty string = none of our faces is active),
-     * lines 1..N = every installed Dialed package (N = 0 or 1 on Wear OS 6, slot limit = 1).
+     * lines 1..N = every installed Dialed package (N = 0 or 1 on Wear OS 6, slot limit = 1),
+     * optional trailing flag line = watch-side setup state (see [SETUP_FLAG_GRANTED]).
      */
-    fun encodeQueryState(activePackage: String?, installedPackages: List<String>): ByteArray =
-        (listOf(activePackage.orEmpty()) + installedPackages)
+    fun encodeQueryState(
+        activePackage: String?,
+        installedPackages: List<String>,
+        pushGranted: Boolean? = null,
+    ): ByteArray {
+        val flag = when (pushGranted) {
+            true -> listOf(SETUP_FLAG_GRANTED)
+            false -> listOf(SETUP_FLAG_NEEDED)
+            null -> emptyList()
+        }
+        return (listOf(activePackage.orEmpty()) + installedPackages + flag)
             .joinToString(SEP).toByteArray(Charsets.UTF_8)
+    }
 
     /** Reply for a watch with no Watch Face Push at all (see [UNSUPPORTED_SENTINEL]). */
     fun encodeUnsupportedState(): ByteArray = UNSUPPORTED_SENTINEL.toByteArray(Charsets.UTF_8)
@@ -125,8 +149,14 @@ object WearConstants {
         }
         val lines = text.split(SEP)
         val active = lines.getOrElse(0) { "" }.ifEmpty { null }
-        val installed = lines.drop(1).filter { it.isNotEmpty() }
-        return QueryStateResult(activePackage = active, installedPackages = installed)
+        // '!'-prefixed lines are flags, never packages (and unknown flags are simply ignored).
+        val installed = lines.drop(1).filter { it.isNotEmpty() && !it.startsWith("!") }
+        val pushGranted = when {
+            lines.contains(SETUP_FLAG_GRANTED) -> true
+            lines.contains(SETUP_FLAG_NEEDED) -> false
+            else -> null
+        }
+        return QueryStateResult(activePackage = active, installedPackages = installed, pushGranted = pushGranted)
     }
 
     /** Uninstall request payload = the target package name (the phone knows its catalog packages). */
@@ -167,11 +197,14 @@ enum class WatchFaceInstallResult {
  * Decoded query-state reply: which Dialed face(s) are installed on the watch + which is active.
  * [supported] = false means the watch has no Watch Face Push (Wear OS < 6) and can never install a
  * face — the phone shows that honestly instead of offering a push that will always fail.
+ * [pushGranted] = whether the watch app's install permission is granted (watch-side setup done);
+ * null = the watch didn't say (older wear app) — treat as unknown, never as "needs setup".
  */
 data class QueryStateResult(
     val activePackage: String?,
     val installedPackages: List<String>,
     val supported: Boolean = true,
+    val pushGranted: Boolean? = null,
 )
 
 /**

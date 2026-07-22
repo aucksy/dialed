@@ -114,6 +114,30 @@ Edit → compile-review → **adversarial logic review** → fix → commit → 
   `res/xml` + manifest icon; a `<Launch>` tap-target was REMOVED pre-tag (zero precedent, strict CI, no local
   validate). ⚠ **owner on-wrist test PENDING** (no watch in dev env): after onboarding, every pushed face
   must go live with no tap/long-press; uninstall must show the Dialed default, not blank.
+- 🔶 **UNSHIPPED ON DISK (2026-07-22): the ONBOARDING REDESIGN — implemented, awaiting owner ship
+  approval.** Full spec + audit: `docs/ONBOARDING-REDESIGN.md` (research-first; owner approved all 4
+  items); visual tour: `docs/design-demos/onboarding-redesign.html`. What changed: **phone** — the
+  3-page marketing pager is DELETED, replaced by ONE adaptive `SetupScreen` driven by a live 6-state
+  machine (`transport/WatchSetupState.kt` + `MainViewModel.watchSetup`) that distinguishes
+  no-watch / **watch-paired-but-Dialed-app-missing** (new `NodeClient` probe vs capability diff —
+  previously read falsely as "No watch connected") / open-on-watch / ready / unsupported, with a
+  3-step install guide sheet (the Phase-4 remote-install seam); Home gains a **"Put your first face
+  on" starter card** (Solstice · Vakt GT · Guilloché) that retires forever once any install is
+  observed (`firstInstallDone` in SettingsStore); pill gains `APP_MISSING`; push sheet gains an
+  honest **NeedsWatchSetup** state. **Watch** — FirstRun + MakeDefault are MERGED into one
+  `SetupScreen` ("Set up Dialed" = one tap → both permission dialogs in context → default face
+  installs + activates → "Dialed in." → exit-to-face; "Later" is safe); a face pushed before setup
+  now answers **`RESPONSE_NEEDS_SETUP = 3`** (ordinal-appended) instead of lying "busy", the face
+  name is remembered (`WfpStateStore.pendingFaceName`) and the setup screen asks with it as the
+  hero ("{Face} is waiting"). Query-state reply gains an appended `!setup:granted|needed` flag line
+  (wire-safe both directions; old phone drops it, old watch → null → treated as done).
+  ⭐ The high-stakes rationale: `SET_PUSHED_WATCH_FACE_AS_ACTIVE` is REQUESTABLE ONCE EVER — it now
+  fires only inside the make-default tap, never as a context-free stacked dialog. **Transport
+  untouched** except the sanctioned listener pre-check + the appended wire values; TransferSession /
+  repo / channel path byte-identical. ⚠ On-wrist checklist before tag: fresh-install one-tap chain;
+  deny/deny-forever paths; push-before-setup → phone sheet → watch "{Face} is waiting" → allow →
+  re-push auto-applies; upgrade path (granted, no default) shows setup once; celebration exits to
+  the face.
 - ⚠ **TAG NUMBERS ARE NEVER RESERVED — claim the next free number at SHIP time.** This has bitten 3×: `v0.20.0` was held for 2B, never tagged, and is now **permanently unusable** (versionCode is past 20; a lower code can't install over a higher one). `v0.22.0` was reserved for 2D → spent by the out-of-band VAKT ship. `v0.23.0` was reassigned to 2D → spent the SAME DAY by the Terra-Compass fix. **The unshipped phases in the plan therefore carry no numbers at all** — sequence them, number them when they ship.
 - ⏭️ **Next: still gated on the parked MAP for the *commercial* 2D layer.** v0.25.0 shipped the **visual** browse spine (collection cards + collection screen) without pre-empting the map — but the rest of 2D (which faces are FREE, per-collection product ids, coming-soon tiles, `config/catalog.json`, entitlement-v2) still needs the owner to sign off the 2A collection map (audit §11 q1 Vakt 15-vs-10, q3 part-built pricing, q4 card total-vs-split). Pricing itself is parked to last. **Live candidates that need no parked decision:** (a) **2B colour parity** (16 faces at 3 ColorOptions → 5, except Pulsar's §11-q2); (b) **2E showcase/motion** on top of the new spine (F2 shared-element card→collection→detail expand — already specced, never built); (c) owner **on-wrist testing / perfecting faces** (the standing steer). The map sign-off unblocks the commercial 2D layer whenever the owner is ready.
 

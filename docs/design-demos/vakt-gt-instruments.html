@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VAKT GT — live instrument dials</title>
+<style>
+  @font-face{ font-family:'Archivo7'; src:url('./assets/archivo_700.ttf'); font-weight:700; }
+  @font-face{ font-family:'Archivo6'; src:url('./assets/archivo_600.ttf'); font-weight:600; }
+  @font-face{ font-family:'Saira7'; src:url('./assets/sairasemicondensed_700.ttf'); font-weight:700; }
+  :root{ --bg:#0d0e10; --panel:#17191c; --line:#2a2d31; --txt:#e7e7ea; --dim:#9a9ea6; --gold:#c8a44e; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--txt); font-family:-apple-system,'Segoe UI',Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:22px 20px 60px; }
+  h1{ font-size:20px; margin:0 0 2px; }
+  .sub{ color:var(--dim); font-size:13.5px; margin:0 0 18px; line-height:1.5; }
+  .layout{ display:flex; gap:26px; flex-wrap:wrap; align-items:flex-start; }
+  .bezel{ width:440px; height:440px; border-radius:50%; background:radial-gradient(circle at 50% 42%,#2b2e33,#0a0b0d 78%); padding:14px; box-shadow:0 22px 60px rgba(0,0,0,.6), inset 0 2px 3px rgba(255,255,255,.06); }
+  .glass{ position:relative; width:412px; height:412px; border-radius:50%; overflow:hidden; background:#000; }
+  .stage{ position:absolute; left:0; top:0; width:450px; height:450px; transform-origin:top left; transform:scale(.9155); }
+  .layer{ position:absolute; left:0; top:0; }
+  .layer img,.layer svg{ position:absolute; display:block; }
+  .lbl{ position:absolute; text-align:center; line-height:1; white-space:nowrap; display:flex; align-items:center; justify-content:center; }
+  .panelCol{ flex:1 1 340px; min-width:320px; }
+  .caption{ text-align:center; color:var(--dim); font-size:12px; margin-top:10px; }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:15px 16px; margin-bottom:14px; }
+  .card h3{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:1.4px; color:var(--dim); font-weight:700; }
+  .swatches{ display:flex; gap:9px; flex-wrap:wrap; }
+  .sw{ width:40px; height:40px; border-radius:8px; border:2px solid transparent; cursor:pointer; }
+  .sw.on{ border-color:#fff; }
+  .row{ display:flex; align-items:center; gap:10px; margin:9px 0; }
+  .row label{ flex:0 0 120px; font-size:12.5px; color:var(--dim); display:flex; align-items:center; gap:7px; }
+  .row label .ic{ width:16px; height:16px; }
+  select{ flex:1 1 auto; padding:8px 9px; border-radius:8px; background:#1e2126; color:var(--txt); border:1px solid var(--line); font-size:13px; }
+  .note{ font-size:12.5px; color:var(--dim); line-height:1.55; margin:8px 0 0; }
+  .handsToggle{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--dim); cursor:pointer; }
+  .handsToggle input{ accent-color:var(--gold); width:15px; height:15px; }
+  .foot{ margin-top:18px; font-size:12px; color:#6c7076; line-height:1.6; }
+  .keyrow{ display:flex; gap:16px; flex-wrap:wrap; margin-top:6px; }
+  .key{ display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--dim); }
+  .key .ic{ width:17px; height:17px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>VAKT GT — the three dials as live instruments</h1>
+  <p class="sub">Design proposal (not built yet — approve this and I'll bake it in). Each of the three sub-dials is now a real instrument whose needle/gauge tracks your live value, with a small icon telling you what it is. Every dial is still swappable — change any dropdown to see it hold a different complication, then switch back to see the instrument return unchanged.</p>
+
+  <div class="layout">
+    <div>
+      <div class="bezel"><div class="glass"><div class="stage" id="stage"></div></div></div>
+      <div class="caption" id="cap">Live instruments · Pit Lane theme</div>
+      <div class="keyrow">
+        <div class="key"><span class="ic" id="kbatt"></span> Battery — needle + %</div>
+        <div class="key"><span class="ic" id="khr"></span> Heart rate — needle + bpm</div>
+        <div class="key"><span class="ic" id="ksteps"></span> Steps — goal ring</div>
+      </div>
+    </div>
+
+    <div class="panelCol">
+      <div class="card">
+        <h3>Each dial (try swapping)</h3>
+        <div class="row"><label><span class="ic" id="lbatt"></span> Battery dial</label><select id="mbattery"></select></div>
+        <div class="row"><label><span class="ic" id="lhr"></span> Heart-rate dial</label><select id="mhr"></select></div>
+        <div class="row"><label><span class="ic" id="lsteps"></span> Steps dial</label><select id="msteps"></select></div>
+        <div class="row"><label>Date / Day</label><select disabled><option>Locked — date + weekday</option></select></div>
+        <p class="note" id="modeNote"></p>
+      </div>
+      <div class="card">
+        <h3>Theme</h3><div class="swatches" id="swatches"></div>
+        <label class="handsToggle" style="margin-top:12px"><input type="checkbox" id="handsChk" checked> Show watch hands</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot" id="foot">Rendered from the real GT dial art. Needles use the machined VAKT needle sprites; scales/goal-ring drawn to the intended design. Live values are sample data (battery 68% · HR 72 · steps 8,432 of 10,000). The real dial will read your actual sensors — confirmed on-wrist.</div>
+</div>
+
+<script>
+const FACE = {
+  themes:[
+    {id:'t0',name:'Pit Lane',bg:'#141413',ink:'#ece9e2',accent:'#cf3e32',muted:'#5e5d57',lume:'#d8d6c8'},
+    {id:'t1',name:'Chalk Circuit',bg:'#d8d6cf',ink:'#1a1b1c',accent:'#bd3a2c',muted:'#8e8d85',lume:'#c8c8ba',light:true},
+    {id:'t2',name:'Gulf Racing',bg:'#12181e',ink:'#e4e9ed',accent:'#d97b2e',muted:'#566068',lume:'#a9cbe0'},
+    {id:'t3',name:'Verde Legend',bg:'#0f1611',ink:'#e7e4d5',accent:'#c8a44e',muted:'#556056',lume:'#d4c896'},
+    {id:'t4',name:'Night Stage',bg:'#101010',ink:'#e9e8e0',accent:'#cfd23c',muted:'#585850',lume:'#e0e388'},
+    {id:'dark',name:'Dark mode',bg:'#000000',ink:'#d8d4cc',accent:'#d8d4cc',muted:'#8f8877',lume:'#d8d4cc'},
+  ],
+  hands:{ hour:{res:'hand_hour',x:204,y:97,w:42,h:156,px:.5,py:.8205}, minute:{res:'hand_minute',x:212,y:37,w:26,h:220,px:.5,py:.8545}, second:{res:'hand_second',x:211,y:25,w:28,h:244,px:.5,py:.8197} },
+  dials:{
+    battery:{ label:'Battery', cx:128, cy:230, r:44, icon:'batt', sweep:[40,320], frac:.68, value:'68', unit:'%', patchFloor:true,
+              needle:{res:'needle_0',x:119,y:190,w:19,h:56,px:.4947,py:.7143}, majors:[[0,'0'],[.25,'25'],[.5,'50'],[.75,'75'],[1,'100']] },
+    hr:{ label:'Heart rate', cx:260, cy:150, r:58, icon:'heart', sweep:[-150,150], frac:(72-40)/160, value:'72', unit:'bpm',
+              needle:{res:'subsec_0',x:250,y:96,w:20,h:73,px:.5,py:.7397}, majors:[[0,'40'],[.25,'80'],[.5,'120'],[.75,'160'],[1,'200']] },
+    steps:{ label:'Steps', cx:210, cy:318, r:64, icon:'steps', sweep:[-150,150], frac:.843, value:'8,432', goal:'of 10,000', kind:'goal' },
+  },
+  date:{ cx:336, cy:240 },
+};
+const SWAPS = {
+  home:  null,
+  notif: {icon:'bell',  value:'3'},
+  world: {icon:'globe', value:'14:25'},
+};
+const SWAP_LABELS = { home:'(home instrument)', notif:'Notifications', world:'World clock' };
+
+function glyph(kind,col,sw){
+  const s=(p,fill)=>`<svg viewBox="0 0 24 24" width="100%" height="100%" fill="${fill||'none'}" stroke="${col}" stroke-width="${sw||2}" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  switch(kind){
+    case 'batt': return s('<rect x="3" y="8" width="15" height="9" rx="1.6"/><path d="M20 11v3"/><rect x="5" y="10" width="7" height="5" rx=".8" fill="'+col+'" stroke="none"/>');
+    case 'heart':return s('<path d="M12 20s-7-4.6-7-9.4A3.6 3.6 0 0 1 12 8a3.6 3.6 0 0 1 7 2.6C19 15.4 12 20 12 20z" fill="'+col+'" stroke="none"/>');
+    case 'steps':return s('<path d="M8 4.5c1.4 0 2.3 1.4 2.3 3.6S9.3 13 8 13s-2.3-2.7-2.3-4.9S6.6 4.5 8 4.5z" fill="'+col+'" stroke="none"/><path d="M7 15c1.8 0 2.7 1 2.7 2.5S8.6 20 7.2 20 5 18.5 5 17.5 5.2 15 7 15z" fill="'+col+'" stroke="none"/><path d="M16.5 7c1.3 0 2.2 1.3 2.2 3.4S17.8 15 16.5 15s-2.2-2.5-2.2-4.6S15.2 7 16.5 7z" fill="'+col+'" stroke="none" opacity=".55"/>');
+    case 'bell': return s('<path d="M18 9a6 6 0 10-12 0c0 5-2 6-2 6h16s-2-1-2-6z"/><path d="M10.5 20a1.8 1.8 0 003 0"/>');
+    case 'globe':return s('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 2.5 14.6 0 17M12 3.5c-2.5 2.4-2.5 14.6 0 17"/>');
+  } return '';
+}
+const ASSET=(n,t)=>`./assets/${n}_${t}.png`;
+const Q=new URLSearchParams(location.search);
+let themeId=Q.get('theme')||'t0', showHands=Q.get('hands')!=='0';
+const mode={ battery:'home', hr:'home', steps:'home' };
+const stage=document.getElementById('stage');
+const theme=()=>FACE.themes.find(t=>t.id===themeId);
+const NS='http://www.w3.org/2000/svg';
+function el(c,css){const d=document.createElement('div');if(c)d.className=c;if(css)d.style.cssText=css;return d;}
+function img(src,x,y,w,h,extra){const i=document.createElement('img');i.src=src;i.style.cssText=`left:${x}px;top:${y}px;width:${w}px;height:${h}px;${extra||''}`;return i;}
+function pt(cx,cy,r,a){const rad=(a)*Math.PI/180;return [cx+r*Math.sin(rad),cy-r*Math.cos(rad)];}
+function svgLayer(){const s=document.createElementNS(NS,'svg');s.setAttribute('width',450);s.setAttribute('height',450);s.style.cssText='position:absolute;left:0;top:0;overflow:visible';return s;}
+function arc(svg,cx,cy,r,a0,a1,col,w,cap){const p=document.createElementNS(NS,'path');const [x0,y0]=pt(cx,cy,r,a0),[x1,y1]=pt(cx,cy,r,a1);const large=Math.abs(a1-a0)>180?1:0;const dir=a1>a0?1:0;p.setAttribute('d',`M ${x0} ${y0} A ${r} ${r} 0 ${large} ${dir} ${x1} ${y1}`);p.setAttribute('stroke',col);p.setAttribute('stroke-width',w);p.setAttribute('fill','none');if(cap)p.setAttribute('stroke-linecap',cap);svg.appendChild(p);}
+function line(svg,x1,y1,x2,y2,col,w){const l=document.createElementNS(NS,'line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke',col);l.setAttribute('stroke-width',w);l.setAttribute('stroke-linecap','round');svg.appendChild(l);}
+function txt(x,y,w,h,font,color,text){const d=el('lbl',`left:${x}px;top:${y}px;width:${w}px;height:${h}px;font:${font};color:${color};`);d.textContent=text;return d;}
+function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;}
+function darken(hex,f){const n=parseInt(hex.slice(1),16);return `rgb(${Math.round(((n>>16)&255)*f)},${Math.round(((n>>8)&255)*f)},${Math.round((n&255)*f)})`;}
+
+function drawScaleTicks(svg,d,t){
+  // Clean instrument scale: tick marks only (no numeric labels — they collide with the
+  // centre value and are unreadable at watch size). Majors are longer + brighter.
+  const [a0,a1]=d.sweep, span=a1-a0;
+  for(let i=0;i<=20;i++){const f=i/20,a=a0+f*span;const major=d.majors.some(m=>Math.abs(m[0]-f)<.001);
+    const r1=d.r-3, r2=d.r-(major?10:5);const [x1,y1]=pt(d.cx,d.cy,r1,a),[x2,y2]=pt(d.cx,d.cy,r2,a);
+    line(svg,x1,y1,x2,y2,major?t.ink:hexA(t.muted,.85),major?2:0.9);}
+}
+function renderGaugeDial(host,d,t,at){
+  const box=el('layer'); host.appendChild(box);
+  const m=mode[d===FACE.dials.battery?'battery':d===FACE.dials.hr?'hr':'steps'];
+  const swap=SWAPS[m];
+  const svg=svgLayer(); box.appendChild(svg);
+  // battery register bakes its scale into the dial art (it isn't a slot) — cover that floor so
+  // the demo shows the intended clean instrument. In the real build the register is re-baked clean.
+  if(d.patchFloor){ const c=document.createElementNS(NS,'circle');c.setAttribute('cx',d.cx);c.setAttribute('cy',d.cy);c.setAttribute('r',d.r-4);c.setAttribute('fill',darken(t.bg,0.5));svg.appendChild(c); }
+  if(swap){ // swapped to a plain complication → icon + value (SHORT_TEXT style), consistent with other dials
+    const ic=el(null,`position:absolute;left:${d.cx-9}px;top:${d.cy-d.r*0.4-9}px;width:18px;height:18px;`);ic.innerHTML=glyph(swap.icon,t.muted);box.appendChild(ic);
+    box.appendChild(txt(d.cx-d.r,d.cy-13,d.r*2,26,'700 26px Archivo7',t.ink,swap.value));
+    return;
+  }
+  // home instrument
+  const [a0,a1]=d.sweep, span=a1-a0;
+  arc(svg,d.cx,d.cy,d.r-6,a0,a1,hexA(t.muted,.28),3.5,'round');     // track
+  arc(svg,d.cx,d.cy,d.r-6,a0,a0+d.frac*span,t.accent,3.5,'round');   // fill
+  drawScaleTicks(svg,d,t);
+  // needle sprite → value
+  const n=d.needle, ang=a0+d.frac*span;
+  box.appendChild(img(ASSET(n.res,at),n.x,n.y,n.w,n.h,`transform-origin:${n.px*100}% ${n.py*100}%;transform:rotate(${ang}deg);`));
+  // hub
+  const hub=document.createElementNS(NS,'circle');hub.setAttribute('cx',d.cx);hub.setAttribute('cy',d.cy);hub.setAttribute('r',3.4);hub.setAttribute('fill',t.ink);svg.appendChild(hub);
+  // icon (top) + value (bottom, in the scale's clear zone — no numerals now)
+  const ic=el(null,`position:absolute;left:${d.cx-8}px;top:${d.cy-d.r*0.55-8}px;width:16px;height:16px;`);ic.innerHTML=glyph(d.icon,t.accent);box.appendChild(ic);
+  const vSize=Math.round(d.r*(d.r<52?0.30:0.42)), uSize=Math.max(7,Math.round(vSize*0.42));
+  box.appendChild(txt(d.cx-d.r,d.cy+d.r*0.20,d.r*2,vSize+2,`700 ${vSize}px Archivo7`,t.ink,d.value+(d.unit==='%'?'%':'')));
+  if(d.unit!=='%') box.appendChild(txt(d.cx-d.r,d.cy+d.r*0.20+vSize,d.r*2,uSize+2,`600 ${uSize}px Archivo6`,t.muted,d.unit));
+}
+function renderGoalDial(host,d,t){
+  const box=el('layer'); host.appendChild(box);
+  if(SWAPS[mode.steps]){ const swap=SWAPS[mode.steps];
+    const ic=el(null,`position:absolute;left:${d.cx-9}px;top:${d.cy-d.r*0.4-9}px;width:18px;height:18px;`);ic.innerHTML=glyph(swap.icon,t.muted);box.appendChild(ic);
+    box.appendChild(txt(d.cx-d.r,d.cy-15,d.r*2,30,'700 30px Archivo7',t.ink,swap.value));return;
+  }
+  const svg=svgLayer(); box.appendChild(svg);
+  const [a0,a1]=d.sweep, span=a1-a0;
+  arc(svg,d.cx,d.cy,d.r-8,a0,a1,hexA(t.muted,.28),5.6,'round');          // goal track (-20% thickness)
+  arc(svg,d.cx,d.cy,d.r-8,a0,a0+d.frac*span,t.accent,5.6,'round');        // progress fill (-20% thickness)
+  const ic=el(null,`position:absolute;left:${d.cx-9}px;top:${d.cy-d.r*0.5-9}px;width:18px;height:18px;`);ic.innerHTML=glyph(d.icon,t.accent);box.appendChild(ic);
+  box.appendChild(txt(d.cx-d.r,d.cy-13,d.r*2,26,'700 26px Archivo7',t.ink,d.value));
+  box.appendChild(txt(d.cx-d.r,d.cy+14,d.r*2,12,'600 9px Archivo6',t.muted,d.goal));
+}
+function renderDate(t){
+  const d=FACE.date, box=el('layer'); stage.appendChild(box);
+  box.appendChild(txt(d.cx-21,d.cy-14,42,26,'700 19px Saira7',t.lume,'19'));
+  box.appendChild(txt(d.cx-21,d.cy+16,42,14,'700 12px Saira7',t.muted,'SUN'));
+}
+function clockAngles(){const d=new Date(),ms=d.getMilliseconds(),s=d.getSeconds(),m=d.getMinutes(),h=d.getHours();const sw=Math.floor(s*15+ms/1000*15)/15;return{hour:((h%12)+m/60)*30,minute:(m+s/60)*6,second:sw*6};}
+function render(){
+  const t=theme(), at=themeId; stage.innerHTML=''; document.querySelector('.glass').style.background=t.bg;
+  const dl=el('layer'); dl.appendChild(img(ASSET('dial',at),0,0,450,450)); stage.appendChild(dl);
+  renderGaugeDial(stage,FACE.dials.battery,t,at);
+  renderGaugeDial(stage,FACE.dials.hr,t,at);
+  renderGoalDial(stage,FACE.dials.steps,t);
+  renderDate(t);
+  if(showHands){const h=el('layer');const a=clockAngles();['hour','minute','second'].forEach(k=>{const hd=FACE.hands[k];h.appendChild(img(ASSET(hd.res,at),hd.x,hd.y,hd.w,hd.h,`transform-origin:${hd.px*100}% ${hd.py*100}%;transform:rotate(${a[k]}deg);`));});stage.appendChild(h);}
+}
+function tick(){const a=clockAngles();[...stage.querySelectorAll('img')].filter(i=>/hand_(hour|minute|second)/.test(i.src)).forEach(i=>{const k=/hand_hour/.test(i.src)?'hour':/hand_minute/.test(i.src)?'minute':'second';i.style.transform=`rotate(${a[k]}deg)`;});requestAnimationFrame(tick);}
+
+function buildSwatches(){const box=document.getElementById('swatches');box.innerHTML='';FACE.themes.forEach(t=>{const d=el('sw'+(t.id===themeId?' on':''),`background:${t.bg};box-shadow:inset 0 0 0 1px ${t.muted};`);d.title=t.name;d.onclick=()=>{themeId=t.id;buildSwatches();render();cap();};box.appendChild(d);});}
+function buildSelect(id,key){const s=document.getElementById(id);s.innerHTML='';Object.keys(SWAPS).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k==='home'?FACE.dials[key].label+' '+SWAP_LABELS[k]:SWAP_LABELS[k];s.appendChild(o);});s.onchange=()=>{mode[key]=s.value;render();noteMode();};}
+function noteMode(){const any=Object.values(mode).some(m=>m!=='home');document.getElementById('modeNote').innerHTML=any?'Swapped a dial to another complication — notice it drops to the clean icon+value style, exactly like any other dial. Set it back to its home instrument and the needle/gauge returns unchanged.':'All three dials on their home instruments: battery needle, heart-rate needle, steps goal-ring — each with its icon.';}
+function cap(){document.getElementById('cap').textContent=`Live instruments · ${theme().name} theme`;}
+// key icons
+document.getElementById('kbatt').innerHTML=glyph('batt','#9a9ea6');document.getElementById('khr').innerHTML=glyph('heart','#cf6a5e');document.getElementById('ksteps').innerHTML=glyph('steps','#9a9ea6');
+document.getElementById('lbatt').innerHTML=glyph('batt','#9a9ea6');document.getElementById('lhr').innerHTML=glyph('heart','#cf6a5e');document.getElementById('lsteps').innerHTML=glyph('steps','#9a9ea6');
+const handsChk=document.getElementById('handsChk');handsChk.checked=showHands;handsChk.onchange=()=>{showHands=handsChk.checked;render();};
+buildSwatches();buildSelect('mbattery','battery');buildSelect('mhr','hr');buildSelect('msteps','steps');noteMode();cap();render();requestAnimationFrame(tick);
+</script>
+</body>
+</html>

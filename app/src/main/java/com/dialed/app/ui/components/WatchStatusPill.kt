@@ -43,6 +43,10 @@ fun WatchStatusPill(status: WatchStatus, modifier: Modifier = Modifier) {
             c.error, c.error, c.error.copy(alpha = 0.08f), c.error.copy(alpha = 0.3f),
             "Watch unsupported · Wear OS 6 required",
         )
+        WatchConnection.APP_MISSING -> PillStyle(
+            c.primary, c.primary, c.primary.copy(alpha = 0.08f), c.primary.copy(alpha = 0.3f),
+            "${status.deviceName ?: "Watch"} · needs the Dialed watch app",
+        )
         WatchConnection.DISCONNECTED -> PillStyle(
             c.locked, c.onSurfaceVariant, Color.Transparent, c.outline, "No watch connected",
         )

@@ -34,3 +34,6 @@ wear/src/main/assets/default_watchface.token
 *-release.keystore
 *-play.jks
 keystore.properties
+
+# face-review harness per-run output (screenshots, diffs, fidelity.json) — regenerated each gate run
+tools/face-review/.check/

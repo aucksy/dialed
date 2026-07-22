@@ -1,7 +1,9 @@
 package com.dialed.app.model
 
-/** Connection state of the paired watch (HANDOFF.md §6 WatchStatusPill). */
-enum class WatchConnection { CONNECTED, DISCONNECTED, CONNECTING, UNSUPPORTED }
+/** Connection state of the paired watch (HANDOFF.md §6 WatchStatusPill).
+ *  [APP_MISSING] = a watch is paired + reachable but the Dialed watch app isn't on it — previously
+ *  indistinguishable from DISCONNECTED, which read (falsely) as "No watch connected". */
+enum class WatchConnection { CONNECTED, DISCONNECTED, CONNECTING, UNSUPPORTED, APP_MISSING }
 
 /**
  * [deviceName] is the Data Layer node's display name. There is deliberately no `wearOsVersion` /

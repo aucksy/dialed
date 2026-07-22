@@ -12,8 +12,11 @@ import com.dialed.app.data.SettingsStore
 import com.dialed.app.model.WatchConnection
 import com.dialed.app.model.WatchStatus
 import com.dialed.app.transport.ConnectedWatch
+import com.dialed.app.transport.PairedProbe
 import com.dialed.app.transport.PushStatus
 import com.dialed.app.transport.WatchBridge
+import com.dialed.app.transport.WatchSetup
+import com.dialed.app.transport.WatchSetupState
 import com.dialed.app.ui.theme.ThemeMode
 import com.dialed.app.wear.common.WatchFaceUninstallResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -40,6 +44,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     val onboarded: StateFlow<Boolean> =
         settings.onboarded.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    /** Home's "Put your first face on" starters (docs/ONBOARDING-REDESIGN.md §5.2). */
+    val starterFaces: List<Face> = STARTER_IDS.mapNotNull { id -> faces.firstOrNull { it.id == id } }
+
+    /**
+     * True once any face has been observed installed — Home's starter card retires forever.
+     * Initial TRUE so the card never flashes for an already-set-up user while the flag loads;
+     * a genuinely new user just sees it appear a beat later.
+     */
+    val firstInstallDone: StateFlow<Boolean> =
+        settings.firstInstallDone.stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     val entitled: StateFlow<Boolean> =
         entitlement.unlocked.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
@@ -61,21 +76,48 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
      */
     private val watchSupported = MutableStateFlow(true)
 
-    /** Real reachable-watch detection via CapabilityClient (dialed_wfp_install). */
+    /**
+     * ANY paired + reachable watch node (Dialed watch app or not) — NodeClient, not capability.
+     * With the capability node this distinguishes "watch there, Dialed watch app missing" (a
+     * guided setup step) from "no watch at all" (previously both read "No watch connected").
+     */
+    private val pairedProbe = MutableStateFlow<PairedProbe>(PairedProbe.Unknown)
+
+    /**
+     * The watch app's own one-time setup state (install permission granted), from the query-state
+     * reply. Null = this watch hasn't answered a query yet (Setup shows CHECKING, not a false
+     * READY); a reply WITHOUT the flag (older wear app) is recorded as true — never nag on unknown.
+     */
+    private val watchSetupDone = MutableStateFlow<Boolean?>(null)
+
+    /** Real reachable-watch detection via CapabilityClient (dialed_wfp_install) + the node probe. */
     val watchStatus: StateFlow<WatchStatus> =
-        combine(connectedWatch, watchSupported) { watch, supported ->
+        combine(connectedWatch, watchSupported, pairedProbe) { watch, supported, probe ->
             when {
-                watch == null -> WatchStatus(connection = WatchConnection.DISCONNECTED)
-                !supported -> WatchStatus(
-                    connection = WatchConnection.UNSUPPORTED,
-                    deviceName = watch.displayName,
-                )
-                else -> WatchStatus(
-                    connection = WatchConnection.CONNECTED,
-                    deviceName = watch.displayName,
-                )
+                watch != null && !supported -> WatchStatus(WatchConnection.UNSUPPORTED, watch.displayName)
+                watch != null -> WatchStatus(WatchConnection.CONNECTED, watch.displayName)
+                probe is PairedProbe.Found -> WatchStatus(WatchConnection.APP_MISSING, probe.name)
+                probe is PairedProbe.Unknown -> WatchStatus(WatchConnection.CONNECTING)
+                else -> WatchStatus(WatchConnection.DISCONNECTED)
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WatchStatus())
+
+    /** The Setup screen's live state (docs/ONBOARDING-REDESIGN.md §5.1). */
+    val watchSetup: StateFlow<WatchSetup> =
+        combine(connectedWatch, watchSupported, pairedProbe, watchSetupDone) { watch, supported, probe, setupDone ->
+            when {
+                watch != null && !supported -> WatchSetup(WatchSetupState.UNSUPPORTED, watch.displayName)
+                // Capability there but the watch hasn't answered a query yet: keep CHECKING rather
+                // than flash a READY that may immediately correct to OPEN_ON_WATCH (the Setup
+                // screen's poll re-queries every few seconds, so this can't stick on a live link).
+                watch != null && setupDone == null -> WatchSetup(WatchSetupState.CHECKING, watch.displayName)
+                watch != null && setupDone == false -> WatchSetup(WatchSetupState.OPEN_ON_WATCH, watch.displayName)
+                watch != null -> WatchSetup(WatchSetupState.READY, watch.displayName)
+                probe is PairedProbe.Found -> WatchSetup(WatchSetupState.WATCH_APP_MISSING, probe.name)
+                probe is PairedProbe.None -> WatchSetup(WatchSetupState.NO_WATCH)
+                else -> WatchSetup(WatchSetupState.CHECKING)
+            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WatchSetup())
 
     /** The face whose PushToWatchSheet is open (null = closed), and the transfer's progress. */
     private val _pushingFace = MutableStateFlow<Face?>(null)
@@ -131,14 +173,30 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             connectedWatch.collect { watch ->
                 if (watch != null) {
                     watchSupported.value = true // optimistic until this watch says otherwise
+                    watchSetupDone.value = null // this watch will say via the next query
                     refreshInstalledState()
                 } else {
                     _installedPackages.value = emptyList()
                     _activePackage.value = null
                     watchSupported.value = true
+                    watchSetupDone.value = null
+                    // Capability gone: re-probe raw nodes so APP_MISSING vs NO_WATCH stays honest.
+                    refreshPairedProbe()
                 }
             }
         }
+    }
+
+    /** Re-probe for any paired watch node (drives APP_MISSING vs NO_WATCH). */
+    private suspend fun refreshPairedProbe() {
+        val name = watchBridge.pairedWatchName()
+        pairedProbe.value = if (name != null) PairedProbe.Found(name) else PairedProbe.None
+    }
+
+    /** The Setup screen's poll tick: refresh the node probe + the watch's own answers. */
+    fun refreshWatchSetup() {
+        viewModelScope.launch { refreshPairedProbe() }
+        refreshInstalledState()
     }
 
     fun setThemeMode(mode: ThemeMode) = viewModelScope.launch { settings.setThemeMode(mode) }
@@ -163,6 +221,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 // and a watch that can't install anything should say so everywhere.
                 if (status is PushStatus.Done) refreshInstalledState()
                 if (status is PushStatus.Unsupported) watchSupported.value = false
+                if (status is PushStatus.NeedsWatchSetup) watchSetupDone.value = false
                 // Only the sheet write is gated — a stale transfer must never repaint a sheet that
                 // now belongs to another face.
                 if (token != pushToken) return@pushFace
@@ -176,6 +235,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             val state = watchBridge.queryInstalledState() ?: return@launch
             watchSupported.value = state.supported
+            // A reply WITHOUT the setup flag (older wear app) counts as done — never nag on unknown.
+            watchSetupDone.value = state.pushGranted ?: true
             if (!state.supported) {
                 _installedPackages.value = emptyList()
                 _activePackage.value = null
@@ -183,6 +244,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             }
             _installedPackages.value = state.installedPackages
             _activePackage.value = state.activePackage
+            // Any observed install retires Home's starter card, forever (write-once).
+            if (state.installedPackages.isNotEmpty() && !settings.firstInstallDone.first()) {
+                settings.setFirstInstallDone(true)
+            }
         }
     }
 
@@ -251,5 +316,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun debugRestoreEntitlement() {
         if (!BuildConfig.DEBUG) return
         viewModelScope.launch { entitlement.setUnlocked(true) }
+    }
+
+    private companion object {
+        /** Home's first-face starters (owner-picked 2026-07-22; revisit when the free map lands). */
+        val STARTER_IDS = listOf("arclight_solstice", "vakt_gt", "aurum_guilloche")
     }
 }

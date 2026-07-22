@@ -6,6 +6,102 @@
 
 ---
 
+## ⛔ MANDATORY WORKFLOW — EVERY FACE, EVERY COLLECTION (owner-imposed 2026-07-20, asked 4×)
+
+**No face is ever handed back any other way.** This is not a suggestion and does not need re-asking.
+
+1. **Read the plan first** — this file + `docs/COMPLICATION-FIX-PROGRESS.md` (its ⛔ STOP section) +
+   `CLAUDE.md` + `faces/collection3-tools/VAKT-COMPLICATIONS-PLAN.md` §7 + **both WFF skills**
+   (`wff-watchface.skill`, `wff-watchface-polish.skill`) and the **design skills** available in the
+   session. Diff against the ORIGINAL design files before changing any geometry — never design from
+   memory, from an approved PNG, or by eye.
+2. **Make the fix, then MEASURE it — do not eyeball it.** Re-bake (`node gen/build-all.mjs <FACE>`),
+   WFF-validate, byte-compare (only the touched face + `collection3-tools` may differ), then run the
+   **fidelity gate** (§ below) and fix everything it flags BEFORE the owner sees it. Eyeballing is what
+   kept missing things; a number does not get tired or optimistic.
+3. **Hand back an INTERACTIVE page opened in Chrome, showing the ORIGINAL DESIGN beside the CURRENT
+   BUILD.** Never a PNG, never a wall of text, never a file path the owner has to open themselves.
+   The harness is built and reusable — see below. Launch it, screenshot it, check the screenshot,
+   *then* open the window.
+
+### The harness (built 2026-07-20) — `scratchpad/compare/`
+| File | Job |
+|---|---|
+| `serve.mjs` | One HTTP origin mounting `/orig` (the handoff design project), `/faces` (this repo's built faces), `/vendor` (React UMD, vendored — no CDN). Port 8099. The showroom **cannot** run as `file://`. |
+| `current.js` | Renders the CURRENT build from its real `res/raw/watchface.xml` — real slot rects, arcs + their `Transform endAngle` expressions, needle sprites + angle expressions, text templates, over the real baked dial art. Only `[COMPLICATION.*]` values are sampled. |
+| `compare.html` | Two columns: **left** = the original, rendered by the handoff's OWN `WatchFaceRenderer` from `faces/cat-<x>.js` (nothing redrawn by us); **right** = the current build. Shared theme swatches, hands toggle, per-slot complication-type dropdowns, and two annotation columns: *the fixes this round* and *deliberate differences already approved* (so an approved change is never mistaken for a regression). |
+
+```
+node serve.mjs                                   # then:
+chrome.exe --new-window "http://localhost:8099/?face=WF-A2&dir=Vakt-GT&spec=cat-a2"
+chrome.exe --headless=new --screenshot=shot.png --window-size=1500,1400 http://localhost:8099/   # self-review first
+```
+Retarget per face with the query string (`face` = spec id, `dir` = built face folder, `spec` = the
+handoff spec file). Family-A faces have no handoff spec — for those, show the current build beside the
+committed baseline render instead, and say so on the page.
+
+⚠ **A harness that redraws the face by hand is banned.** The previous one (`docs/design-demos/*.html`)
+re-drew each register in JS and invented major tick marks that the spec never had — it cost the owner
+a full review cycle. Render from the shipped XML, or don't ship the review.
+
+### ⛔ THE FIDELITY GATE — the design is matched when the NUMBER says so (owner, 2026-07-20)
+
+Owner: *"I can still spot many differences… figure out a way to follow the design brief accurately,
+especially the self-verification part."* The honest answer is that my eye is not a measuring
+instrument. This is the industry's answer — **visual-regression testing**, with the DESIGN as the
+baseline instead of a previous build.
+
+```
+node serve.mjs &                 # once per session
+node check.mjs --face WF-A2 --dir Vakt-GT --spec cat-a2 --theme t0
+```
+
+What it does, and why each part exists:
+
+| Step | Why |
+|---|---|
+| Renders design + build to **identical 450×450** rasters via `frame.html` | Different sizes = resampling = invented differences. Both at 1:1, no scaling. |
+| **Freezes the clock** and kills animation before either renderer loads | Two live clocks make the hands disagree and the diff measures time, not design. |
+| Feeds the build renderer **the design's own SIM values** (battery 68, steps 6203, hr 72) | A needle at a different angle is a data difference, not a defect. |
+| Strips the design's presentation case + glass reflection | Not part of the watch face; it would smear every pixel. |
+| **pixelmatch** comparison — YIQ perceptual distance, anti-aliased pixels rejected | Raw RGB diffing screams about every curved edge. |
+| Scores **per design region**, taken from the spec's own plate geometry | A whole-dial average hides one broken sub-dial. |
+| Measures a **noise floor**: the design's own SVG through resvg vs through Chrome | Two rasterisers never agree exactly. Without this you chase a number that can never reach zero. Per-region, because text-heavy regions disagree more. |
+| Adds an **ink-mass** check per region | ⭐ The one that matters most: a *missing element* dilutes to a tiny percentage and hides under the floor. Ink caught GT's absent "SUN" (−37%) when the percentage said "fine". |
+
+#### ⭐ The gate ALSO runs a FIT CHECK — because a pixel diff is blind to this (added 2026-07-20)
+`check.mjs` now shells out to `faces/collection3-tools/gen/fit-check.mjs` and prints
+**SLOT CONTENT vs DIAL ART** under every run. It measures, per register, whether what the SLOT draws
+(the provider icon) clears the dial art around it (the engraved numerals) — arithmetically, in dial
+units, per the polish skill §7.
+
+**Why it exists — the defect it would have caught.** A provider icon was sized from `layerExtent`,
+which returns `(s * 0.7 + 2)` — a deliberately **padded** box for *overlap tests*. Used as a
+**drawing** size it made every icon ~2× the engraved glyph it stands in for, and the battery
+register's icon printed straight across its engraved "50". ⚠ **The pixel diff did not flag it**
+(a few px inside a big region stays under the floor) and **three rounds of screenshots did not show
+it** — at page scale it looks like a smudge. The owner spotted it immediately on his own screen.
+**A collision box and a drawing box are not the same number.** Sizing rule now lives in one place:
+`svglib.mjs` → `ICON_REACH` + `iconBox()` (largest square that fits *inside* the glyph's own
+footprint, since a provider image FILLS the box it is given).
+
+**Rule: never hand a face back on a screenshot alone when slot content sits near dial art.** The
+percentage and the eye both miss it; the arithmetic does not.
+
+**Reading it:** a region "matches" when its diff is at/below its own floor **and** its ink is within
+±12%. `CONTENT MISSING` / `EXTRA content` are structural — always real, always fix them.
+`OVER (floor …)` means genuinely displaced or recoloured pixels.
+
+**Vakt-GT scored 0.26% against a 0.23% floor** — every region at or below its own floor, one flag:
+the date window's missing weekday (a complications-step item). That is what "matches the design"
+looks like as a number.
+
+The same numbers, the diff image, an **onion-skin slider** and a **difference blend** (the two
+techniques design QA actually uses for this) appear in the review page automatically once `check.mjs`
+has run — the owner sees exactly what I measured, not a claim.
+
+---
+
 ## Wave 1 — the four photographed bugs + no more black holes (one Dialed release)
 
 ### W1.1 VAKT register defaults (F1) — spec `cat-a2.js`, regen all 5 VAKT faces

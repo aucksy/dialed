@@ -11,23 +11,23 @@ import androidx.wear.compose.material3.AppScaffold
 import com.dialed.app.wear.WearViewModel
 import com.dialed.app.wear.common.WatchFaceActivationStrategy
 import com.dialed.app.wear.ui.screens.ConciergeScreen
-import com.dialed.app.wear.ui.screens.FirstRunScreen
 import com.dialed.app.wear.ui.screens.HomeScreen
-import com.dialed.app.wear.ui.screens.MakeDefaultScreen
 import com.dialed.app.wear.ui.screens.ReceiveScreen
 import com.dialed.app.wear.ui.screens.ReceiveSuccess
+import com.dialed.app.wear.ui.screens.SetupDoneScreen
+import com.dialed.app.wear.ui.screens.SetupScreen
 import com.dialed.app.wear.ui.screens.UnsupportedScreen
 import com.dialed.app.wear.wfp.ReceiveState
 import kotlinx.coroutines.delay
 
 /**
  * Single-state navigator (no navigation dep). Order matters: an unsupported watch and an active
- * transfer both take precedence over the permission gate and Home.
+ * transfer both take precedence over the setup gate and Home.
  */
 @Composable
 fun WearApp(
     viewModel: WearViewModel,
-    onAllow: () -> Unit,
+    onSetUp: () -> Unit,
     onSetActive: () -> Unit,
     onOpenSettings: () -> Unit,
     onExit: () -> Unit,
@@ -36,13 +36,20 @@ fun WearApp(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val receive = state.receive
 
-    // The one-time "Make Dialed your watch face" step: only on a fresh watch (permission granted, no
-    // Dialed face yet, not already resolved). Gating on `home == None` means it never replaces an
-    // existing face, and the ViewModel resolves it silently the moment a face is observed installed.
-    val needsDefaultSetup = state.pushGranted &&
-        state.homeLoaded &&
-        !state.onboardingComplete &&
-        state.home is com.dialed.app.wear.HomeFaceState.None
+    // The ONE setup moment (permissions + default face in a single tap). Shown when:
+    // - fresh install (no permission, step unresolved) — immediately, no homeLoaded wait;
+    // - a face was pushed before setup (pendingFaceName) — the ask returns WITH that context,
+    //   even after "Later";
+    // - upgrade path: permission already granted but the default-face step unresolved — only once
+    //   the GENUINE slot state is known (homeLoaded) and empty, so it never flashes over an
+    //   existing user's face; the ViewModel resolves it silently when a face is observed installed.
+    val needsSetup =
+        (!state.pushGranted && !state.onboardingComplete) ||
+            (!state.pushGranted && state.pendingFaceName != null) ||
+            (
+                state.pushGranted && state.homeLoaded && !state.onboardingComplete &&
+                    state.home is com.dialed.app.wear.HomeFaceState.None
+                )
 
     AppScaffold {
         when {
@@ -56,17 +63,20 @@ fun WearApp(
             receive is ReceiveState.Success ->
                 SuccessThenConcierge(receive, onSetActive, onExitToWatchFace)
 
-            !state.pushGranted ->
-                FirstRunScreen(
-                    permanentlyDenied = state.pushPermanentlyDenied,
-                    onAllow = onAllow,
-                    onOpenSettings = onOpenSettings,
-                )
+            // Setup just made the default face active — celebrate once, then land on the face.
+            state.setupCelebrate ->
+                SetupDoneScreen(onDone = {
+                    viewModel.clearSetupCelebrate()
+                    onExitToWatchFace()
+                })
 
-            needsDefaultSetup ->
-                MakeDefaultScreen(
-                    onMakeDefault = viewModel::makeDefaultFaceActive,
+            needsSetup ->
+                SetupScreen(
+                    pendingFaceName = state.pendingFaceName,
+                    permanentlyDenied = state.pushPermanentlyDenied,
+                    onSetUp = onSetUp,
                     onSkip = viewModel::skipDefaultFaceSetup,
+                    onOpenSettings = onOpenSettings,
                 )
 
             else -> HomeScreen(state, onSetActive = viewModel::setInstalledFaceActive)

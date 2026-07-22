@@ -73,6 +73,7 @@ fun PushToWatchSheet(
             when (status) {
                 is PushStatus.NoWatch -> NoWatchContent(face)
                 is PushStatus.Unsupported -> UnsupportedContent(deviceName, onDismiss)
+                is PushStatus.NeedsWatchSetup -> NeedsWatchSetupContent(face, onRetry, onDismiss)
                 is PushStatus.Error -> ErrorContent(face, status.message, onRetry, onDismiss)
                 is PushStatus.Done -> DoneContent(face, needsActivation = status.needsActivation, onDone = onDismiss)
                 else -> SendingContent(face, deviceName)
@@ -126,7 +127,9 @@ private fun DoneContent(face: Face, needsActivation: Boolean, onDone: () -> Unit
     Spacer(Modifier.height(8.dp))
     Text(
         if (needsActivation) {
-            "${face.displayName} is installed. Finish setting it on your watch."
+            // Mirrors the watch's own three-step guide word-for-word, so both devices read as one
+            // product at the hand-off moment (docs/ONBOARDING-REDESIGN.md §5.3).
+            "${face.displayName} is installed. On your watch, follow the three steps shown — press and hold, swipe, tap."
         } else {
             "${face.displayName} is now your watch face."
         },
@@ -152,6 +155,35 @@ private fun ErrorContent(face: Face, message: String, onRetry: () -> Unit, onDis
     DialedButton("Retry", onRetry, height = 52.dp)
     Spacer(Modifier.height(DialedSpacing.sm))
     DialedButton("Not now", onDismiss, variant = DialedButtonVariant.TEXT)
+}
+
+/**
+ * The watch app hasn't been set up yet (its install permission was never granted). "Busy — retry"
+ * would be a lie retrying can't fix; the honest fix is one tap on the watch, so say exactly that.
+ * The watch remembers this face and asks with it as the context when Dialed is opened there.
+ */
+@Composable
+private fun NeedsWatchSetupContent(face: Face, onRetry: () -> Unit, onDismiss: () -> Unit) {
+    val c = dialedColors
+    Box(
+        Modifier.size(84.dp).clip(RoundedCornerShape(24.dp)).background(c.primary.copy(alpha = 0.10f)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(painterResource(R.drawable.ic_watch), null, tint = c.primary, modifier = Modifier.size(38.dp))
+    }
+    Spacer(Modifier.height(DialedSpacing.lg))
+    Text("Finish setting up your watch", style = MaterialTheme.typography.titleMedium, color = c.onSurface)
+    Spacer(Modifier.height(8.dp))
+    Text(
+        "Open Dialed on your watch and tap “Set up Dialed”. Then push ${face.displayName} again.",
+        style = MaterialTheme.typography.bodyMedium,
+        color = c.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+    )
+    Spacer(Modifier.height(DialedSpacing.xl))
+    DialedButton("Done", onDismiss, variant = DialedButtonVariant.TONAL, height = 48.dp)
+    Spacer(Modifier.height(DialedSpacing.sm))
+    DialedButton("Retry", onRetry, variant = DialedButtonVariant.TEXT)
 }
 
 /**

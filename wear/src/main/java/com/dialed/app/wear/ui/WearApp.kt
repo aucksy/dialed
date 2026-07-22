@@ -39,6 +39,7 @@ fun WearApp(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val receive = state.receive
+    val awaitingFace = state.awaitingFaceName
 
     // Don't pick a screen from default state. WearUiState's defaults deliberately mean "don't show
     // setup" (so an existing user's face is never covered), which made a FRESH install render Home
@@ -95,11 +96,8 @@ fun WearApp(
 
             // Setup finished with a face waiting on the phone: the phone has been nudged to send it
             // and the incoming transfer's own screens take over the instant it lands.
-            state.awaitingFaceName != null ->
-                AwaitingFaceScreen(
-                    faceName = state.awaitingFaceName!!,
-                    onTimeout = viewModel::clearAwaitingFace,
-                )
+            awaitingFace != null ->
+                AwaitingFaceScreen(faceName = awaitingFace, onTimeout = viewModel::clearAwaitingFace)
 
             // Setup worked but nothing became active — confirm what DID happen.
             state.setupSettled -> SetupSettledScreen(onDone = viewModel::clearSetupSettled)

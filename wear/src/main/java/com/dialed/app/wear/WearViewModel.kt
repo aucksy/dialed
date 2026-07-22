@@ -17,6 +17,7 @@ import com.dialed.app.wear.wfp.WfpStateStore
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeoutOrNull
 
 /** The GENUINE Watch-Face-Push slot state, as Home must convey it (never the stale last-pushed cache). */
 sealed interface HomeFaceState {
@@ -189,6 +191,17 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
             runCatching { store.onboardingComplete.first() }
             booted.value = true
         }
+        // Any incoming transfer supersedes the one-shot setup beats. Without this, dismissing the
+        // receive flow re-showed "Bringing {Face} over…" for a face that had just landed (the
+        // navigator puts receive above them, so they were only hidden, never resolved).
+        viewModelScope.launch {
+            TransferSession.state.collect { receive ->
+                if (receive !is ReceiveState.Idle) {
+                    awaitingFaceName.value = null
+                    setupSettled.value = false
+                }
+            }
+        }
         refresh()
         // Self-heal a stale link: FILTER_REACHABLE is a transient snapshot and the capability
         // listener does not always fire on a silent transport blip, so re-check on a gentle cadence
@@ -229,7 +242,17 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
     /** The "Set up Dialed" tap: hold a working state so the screen can't be re-tapped mid-chain. */
     fun beginSetup() {
         setupBusy.value = true
+        // Backstop. The permission launcher always delivers a result, but a working state with no
+        // exit is the worst possible failure on a watch — so give it a deadline it can't outlive
+        // unless the setup chain is genuinely still running.
+        busyWatchdog?.cancel()
+        busyWatchdog = viewModelScope.launch {
+            delay(SETUP_BUSY_TIMEOUT_MS)
+            if (!setupRunning) setupBusy.value = false
+        }
     }
+
+    private var busyWatchdog: Job? = null
 
     /**
      * Home "Set as your face" for an installed-but-inactive face: attempt the unattended set-active.
@@ -277,8 +300,9 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
             // The face the phone tried to push before setup, if any. Captured BEFORE the store is
             // cleared: it decides the closing beat and is echoed to the phone so it can re-send.
             val pending = runCatching { store.pendingFaceName.first() }.getOrNull()
-            var activated = false
+            var handOff = false
             try {
+                var activated = false
                 store.setPermissionDenied(!setActiveGranted)
                 if (repo.hasPushPermission() && repo.installedState().installedPackages.isEmpty()) {
                     if (repo.installDefault() && setActiveGranted && repo.setActive()) {
@@ -289,26 +313,29 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
                 store.setPendingFaceName(null) // the ask is resolved either way
                 store.setOnboardingComplete(true)
                 loadHome()
+
+                // Pick the closing beat BEFORE the working state is released, or the navigator
+                // briefly finds nothing to show and flashes Home between the two.
+                handOff = pending != null && repo.hasPushPermission()
+                if (handOff) {
+                    // A face was waiting. It — not the bundled DEFAULT — is the face the user
+                    // chose, so do NOT celebrate here: hand over and let the arriving push own the
+                    // celebration.
+                    awaitingFaceName.value = pending
+                } else {
+                    // Celebrate only a genuinely-active default ("Dialed in." must never lie); when
+                    // nothing became active, still confirm that the setup itself worked — the
+                    // screen used to just become Home, so two granted permissions looked like a
+                    // no-op.
+                    setupCelebrate.value = activated
+                    setupSettled.value = !activated
+                }
             } finally {
                 setupRunning = false
                 setupBusy.value = false
             }
-
-            if (pending != null && repo.hasPushPermission()) {
-                // A face was waiting. Tell the phone to send it now that setup is done — it is the
-                // face the user actually chose, and the screen promised it "goes on now". The
-                // DEFAULT face is not that face, so do NOT celebrate it here; show the hand-off
-                // beat and let the arriving push own the celebration.
-                awaitingFaceName.value = pending
-                notifyPhoneSetupComplete(pending)
-            } else {
-                // Celebrate only a genuinely-active default ("Dialed in." must never lie); when
-                // nothing became active, still confirm that the setup itself worked — the screen
-                // used to just become Home, so two granted permissions looked like a no-op.
-                setupCelebrate.value = activated
-                setupSettled.value = !activated
-                if (!activated) notifyPhoneSetupComplete(null)
-            }
+            // After the UI has settled: tell the phone it can send the face it was holding.
+            if (handOff || repo.hasPushPermission()) notifyPhoneSetupComplete(pending)
         }
     }
 
@@ -323,12 +350,16 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
      */
     private suspend fun notifyPhoneSetupComplete(faceName: String?) {
         runCatching {
-            val nodes = capabilityClient
-                .getCapability(WearConstants.CAPABILITY_PHONE, CapabilityClient.FILTER_REACHABLE)
-                .await().nodes
-            val payload = faceName.orEmpty().toByteArray(Charsets.UTF_8)
-            nodes.forEach { node ->
-                messageClient.sendMessage(node.id, WearConstants.PATH_SETUP_COMPLETE, payload).await()
+            // Bounded: a wedged Data Layer must not hold this coroutine open. It is best-effort by
+            // design — the phone's own Retry is the fallback for every failure here.
+            withTimeoutOrNull(NUDGE_TIMEOUT_MS) {
+                val nodes = capabilityClient
+                    .getCapability(WearConstants.CAPABILITY_PHONE, CapabilityClient.FILTER_REACHABLE)
+                    .await().nodes
+                val payload = faceName.orEmpty().toByteArray(Charsets.UTF_8)
+                nodes.forEach { node ->
+                    messageClient.sendMessage(node.id, WearConstants.PATH_SETUP_COMPLETE, payload).await()
+                }
             }
         }.onFailure { Log.w(TAG, "setup-complete nudge failed (phone will still offer Retry)", it) }
     }
@@ -350,6 +381,12 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Setup "Later": resolve the step without installing the default (shown once, then never). */
     fun skipDefaultFaceSetup() {
+        // Also drop the denial states, or "Later" is a dead button: the denied variants of the setup
+        // screen are themselves a reason to SHOW it, so leaving them set traps the user on it.
+        // Re-tapping "Set up Dialed" from Home re-derives them from the OS in one launcher round.
+        pushSoftDenied.value = false
+        pushPermanentlyDenied.value = false
+        setupBusy.value = false
         viewModelScope.launch {
             store.setPendingFaceName(null) // declining the waiting face resolves its ask too
             store.setOnboardingComplete(true)
@@ -451,5 +488,11 @@ class WearViewModel(app: Application) : AndroidViewModel(app) {
         const val REACH_ATTEMPTS = 3       // reachability probes before declaring UNREACHABLE
         const val REACH_RETRY_MS = 1200L   // wait between probes (rides out a transport blip)
         const val LINK_RECHECK_MS = 12_000L // periodic self-heal cadence while alive
+
+        /** Deadline on the "Setting Dialed up…" state when the chain never actually started. */
+        const val SETUP_BUSY_TIMEOUT_MS = 45_000L
+
+        /** Budget for the one-way "setup complete" nudge to the phone (best-effort). */
+        const val NUDGE_TIMEOUT_MS = 8_000L
     }
 }

@@ -80,6 +80,18 @@ fun SetupScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 22.dp),
             )
+            Spacer(Modifier.height(10.dp))
+            // A way out. This state is itself a reason the navigator shows this screen, so without
+            // it the user is held here by the very thing they were told to go and fix elsewhere.
+            Text(
+                "Not now",
+                style = MaterialTheme.typography.labelLarge,
+                color = DialedWearColors.disabled,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .clickable(onClick = onSkip)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+            )
         }
         return
     }

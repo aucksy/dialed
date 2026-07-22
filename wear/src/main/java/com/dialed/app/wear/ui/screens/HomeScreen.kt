@@ -71,9 +71,11 @@ fun HomeScreen(state: WearUiState, onSetActive: () -> Unit, onSetUp: () -> Unit)
     DialedHeroScreen(
         edgeButton = {
             when {
-                // Nothing else on this screen can work without the install permission.
-                needsPermission -> DialedEdgeButton(text = "Set up Dialed", onClick = onSetUp, filled = true)
+                // A face they can try to wear right now still outranks everything (unchanged).
                 inactiveFace -> DialedEdgeButton(text = "Set as your face", onClick = onSetActive, filled = true)
+                // Otherwise, with no install permission nothing else here can work — and after
+                // "Later" this is the ONLY remaining route back to setup.
+                needsPermission -> DialedEdgeButton(text = "Set up Dialed", onClick = onSetUp, filled = true)
                 reachable -> DialedEdgeButton(
                     text = if (home is HomeFaceState.Installed) "Browse on phone" else "Open on phone",
                     onClick = openOnPhone,

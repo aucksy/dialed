@@ -50,7 +50,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
      * onboarding appeared to come back on every launch. The UI renders nothing until this is known.
      */
     val onboarded: StateFlow<Boolean?> =
-        settings.onboarded.map { it as Boolean? }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+        settings.onboarded
+            .map<Boolean, Boolean?> { it }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     /** Home's "Put your first face on" starters (docs/ONBOARDING-REDESIGN.md §5.2). */
     val starterFaces: List<Face> = STARTER_IDS.mapNotNull { id -> faces.firstOrNull { it.id == id } }

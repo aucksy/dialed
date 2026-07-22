@@ -73,6 +73,24 @@ generated + all touched Family-A faces validator PASS.
   adaptive-scale size fix.
 - `scaffold.mjs` emits the committed manifest comment (kills the recurring cosmetic drift).
 
+### Kickoff prompt for the PER-WATCH-FACE REFINEMENT program (copy verbatim into a fresh chat)
+> Run the per-watch-face refinement program in D:\Apps\WearOS Apps\WatchFaces\Dialed App.
+> READ FIRST: docs/COMPLICATION-FIX-PROGRESS.md top-to-bottom (the ✅ PROGRAM EXECUTED section is
+> the state of the world — dialed-v0.29.0 shipped all 43 faces), then docs/COMPLICATION-FIX-PLAN.md
+> (⛔ MANDATORY WORKFLOW + ⛔ FIDELITY GATE are still law), CLAUDE.md, and both WFF skills.
+> The owner reviews ONE FACE AT A TIME on the interactive harness: start `node serve.mjs` in
+> tools/face-review (check :8099 isn't stale: `curl -s localhost:8099/frame.html | grep font-face`),
+> open `http://localhost:8099/compare.html?face=<ID>&dir=<Dir>&spec=<cat-x>` in Chrome for the face
+> the owner picks, run `node check.mjs --face <ID> --dir <Dir> --spec <cat-x> --theme t0` first and
+> fix what it flags BEFORE showing anything. Collection-3 faces are GENERATED (edit spec/gen +
+> `node gen/build-all.mjs <FACE>`, byte-compare untouched faces); Family A = direct XML; validate
+> every change (portable JRE17 + wff-validator.jar, v per manifest). Known refinement candidates
+> already logged: Field24/Solstice baked moon glyph beside the WORLD_CLOCK cell; GT date window
+> missing "SUN"; unread chip 16-vs-12.5 text; VAKT first-install HR-dial behaviour per the wrist
+> test. Ship loop per CLAUDE.md (fablecollection push → submodule bump → gen-facepacks with the
+> ABSOLUTE root → version bump app/+wear/ → adversarial review → next free dialed-v* tag → both
+> direct APK links). Plain English to the owner; detail goes in this progress doc.
+
 ### Still open for the wrist (unchanged facts)
 - `HEART_RATE/RANGED_VALUE` defaults on all 5 VAKT top dials: an OEM that serves text/shortcut
   leaves that dial blank until the wearer assigns a ranged pulse (fallback = one-line spec change

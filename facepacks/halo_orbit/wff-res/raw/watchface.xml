@@ -454,29 +454,6 @@
 </PartText>
 </Group>
 </Group>
-<Group x="0" y="0" width="450" height="450" name="aod" alpha="0">
-<Variant mode="AMBIENT" target="alpha" value="255" />
-<DigitalClock x="172" y="114" width="106" height="132">
-<TimeText format="hh" x="0" y="0" width="106" height="132" align="CENTER">
-<Font family="bigshouldersdisplay_400" size="88" color="#d8d4cc" />
-</TimeText>
-</DigitalClock>
-<DigitalClock x="172" y="202" width="106" height="132">
-<TimeText format="mm" x="0" y="0" width="106" height="132" align="CENTER">
-<Font family="bigshouldersdisplay_400" size="88" color="#8f8877" />
-</TimeText>
-</DigitalClock>
-<PartText x="202" y="318" width="47" height="24" name="aod2">
-<Text align="CENTER">
-<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Font>
-</Text>
-</PartText>
-<PartText x="207" y="340" width="37" height="24" name="aod3">
-<Text align="CENTER">
-<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
 <ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="37" y="37" width="376" height="376" supportedTypes="RANGED_VALUE EMPTY" isCustomizable="TRUE">
 <Variant mode="AMBIENT" target="alpha" value="0" />
 <DefaultProviderPolicy defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" />
@@ -501,7 +478,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="376" height="376" name="rv_t0">
 <Arc centerX="188" centerY="188" width="376" height="376" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#b04c2a" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -521,7 +498,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="376" height="376" name="rv_t1">
 <Arc centerX="188" centerY="188" width="376" height="376" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#d9a23c" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -541,7 +518,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="376" height="376" name="rv_t2">
 <Arc centerX="188" centerY="188" width="376" height="376" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#7cb8d6" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -561,7 +538,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="376" height="376" name="rv_t3">
 <Arc centerX="188" centerY="188" width="376" height="376" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#c73f34" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -581,7 +558,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="376" height="376" name="rv_t4">
 <Arc centerX="188" centerY="188" width="376" height="376" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#c2a052" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -604,7 +581,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="376" height="376" name="rv_dark">
 <Arc centerX="188" centerY="188" width="376" height="376" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#d8d4cc" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -612,6 +589,7 @@
 </Group>
 </Group>
 </Complication>
+<Complication type="EMPTY" />
 </ComplicationSlot>
 <ComplicationSlot slotId="1" name="slot2" displayName="@string/slot_2" x="53" y="53" width="344" height="344" supportedTypes="RANGED_VALUE EMPTY" isCustomizable="TRUE">
 <Variant mode="AMBIENT" target="alpha" value="0" />
@@ -637,7 +615,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="344" height="344" name="rv_t0">
 <Arc centerX="172" centerY="172" width="344" height="344" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#b04c2a" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -657,7 +635,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="344" height="344" name="rv_t1">
 <Arc centerX="172" centerY="172" width="344" height="344" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#d9a23c" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -677,7 +655,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="344" height="344" name="rv_t2">
 <Arc centerX="172" centerY="172" width="344" height="344" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#7cb8d6" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -697,7 +675,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="344" height="344" name="rv_t3">
 <Arc centerX="172" centerY="172" width="344" height="344" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#c73f34" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -717,7 +695,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="344" height="344" name="rv_t4">
 <Arc centerX="172" centerY="172" width="344" height="344" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#c2a052" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -740,7 +718,7 @@
 </PartDraw>
 <PartDraw x="0" y="0" width="344" height="344" name="rv_dark">
 <Arc centerX="172" centerY="172" width="344" height="344" startAngle="0" endAngle="0" direction="CLOCKWISE">
-<Transform target="endAngle" value="(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+<Transform target="endAngle" value="clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) > 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1), 0, 1) * 360" />
 <Stroke color="#d8d4cc" thickness="3" cap="ROUND" />
 </Arc>
 </PartDraw>
@@ -748,6 +726,7 @@
 </Group>
 </Group>
 </Complication>
+<Complication type="EMPTY" />
 </ComplicationSlot>
 <ComplicationSlot slotId="2" name="slot3" displayName="@string/slot_3" x="160" y="314" width="130" height="28" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
 <Variant mode="AMBIENT" target="alpha" value="0" />
@@ -760,16 +739,16 @@
 <ListOption id="t0">
 <Group x="0" y="0" width="130" height="28" name="sc_t0">
 <PartDraw x="0" y="0" width="130" height="28" name="patch_t0">
-<Rectangle x="4" y="4" width="53" height="24">
+<Rectangle x="2" y="3" width="57" height="26">
 <Fill color="#b6b6b3" />
 </Rectangle>
-<Rectangle x="59" y="4" width="43" height="24">
+<Rectangle x="57" y="3" width="46" height="26">
 <Fill color="#b6b6b3" />
 </Rectangle>
 </PartDraw>
-<PartText x="4" y="4" width="98" height="24" name="sttx_t0">
+<PartText x="2" y="3" width="101" height="26" name="sttx_t0">
 <Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#8f908c"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+<Font family="spacegrotesk_500" size="18" color="#8f908c"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
 </Text>
 </PartText>
 </Group>
@@ -777,16 +756,16 @@
 <ListOption id="t1">
 <Group x="0" y="0" width="130" height="28" name="sc_t1">
 <PartDraw x="0" y="0" width="130" height="28" name="patch_t1">
-<Rectangle x="4" y="4" width="53" height="24">
+<Rectangle x="2" y="3" width="57" height="26">
 <Fill color="#0e1015" />
 </Rectangle>
-<Rectangle x="59" y="4" width="43" height="24">
+<Rectangle x="57" y="3" width="46" height="26">
 <Fill color="#0e1015" />
 </Rectangle>
 </PartDraw>
-<PartText x="4" y="4" width="98" height="24" name="sttx_t1">
+<PartText x="2" y="3" width="101" height="26" name="sttx_t1">
 <Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#4f5660"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+<Font family="spacegrotesk_500" size="18" color="#4f5660"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
 </Text>
 </PartText>
 </Group>
@@ -794,16 +773,16 @@
 <ListOption id="t2">
 <Group x="0" y="0" width="130" height="28" name="sc_t2">
 <PartDraw x="0" y="0" width="130" height="28" name="patch_t2">
-<Rectangle x="4" y="4" width="53" height="24">
+<Rectangle x="2" y="3" width="57" height="26">
 <Fill color="#131516" />
 </Rectangle>
-<Rectangle x="59" y="4" width="43" height="24">
+<Rectangle x="57" y="3" width="46" height="26">
 <Fill color="#131516" />
 </Rectangle>
 </PartDraw>
-<PartText x="4" y="4" width="98" height="24" name="sttx_t2">
+<PartText x="2" y="3" width="101" height="26" name="sttx_t2">
 <Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#5a5e63"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+<Font family="spacegrotesk_500" size="18" color="#5a5e63"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
 </Text>
 </PartText>
 </Group>
@@ -811,16 +790,16 @@
 <ListOption id="t3">
 <Group x="0" y="0" width="130" height="28" name="sc_t3">
 <PartDraw x="0" y="0" width="130" height="28" name="patch_t3">
-<Rectangle x="4" y="4" width="53" height="24">
+<Rectangle x="2" y="3" width="57" height="26">
 <Fill color="#0f0f0f" />
 </Rectangle>
-<Rectangle x="59" y="4" width="43" height="24">
+<Rectangle x="57" y="3" width="46" height="26">
 <Fill color="#0f0f0f" />
 </Rectangle>
 </PartDraw>
-<PartText x="4" y="4" width="98" height="24" name="sttx_t3">
+<PartText x="2" y="3" width="101" height="26" name="sttx_t3">
 <Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#5b5857"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+<Font family="spacegrotesk_500" size="18" color="#5b5857"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
 </Text>
 </PartText>
 </Group>
@@ -828,16 +807,16 @@
 <ListOption id="t4">
 <Group x="0" y="0" width="130" height="28" name="sc_t4">
 <PartDraw x="0" y="0" width="130" height="28" name="patch_t4">
-<Rectangle x="4" y="4" width="53" height="24">
+<Rectangle x="2" y="3" width="57" height="26">
 <Fill color="#0d130f" />
 </Rectangle>
-<Rectangle x="59" y="4" width="43" height="24">
+<Rectangle x="57" y="3" width="46" height="26">
 <Fill color="#0d130f" />
 </Rectangle>
 </PartDraw>
-<PartText x="4" y="4" width="98" height="24" name="sttx_t4">
+<PartText x="2" y="3" width="101" height="26" name="sttx_t4">
 <Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#556056"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+<Font family="spacegrotesk_500" size="18" color="#556056"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
 </Text>
 </PartText>
 </Group>
@@ -848,21 +827,71 @@
 <Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
 <Group x="0" y="0" width="130" height="28" name="sc_dark">
 <PartDraw x="0" y="0" width="130" height="28" name="patch_dark">
-<Rectangle x="4" y="4" width="53" height="24">
+<Rectangle x="2" y="3" width="57" height="26">
 <Fill color="#000000" />
 </Rectangle>
-<Rectangle x="59" y="4" width="43" height="24">
+<Rectangle x="57" y="3" width="46" height="26">
 <Fill color="#000000" />
 </Rectangle>
 </PartDraw>
-<PartText x="4" y="4" width="98" height="24" name="sttx_dark">
+<PartText x="2" y="3" width="101" height="26" name="sttx_dark">
 <Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+<Font family="spacegrotesk_500" size="18" color="#8f8877"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
 </Text>
 </PartText>
 </Group>
 </Group>
 </Complication>
+<Complication type="EMPTY" />
 </ComplicationSlot>
+<Group x="0" y="0" width="450" height="450" name="interactiveOver">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<Group x="0" y="0" width="450" height="450" name="themedOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="450" height="450" name="theme_t0" />
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="450" height="450" name="theme_t1" />
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="450" height="450" name="theme_t2" />
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="450" height="450" name="theme_t3" />
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="450" height="450" name="theme_t4" />
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="darkTwinOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+</Group>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="aod" alpha="0">
+<Variant mode="AMBIENT" target="alpha" value="255" />
+<DigitalClock x="172" y="114" width="106" height="132">
+<TimeText format="hh" x="0" y="0" width="106" height="132" align="CENTER">
+<Font family="bigshouldersdisplay_400" size="88" color="#d8d4cc" />
+</TimeText>
+</DigitalClock>
+<DigitalClock x="172" y="202" width="106" height="132">
+<TimeText format="mm" x="0" y="0" width="106" height="132" align="CENTER">
+<Font family="bigshouldersdisplay_400" size="88" color="#8f8877" />
+</TimeText>
+</DigitalClock>
+<PartText x="202" y="318" width="47" height="24" name="aod2">
+<Text align="CENTER">
+<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="207" y="340" width="37" height="24" name="aod3">
+<Text align="CENTER">
+<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
 </Scene>
 </WatchFace>

@@ -7,9 +7,7 @@
     <string name="theme_2">Gauge Green</string>
     <string name="theme_3">Night Flight</string>
     <string name="theme_4">Bare Metal</string>
-    <string name="slot_1">Altimeter register</string>
-    <string name="slot_2">Fuel gauge</string>
-    <string name="slot_3">Placard (date)</string>
+    <string name="slot_1">Placard (date)</string>
     <string name="cfg_seconds">Seconds hand</string>
     <string name="cfg_dark">Pure-black dark mode</string>
 </resources>

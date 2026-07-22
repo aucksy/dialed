@@ -411,29 +411,6 @@
 </PartText>
 </Group>
 </Group>
-<Group x="0" y="0" width="450" height="450" name="aod" alpha="0">
-<Variant mode="AMBIENT" target="alpha" value="255" />
-<DigitalClock x="172" y="114" width="106" height="132">
-<TimeText format="hh" x="0" y="0" width="106" height="132" align="CENTER">
-<Font family="bigshouldersdisplay_400" size="88" color="#d8d4cc" />
-</TimeText>
-</DigitalClock>
-<DigitalClock x="172" y="202" width="106" height="132">
-<TimeText format="mm" x="0" y="0" width="106" height="132" align="CENTER">
-<Font family="bigshouldersdisplay_400" size="88" color="#8f8877" />
-</TimeText>
-</DigitalClock>
-<PartText x="202" y="318" width="47" height="24" name="aod2">
-<Text align="CENTER">
-<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Font>
-</Text>
-</PartText>
-<PartText x="207" y="340" width="37" height="24" name="aod3">
-<Text align="CENTER">
-<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
 <ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="268" y="96" width="116" height="116" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
 <Variant mode="AMBIENT" target="alpha" value="0" />
 <DefaultProviderPolicy defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" />
@@ -566,6 +543,7 @@
 </Group>
 </Group>
 </Complication>
+<Complication type="EMPTY" />
 </ComplicationSlot>
 <ComplicationSlot slotId="1" name="slot2" displayName="@string/slot_2" x="268" y="236" width="62" height="92" supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
 <Variant mode="AMBIENT" target="alpha" value="0" />
@@ -761,6 +739,7 @@
 </Group>
 </Group>
 </Complication>
+<Complication type="EMPTY" />
 </ComplicationSlot>
 <ComplicationSlot slotId="2" name="slot3" displayName="@string/slot_3" x="334" y="236" width="62" height="92" supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
 <Variant mode="AMBIENT" target="alpha" value="0" />
@@ -956,6 +935,56 @@
 </Group>
 </Group>
 </Complication>
+<Complication type="EMPTY" />
 </ComplicationSlot>
+<Group x="0" y="0" width="450" height="450" name="interactiveOver">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<Group x="0" y="0" width="450" height="450" name="themedOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="450" height="450" name="theme_t0" />
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="450" height="450" name="theme_t1" />
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="450" height="450" name="theme_t2" />
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="450" height="450" name="theme_t3" />
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="450" height="450" name="theme_t4" />
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="darkTwinOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+</Group>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="aod" alpha="0">
+<Variant mode="AMBIENT" target="alpha" value="255" />
+<DigitalClock x="172" y="114" width="106" height="132">
+<TimeText format="hh" x="0" y="0" width="106" height="132" align="CENTER">
+<Font family="bigshouldersdisplay_400" size="88" color="#d8d4cc" />
+</TimeText>
+</DigitalClock>
+<DigitalClock x="172" y="202" width="106" height="132">
+<TimeText format="mm" x="0" y="0" width="106" height="132" align="CENTER">
+<Font family="bigshouldersdisplay_400" size="88" color="#8f8877" />
+</TimeText>
+</DigitalClock>
+<PartText x="202" y="318" width="47" height="24" name="aod2">
+<Text align="CENTER">
+<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Font>
+</Text>
+</PartText>
+<PartText x="207" y="340" width="37" height="24" name="aod3">
+<Text align="CENTER">
+<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
 </Scene>
 </WatchFace>

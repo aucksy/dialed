@@ -2,30 +2,92 @@
 
 ---
 
-## ⏸ PAUSED / PENDING EFFORT — per-watch-face refinement (owner, 2026-07-20)
-> *"I will pick up the per watch face refinement later.. keep that as pending effort."*
+## ✅ PROGRAM EXECUTED END-TO-END (2026-07-22, owner-authorized ship)
 
-**VAKT GT is DONE and parked at a good state.** The remaining 42 faces have NOT been refined.
-Pick this up by re-reading this file top-to-bottom, then `COMPLICATION-FIX-PLAN.md`.
+**All three waves ran on all 43 faces and BOTH apps shipped** (fablecollection `8736d4a`;
+Dialed release tagged the same day — see CLAUDE.md ship log for the tag). Everything that was
+"uncommitted on disk" is now committed and pushed: the Vakt-GT re-bake + generator tools went
+to fablecollection main (`9e62b0c`), the onboarding redesign + face-review harness + these docs
+went to Dialed main (`48f8b43`), and the wave work followed (`8736d4a`).
+**▶ NEXT = the PER-WATCH-FACE REFINEMENT program** (owner reviews each face on the interactive
+harness, one at a time) — kickoff prompt at the bottom of this file.
 
-### ⚠⚠ EVERYTHING IS UNCOMMITTED ON DISK — DO NOT `git checkout`/`clean`/`stash` ANYTHING
-The owner's standing rule this whole program was *"Do NOT commit, push or ship. I approve first."*
-So all of the following exists **only in the working tree** of `faces/` (the fablecollection
-submodule) and of `Dialed App` itself. A stray reset destroys days of work:
+### What each wave shipped (2026-07-22)
 
-| Where | What |
-|---|---|
-| `faces/Vakt-GT/**` | the re-baked face: `watchface.xml`, `strings.xml`, 6 dial PNGs, slotart 0–3, needle_1 |
-| `faces/collection3-tools/spec/cat-a2.js` | the 4-slot VAKT-GT spec (`bare`, `gauge`, `arc`, defaults) |
-| `faces/collection3-tools/gen/{wff,svglib,bake}.mjs` | generator: bare registers, `ICON_INK`, `iconBox`, `iconClearY`, `rvFracFor` |
-| `faces/collection3-tools/gen/fit-check.mjs` **(untracked)** | the slot-content-vs-dial-art gate |
-| `faces/collection3-tools/gen/measure-icons.mjs` **(untracked)** | ⭐ renders + measures the glyphs; the answer to "how big is this bit of the design" |
-| `Dialed App/tools/face-review/**` **(untracked)** | the whole review harness (`serve/check/current/compare/frame/fidelity`) |
-| `Dialed App/docs/COMPLICATION-FIX-PROGRESS.md` **(untracked)** | ⭐ THIS FILE — the only record of every decision |
-| `Dialed App/docs/COMPLICATION-FIX-PLAN.md` | modified (fit-check folded into the fidelity gate) |
+**Wave 1**
+- **VAKT One / Meridian / Ti / NightWatch = the settled GT instrument design** (register map
+  followed exactly): plate + tick sets + engraved numerals bake as permanent hardware; the three
+  chronos are `bare` slots (`RANGED_VALUE GOAL_PROGRESS EMPTY`) driving only the design's own
+  needle/arc/icon; defaults HR→`HEART_RATE/RANGED_VALUE`, battery→`WATCH_BATTERY/RANGED_VALUE`,
+  steps→`STEP_COUNT/RANGED_VALUE`; `rvFracFor` reads the engraved numerals. Date windows →
+  **locked native** (design's frame + dnum [+ day3], Date-toggle gated, never blank; GT keeps its
+  panel slot as settled). Kept: One's unread chip, Meridian's event line, NightWatch's
+  sunrise/sunset (sunset default → WORLD_CLOCK, F9). **Ti's battery stays the baked flange arc**
+  (already a live native instrument; Ti has 2 chrono dials).
+  Gates: cleared-dial at the noise floor on all four (One 0.06/0.08 · Meridian 0.19/0.12 with the
+  event-line region explained · Ti 0.04/0.07 · NightWatch 0.24/0.19 with the date-region ink flag
+  measured as metric noise); fit-check clean everywhere; GT regression clean (0.11/0.10, known SUN
+  flag only); dark + t1 reviewed. First-install needle positions ≠ design = the requested change.
+- **Aurum ×5**: patch → integrated recessed window (theme fill + keyline, value-only ≥18);
+  Guilloché EMPTY → DATE. Date-toggle still hides the window (owner default #2).
+- **Halftone**: bitmap-font cells declared at the PNGs' TRUE 150×212 (were 121×170 → the renderer
+  cropped digits to fragments). `size` → integer 170.
+- **Counterform**: hour UNPADDED (owner default #4) via one-gate-per-node nested groups
+  (12/24h × single/double); single digits shift +22 fully on-canvas; AOD twins identical.
 
-**First action on resuming: ask the owner whether to commit this to a branch** so it stops being one
-`git clean` from gone. Nothing has been shipped; no tag, no APK, no on-wrist test.
+**Wave 2**
+- **De-slotted pure instruments (owner default #1):** PetiteSeconde seconds register,
+  Altimeter both registers, Compass north gauge. Gates: PetiteSeconde 0.01%, Altimeter 0.10%
+  (placard flag = harness sample "19" vs design "SUN 19"), Compass 0.12% — all at/below floor.
+- **Gauge hardening (F10):** every generated RV expression now clamps 0..1 with a guarded
+  denominator (incl. `RV_FRAC` used by VAKT); Vespera-Aurum hand-hardened + gained the
+  GOAL_PROGRESS overflow lap (metal.1, gated `VALUE > TARGET`), s2 HR → WATCH_BATTERY/RV.
+- **HR defaults → safe (owner default #3):** Aether-Ember, Kinetik-Escapement, Kinetik-Metronome,
+  Vespera-Meteorite s1 → WATCH_BATTERY/RANGED_VALUE (verified: none had battery anywhere).
+- **F9 duplicate sunset cells → WORLD_CLOCK:** Field24, Solstice, MeridianLine, Aether-Horizon,
+  NightWatch. ⚠ CAVEAT logged: Field24 + Solstice have BAKED moon glyphs beside the swapped cell
+  (a world-clock time now sits next to a moon) — per-face-refinement item; NightWatch's moon is
+  slot content, so its swap is clean.
+- **Other defaults:** Meridian-Classic date → DATE. **Judged, with reasons:** Calendrier KEEPS
+  NEXT_EVENT (the engraved 'NEXT' is baked art and its calendar row is already native);
+  Halo-Orbit KEEPS EMPTY defaults (XML-verified: its rings are live native battery/steps
+  instruments out of the box — the audit's "rings empty" premise was wrong); Halo-Quadrant keeps
+  native tokens; secondary NEXT_EVENT slots kept fleet-wide (every such face has live data).
+- **EMPTY compliance (F11):** every generated slot + Arclight-Pulsar/Solstice now declare
+  `<Complication type="EMPTY" />`.
+- **Legibility (F13/W2.6):** value-text floor 18 wherever the row is ≥25 tall (patch boxes sized
+  to match). Patch sweep of the remaining 12 faces: no Aurum-class clashes (patches blend on the
+  paper dials) — no further restyles.
+
+**Wave 3 (F12):** every face's scene now splits dial → slots → hands-on-top (the VAKT structure,
+fleet-wide via the generator); Kinetik-Orrery's planet clock hand-moved after its slots.
+Full-fleet regen: **zero dial-art drift** outside the nine intentionally-rebaked faces; all 25
+generated + all touched Family-A faces validator PASS.
+
+### Harness fixes made this session (they changed the numbers)
+- ⭐ **`frame.html` now loads the faces' REAL TTFs for BOTH sides** (`/fonts` mount) + waits on
+  `document.fonts`. Before this the design side fell back to Arial and the build side to Times —
+  the gate was comparing two fallbacks (Vakt-One whole-dial went 0.13% → 0.06% on the same build).
+  `current.js` font stacks gained a `sans-serif` fallback.
+- `dateLockText` renders at the design's own size (no MIN_LIVE_TEXT floor) — same class as the
+  adaptive-scale size fix.
+- `scaffold.mjs` emits the committed manifest comment (kills the recurring cosmetic drift).
+
+### Still open for the wrist (unchanged facts)
+- `HEART_RATE/RANGED_VALUE` defaults on all 5 VAKT top dials: an OEM that serves text/shortcut
+  leaves that dial blank until the wearer assigns a ranged pulse (fallback = one-line spec change
+  per face: drop the slot, restore the seconds sub-hand).
+- All `[COMPLICATION.*]` bindings and the Counterform `< 10` gates are validator-unverifiable.
+- GT's date window still shows "19" without "SUN" (−37% ink) — owner call pending (the other four
+  VAKT faces now show day3 natively where their design has one).
+- Unread chip renders its count at 16 (design 12.5) — the deliberate MIN_SLOT_TEXT legibility
+  floor on provider content; flag for per-face refinement if the owner minds.
+
+---
+
+## ⏸ superseded header (2026-07-20) — kept for history
+
+**VAKT GT was DONE and parked; the rest below is the running record that led here.**
 
 ### What is DONE (VAKT GT only — WF-A2)
 Settled design: three chronos = **battery · steps · heart rate**, each a pure instrument. A slot may

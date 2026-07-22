@@ -8,7 +8,6 @@
     <string name="theme_3">Night March</string>
     <string name="theme_4">Canyon</string>
     <string name="slot_1">Date plaque</string>
-    <string name="slot_2">North gauge (steps)</string>
     <string name="cfg_seconds">Seconds hand</string>
     <string name="cfg_dark">Pure-black dark mode</string>
 </resources>

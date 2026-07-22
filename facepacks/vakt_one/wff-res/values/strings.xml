@@ -8,8 +8,9 @@
     <string name="theme_3">Ice Watch</string>
     <string name="theme_4">NVG Ops</string>
     <string name="slot_1">Top register</string>
-    <string name="slot_2">Date window</string>
-    <string name="slot_3">Unread chip</string>
+    <string name="slot_2">Unread chip</string>
+    <string name="slot_3">Battery register</string>
+    <string name="slot_4">Steps register</string>
     <string name="cfg_seconds">Seconds hand</string>
     <string name="cfg_date">Date display</string>
     <string name="cfg_dark">Pure-black dark mode</string>

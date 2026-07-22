@@ -125,6 +125,7 @@ const PROVIDER_CHIPS = {
   DAY_AND_DATE: 'Day & date',
   DATE: 'Date',
   UNREAD_NOTIFICATION_COUNT: 'Notifications',
+  WORLD_CLOCK: 'World clock',   // F9 fix: duplicate sunset cells now default to a second time zone
   EMPTY: null,   // a deliberately-empty slot: real, but it names no data of its own.
 };
 

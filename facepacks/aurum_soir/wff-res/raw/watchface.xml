@@ -49,28 +49,6 @@
 <Font family="jost_500" size="15" color="#e7e7e2"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t0" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
-<MinuteHand resource="hand_minute_t0" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t0">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t0" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t0_14">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#e7e7e2" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t0_15">
-<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
-<Fill color="#0d1422" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 <ListOption id="t1">
@@ -96,28 +74,6 @@
 <Font family="jost_500" size="15" color="#28251f"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t1" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
-<MinuteHand resource="hand_minute_t1" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t1">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t1" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t1_14">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#28251f" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t1_15">
-<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
-<Fill color="#ded9cc" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 <ListOption id="t2">
@@ -143,28 +99,6 @@
 <Font family="jost_500" size="15" color="#ede0dd"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t2" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
-<MinuteHand resource="hand_minute_t2" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t2">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t2" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t2_14">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#ede0dd" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t2_15">
-<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
-<Fill color="#1d0e13" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 <ListOption id="t3">
@@ -190,28 +124,6 @@
 <Font family="jost_500" size="15" color="#e5e2d3"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t3" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
-<MinuteHand resource="hand_minute_t3" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t3">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t3" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t3_14">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#e5e2d3" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t3_15">
-<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
-<Fill color="#0d1710" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 <ListOption id="t4">
@@ -237,28 +149,6 @@
 <Font family="jost_500" size="15" color="#e9e8e6"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t4" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
-<MinuteHand resource="hand_minute_t4" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t4">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t4" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t4_14">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#e9e8e6" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t4_15">
-<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
-<Fill color="#141517" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 </ListConfiguration>
@@ -286,6 +176,358 @@
 <Font family="jost_500" size="15" color="#d8d4cc"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
+</Group>
+</Group>
+<ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="190" y="98" width="70" height="24" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
+<BoundingBox x="0" y="0" width="70" height="24" outlinePadding="2" />
+<Complication type="SHORT_TEXT">
+<Group x="0" y="0" width="70" height="24" name="scT_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="70" height="24" name="sc_t0">
+<PartDraw x="0" y="0" width="70" height="24" name="patch_t0">
+<RoundRectangle x="0" y="0" width="70" height="24" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#080c14" />
+<Stroke color="#424853" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="0" width="66" height="24" name="sttx_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_400" size="18" color="#cda85e"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="70" height="24" name="sc_t1">
+<PartDraw x="0" y="0" width="70" height="24" name="patch_t1">
+<RoundRectangle x="0" y="0" width="70" height="24" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#85827a" />
+<Stroke color="#e5e1d7" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="0" width="66" height="24" name="sttx_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_400" size="18" color="#a8783c"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="70" height="24" name="sc_t2">
+<PartDraw x="0" y="0" width="70" height="24" name="patch_t2">
+<RoundRectangle x="0" y="0" width="70" height="24" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#11080b" />
+<Stroke color="#4f4347" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="0" width="66" height="24" name="sttx_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_400" size="18" color="#d3937e"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="70" height="24" name="sc_t3">
+<PartDraw x="0" y="0" width="70" height="24" name="patch_t3">
+<RoundRectangle x="0" y="0" width="70" height="24" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#080e0a" />
+<Stroke color="#424a45" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="0" width="66" height="24" name="sttx_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_400" size="18" color="#bfa050"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="70" height="24" name="sc_t4">
+<PartDraw x="0" y="0" width="70" height="24" name="patch_t4">
+<RoundRectangle x="0" y="0" width="70" height="24" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#0c0d0e" />
+<Stroke color="#48484a" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="0" width="66" height="24" name="sttx_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_400" size="18" color="#aeb2ba"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="70" height="24" name="scD_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="70" height="24" name="sc_dark">
+<PartDraw x="0" y="0" width="70" height="24" name="patch_dark">
+<RoundRectangle x="0" y="0" width="70" height="24" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#000000" />
+<Stroke color="#383838" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="0" width="66" height="24" name="sttx_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_400" size="18" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Complication>
+<Complication type="EMPTY" />
+</ComplicationSlot>
+<ComplicationSlot slotId="1" name="slot2" displayName="@string/slot_2" x="178" y="292" width="94" height="26" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<DefaultProviderPolicy defaultSystemProvider="DAY_AND_DATE" defaultSystemProviderType="SHORT_TEXT" />
+<BoundingBox x="0" y="0" width="94" height="26" outlinePadding="2" />
+<Complication type="SHORT_TEXT">
+<Group x="0" y="0" width="94" height="26" name="scG_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
+<Group x="0" y="0" width="94" height="26" name="scT_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="94" height="26" name="sc_t0">
+<PartDraw x="0" y="0" width="94" height="26" name="patch_t0">
+<RoundRectangle x="0" y="0" width="94" height="26" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#080c14" />
+<Stroke color="#424853" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="1" width="90" height="24" name="sttx_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_500" size="18" color="#e7e7e2"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="94" height="26" name="sc_t1">
+<PartDraw x="0" y="0" width="94" height="26" name="patch_t1">
+<RoundRectangle x="0" y="0" width="94" height="26" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#85827a" />
+<Stroke color="#e5e1d7" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="1" width="90" height="24" name="sttx_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_500" size="18" color="#28251f"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="94" height="26" name="sc_t2">
+<PartDraw x="0" y="0" width="94" height="26" name="patch_t2">
+<RoundRectangle x="0" y="0" width="94" height="26" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#11080b" />
+<Stroke color="#4f4347" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="1" width="90" height="24" name="sttx_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_500" size="18" color="#ede0dd"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="94" height="26" name="sc_t3">
+<PartDraw x="0" y="0" width="94" height="26" name="patch_t3">
+<RoundRectangle x="0" y="0" width="94" height="26" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#080e0a" />
+<Stroke color="#424a45" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="1" width="90" height="24" name="sttx_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_500" size="18" color="#e5e2d3"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="94" height="26" name="sc_t4">
+<PartDraw x="0" y="0" width="94" height="26" name="patch_t4">
+<RoundRectangle x="0" y="0" width="94" height="26" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#0c0d0e" />
+<Stroke color="#48484a" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="1" width="90" height="24" name="sttx_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_500" size="18" color="#e9e8e6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="94" height="26" name="scD_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="94" height="26" name="sc_dark">
+<PartDraw x="0" y="0" width="94" height="26" name="patch_dark">
+<RoundRectangle x="0" y="0" width="94" height="26" cornerRadiusX="4" cornerRadiusY="4">
+<Fill color="#000000" />
+<Stroke color="#383838" thickness="1" />
+</RoundRectangle>
+</PartDraw>
+<PartText x="2" y="1" width="90" height="24" name="sttx_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="jost_500" size="18" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Group>
+</Complication>
+<Complication type="EMPTY" />
+</ComplicationSlot>
+<Group x="0" y="0" width="450" height="450" name="interactiveOver">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<Group x="0" y="0" width="450" height="450" name="themedOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="450" height="450" name="theme_t0">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t0" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
+<MinuteHand resource="hand_minute_t0" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t0">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t0" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t0_14">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#e7e7e2" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t0_15">
+<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
+<Fill color="#0d1422" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="450" height="450" name="theme_t1">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t1" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
+<MinuteHand resource="hand_minute_t1" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t1">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t1" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t1_14">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#28251f" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t1_15">
+<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
+<Fill color="#ded9cc" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="450" height="450" name="theme_t2">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t2" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
+<MinuteHand resource="hand_minute_t2" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t2">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t2" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t2_14">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#ede0dd" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t2_15">
+<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
+<Fill color="#1d0e13" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="450" height="450" name="theme_t3">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t3" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
+<MinuteHand resource="hand_minute_t3" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t3">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t3" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t3_14">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#e5e2d3" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t3_15">
+<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
+<Fill color="#0d1710" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="450" height="450" name="theme_t4">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t4" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
+<MinuteHand resource="hand_minute_t4" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t4">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t4" x="218" y="35" width="15" height="224" pivotX="0.5000" pivotY="0.8482">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t4_14">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#e9e8e6" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t4_15">
+<Ellipse x="223.40" y="223.40" width="3.2" height="3.2">
+<Fill color="#141517" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="darkTwinOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
 <AnalogClock x="0" y="0" width="450" height="450">
 <HourHand resource="hand_hour_dark" x="213" y="111" width="25" height="132" pivotX="0.5000" pivotY="0.8636" />
 <MinuteHand resource="hand_minute_dark" x="214" y="47" width="22" height="200" pivotX="0.4818" pivotY="0.8900" />
@@ -365,220 +607,5 @@
 <MinuteHand resource="aod_minute" x="217" y="55" width="17" height="188" pivotX="0.4824" pivotY="0.9043" />
 </AnalogClock>
 </Group>
-<ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="190" y="98" width="70" height="24" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
-<Variant mode="AMBIENT" target="alpha" value="0" />
-<DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
-<BoundingBox x="0" y="0" width="70" height="24" outlinePadding="2" />
-<Complication type="SHORT_TEXT">
-<Group x="0" y="0" width="70" height="24" name="scT_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
-<ListConfiguration id="theme">
-<ListOption id="t0">
-<Group x="0" y="0" width="70" height="24" name="sc_t0">
-<PartDraw x="0" y="0" width="70" height="24" name="patch_t0">
-<Rectangle x="0" y="0" width="70" height="24">
-<Fill color="#0d1422" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="0" width="70" height="24" name="sttx_t0">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_400" size="16" color="#cda85e"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t1">
-<Group x="0" y="0" width="70" height="24" name="sc_t1">
-<PartDraw x="0" y="0" width="70" height="24" name="patch_t1">
-<Rectangle x="0" y="0" width="70" height="24">
-<Fill color="#ded9cc" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="0" width="70" height="24" name="sttx_t1">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_400" size="16" color="#a8783c"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t2">
-<Group x="0" y="0" width="70" height="24" name="sc_t2">
-<PartDraw x="0" y="0" width="70" height="24" name="patch_t2">
-<Rectangle x="0" y="0" width="70" height="24">
-<Fill color="#1d0e13" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="0" width="70" height="24" name="sttx_t2">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_400" size="16" color="#d3937e"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t3">
-<Group x="0" y="0" width="70" height="24" name="sc_t3">
-<PartDraw x="0" y="0" width="70" height="24" name="patch_t3">
-<Rectangle x="0" y="0" width="70" height="24">
-<Fill color="#0d1710" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="0" width="70" height="24" name="sttx_t3">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_400" size="16" color="#bfa050"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t4">
-<Group x="0" y="0" width="70" height="24" name="sc_t4">
-<PartDraw x="0" y="0" width="70" height="24" name="patch_t4">
-<Rectangle x="0" y="0" width="70" height="24">
-<Fill color="#141517" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="0" width="70" height="24" name="sttx_t4">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_400" size="16" color="#aeb2ba"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-</ListConfiguration>
-</Group>
-<Group x="0" y="0" width="70" height="24" name="scD_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
-<Group x="0" y="0" width="70" height="24" name="sc_dark">
-<PartDraw x="0" y="0" width="70" height="24" name="patch_dark">
-<Rectangle x="0" y="0" width="70" height="24">
-<Fill color="#000000" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="0" width="70" height="24" name="sttx_dark">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_400" size="16" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</Group>
-</Complication>
-</ComplicationSlot>
-<ComplicationSlot slotId="1" name="slot2" displayName="@string/slot_2" x="178" y="292" width="94" height="26" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
-<Variant mode="AMBIENT" target="alpha" value="0" />
-<DefaultProviderPolicy defaultSystemProvider="DAY_AND_DATE" defaultSystemProviderType="SHORT_TEXT" />
-<BoundingBox x="0" y="0" width="94" height="26" outlinePadding="2" />
-<Complication type="SHORT_TEXT">
-<Group x="0" y="0" width="94" height="26" name="scG_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.date] ? 255 : 0" />
-<Group x="0" y="0" width="94" height="26" name="scT_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
-<ListConfiguration id="theme">
-<ListOption id="t0">
-<Group x="0" y="0" width="94" height="26" name="sc_t0">
-<PartDraw x="0" y="0" width="94" height="26" name="patch_t0">
-<Rectangle x="0" y="2" width="45" height="24">
-<Fill color="#0d1422" />
-</Rectangle>
-<Rectangle x="47" y="2" width="43" height="24">
-<Fill color="#0d1422" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="2" width="90" height="24" name="sttx_t0">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_500" size="16" color="#e7e7e2"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t1">
-<Group x="0" y="0" width="94" height="26" name="sc_t1">
-<PartDraw x="0" y="0" width="94" height="26" name="patch_t1">
-<Rectangle x="0" y="2" width="45" height="24">
-<Fill color="#ded9cc" />
-</Rectangle>
-<Rectangle x="47" y="2" width="43" height="24">
-<Fill color="#ded9cc" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="2" width="90" height="24" name="sttx_t1">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_500" size="16" color="#28251f"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t2">
-<Group x="0" y="0" width="94" height="26" name="sc_t2">
-<PartDraw x="0" y="0" width="94" height="26" name="patch_t2">
-<Rectangle x="0" y="2" width="45" height="24">
-<Fill color="#1d0e13" />
-</Rectangle>
-<Rectangle x="47" y="2" width="43" height="24">
-<Fill color="#1d0e13" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="2" width="90" height="24" name="sttx_t2">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_500" size="16" color="#ede0dd"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t3">
-<Group x="0" y="0" width="94" height="26" name="sc_t3">
-<PartDraw x="0" y="0" width="94" height="26" name="patch_t3">
-<Rectangle x="0" y="2" width="45" height="24">
-<Fill color="#0d1710" />
-</Rectangle>
-<Rectangle x="47" y="2" width="43" height="24">
-<Fill color="#0d1710" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="2" width="90" height="24" name="sttx_t3">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_500" size="16" color="#e5e2d3"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t4">
-<Group x="0" y="0" width="94" height="26" name="sc_t4">
-<PartDraw x="0" y="0" width="94" height="26" name="patch_t4">
-<Rectangle x="0" y="2" width="45" height="24">
-<Fill color="#141517" />
-</Rectangle>
-<Rectangle x="47" y="2" width="43" height="24">
-<Fill color="#141517" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="2" width="90" height="24" name="sttx_t4">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_500" size="16" color="#e9e8e6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-</ListConfiguration>
-</Group>
-<Group x="0" y="0" width="94" height="26" name="scD_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
-<Group x="0" y="0" width="94" height="26" name="sc_dark">
-<PartDraw x="0" y="0" width="94" height="26" name="patch_dark">
-<Rectangle x="0" y="2" width="45" height="24">
-<Fill color="#000000" />
-</Rectangle>
-<Rectangle x="47" y="2" width="43" height="24">
-<Fill color="#000000" />
-</Rectangle>
-</PartDraw>
-<PartText x="0" y="2" width="90" height="24" name="sttx_dark">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="jost_500" size="16" color="#d8d4cc"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</Group>
-</Group>
-</Complication>
-</ComplicationSlot>
 </Scene>
 </WatchFace>

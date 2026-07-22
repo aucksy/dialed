@@ -73,30 +73,6 @@
       <Variant mode="AMBIENT" target="alpha" value="255" />
     </PartImage>
 
-    <!-- Planets: hands with arm art (dot at the arm tip; pivot = dial centre) -->
-    <AnalogClock x="0" y="0" width="480" height="480">
-      <HourHand resource="planet_hour" x="218" y="109" width="45" height="131"
-                pivotX="0.5" pivotY="1.0">
-        <Variant mode="AMBIENT" target="alpha" value="0" />
-      </HourHand>
-      <HourHand resource="planet_hour_aod" x="221" y="112" width="38" height="128"
-                pivotX="0.5" pivotY="1.0" alpha="0">
-        <Variant mode="AMBIENT" target="alpha" value="255" />
-      </HourHand>
-      <MinuteHand resource="planet_min" x="221" y="54" width="38" height="186"
-                  pivotX="0.5" pivotY="1.0">
-        <Variant mode="AMBIENT" target="alpha" value="0" />
-      </MinuteHand>
-      <MinuteHand resource="planet_min_aod" x="224" y="61" width="32" height="179"
-                  pivotX="0.5" pivotY="1.0" alpha="0">
-        <Variant mode="AMBIENT" target="alpha" value="255" />
-      </MinuteHand>
-      <SecondHand resource="comet" x="230" y="21" width="19" height="220"
-                  pivotX="0.5" pivotY="1.0">
-        <Variant mode="AMBIENT" target="alpha" value="0" />
-        <Sweep frequency="15" />
-      </SecondHand>
-    </AnalogClock>
 
     <!-- Digital time, top centre. Letter-spaced mono needs a full Font element,
          so 12/24-h is handled by twin PartTexts gated on [IS_24_HOUR_MODE]
@@ -201,6 +177,34 @@
       </Complication>
       <Complication type="EMPTY" />
     </ComplicationSlot>
+
+    <!-- Planets drawn AFTER the slots (F12): a slot is Scene-global and paints over
+         everything before it, so declared earlier the assigned data covered the planet
+         hands as they passed. A real orrery has its planets above the plate. -->
+    <!-- Planets: hands with arm art (dot at the arm tip; pivot = dial centre) -->
+    <AnalogClock x="0" y="0" width="480" height="480">
+      <HourHand resource="planet_hour" x="218" y="109" width="45" height="131"
+                pivotX="0.5" pivotY="1.0">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </HourHand>
+      <HourHand resource="planet_hour_aod" x="221" y="112" width="38" height="128"
+                pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </HourHand>
+      <MinuteHand resource="planet_min" x="221" y="54" width="38" height="186"
+                  pivotX="0.5" pivotY="1.0">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+      </MinuteHand>
+      <MinuteHand resource="planet_min_aod" x="224" y="61" width="32" height="179"
+                  pivotX="0.5" pivotY="1.0" alpha="0">
+        <Variant mode="AMBIENT" target="alpha" value="255" />
+      </MinuteHand>
+      <SecondHand resource="comet" x="230" y="21" width="19" height="220"
+                  pivotX="0.5" pivotY="1.0">
+        <Variant mode="AMBIENT" target="alpha" value="0" />
+        <Sweep frequency="15" />
+      </SecondHand>
+    </AnalogClock>
 
     <!-- Date line, bottom centre -->
     <PartText name="date" x="0" y="429" width="480" height="19">

@@ -35,28 +35,6 @@
 <Font family="jost_500" size="17" color="#232326"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t0" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
-<MinuteHand resource="hand_minute_t0" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t0">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t0" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t0_12">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#232326" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t0_13">
-<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
-<Fill color="#e8e4da" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 <ListOption id="t1">
@@ -69,28 +47,6 @@
 <Font family="jost_500" size="17" color="#e3d9bd"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t1" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
-<MinuteHand resource="hand_minute_t1" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t1">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t1" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t1_12">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#e3d9bd" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t1_13">
-<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
-<Fill color="#0e0e0f" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 <ListOption id="t2">
@@ -103,28 +59,6 @@
 <Font family="jost_500" size="17" color="#e8dcc8"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t2" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
-<MinuteHand resource="hand_minute_t2" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t2">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t2" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t2_12">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#e8dcc8" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t2_13">
-<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
-<Fill color="#210f12" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 <ListOption id="t3">
@@ -137,28 +71,6 @@
 <Font family="jost_500" size="17" color="#e4dfcd"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t3" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
-<MinuteHand resource="hand_minute_t3" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t3">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t3" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t3_12">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#e4dfcd" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t3_13">
-<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
-<Fill color="#16211d" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 <ListOption id="t4">
@@ -171,28 +83,6 @@
 <Font family="jost_500" size="17" color="#e5e6e2"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_t4" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
-<MinuteHand resource="hand_minute_t4" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_t4">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_t4" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
-</Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t4_12">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#e5e6e2" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_t4_13">
-<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
-<Fill color="#0e1420" />
-</Ellipse>
-</PartDraw>
 </Group>
 </ListOption>
 </ListConfiguration>
@@ -207,79 +97,7 @@
 <Font family="jost_500" size="17" color="#d8d4cc"><Template>%02d<Parameter expression="[DAY]" /></Template></Font>
 </Text>
 </PartText>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="hand_hour_dark" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
-<MinuteHand resource="hand_minute_dark" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
-</AnalogClock>
-<Group x="0" y="0" width="450" height="450" name="secG_dark">
-<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
-<AnalogClock x="0" y="0" width="450" height="450">
-<SecondHand resource="hand_second_dark" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
-<Sweep frequency="15" />
-</SecondHand>
-</AnalogClock>
 </Group>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_dark_12">
-<Ellipse x="220.50" y="220.50" width="9" height="9">
-<Fill color="#d8d4cc" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="cap_dark_13">
-<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
-<Fill color="#000000" />
-</Ellipse>
-</PartDraw>
-</Group>
-</Group>
-<Group x="0" y="0" width="450" height="450" name="aod" alpha="0">
-<Variant mode="AMBIENT" target="alpha" value="255" />
-<PartDraw x="0" y="0" width="450" height="450" name="aod0">
-<Ellipse x="223.00" y="18.00" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="325.50" y="45.46" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="400.54" y="120.50" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="428.00" y="223.00" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="400.54" y="325.50" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="325.50" y="400.54" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="223.00" y="428.00" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="120.50" y="400.54" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="45.46" y="325.50" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="18.00" y="223.00" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="45.46" y="120.50" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-<Ellipse x="120.50" y="45.46" width="4" height="4">
-<Fill color="#8f8877" />
-</Ellipse>
-</PartDraw>
-<PartDraw x="0" y="0" width="450" height="450" name="aod3">
-<Ellipse x="221.00" y="221.00" width="8" height="8">
-<Fill color="#d8d4cc" />
-</Ellipse>
-</PartDraw>
-<AnalogClock x="0" y="0" width="450" height="450">
-<HourHand resource="aod_hour" x="216" y="109" width="19" height="132" pivotX="0.4947" pivotY="0.8788" />
-<MinuteHand resource="aod_minute" x="217" y="51" width="17" height="192" pivotX="0.4941" pivotY="0.9063" />
-</AnalogClock>
 </Group>
 <ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="208" y="287" width="34" height="26" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
 <Variant mode="AMBIENT" target="alpha" value="0" />
@@ -383,6 +201,220 @@
 </Group>
 </Group>
 </Complication>
+<Complication type="EMPTY" />
 </ComplicationSlot>
+<Group x="0" y="0" width="450" height="450" name="interactiveOver">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<Group x="0" y="0" width="450" height="450" name="themedOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="450" height="450" name="theme_t0">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t0" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
+<MinuteHand resource="hand_minute_t0" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t0">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t0" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t0_12">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#232326" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t0_13">
+<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
+<Fill color="#e8e4da" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="450" height="450" name="theme_t1">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t1" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
+<MinuteHand resource="hand_minute_t1" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t1">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t1" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t1_12">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#e3d9bd" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t1_13">
+<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
+<Fill color="#0e0e0f" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="450" height="450" name="theme_t2">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t2" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
+<MinuteHand resource="hand_minute_t2" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t2">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t2" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t2_12">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#e8dcc8" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t2_13">
+<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
+<Fill color="#210f12" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="450" height="450" name="theme_t3">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t3" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
+<MinuteHand resource="hand_minute_t3" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t3">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t3" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t3_12">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#e4dfcd" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t3_13">
+<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
+<Fill color="#16211d" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="450" height="450" name="theme_t4">
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_t4" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
+<MinuteHand resource="hand_minute_t4" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_t4">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_t4" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t4_12">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#e5e6e2" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_t4_13">
+<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
+<Fill color="#0e1420" />
+</Ellipse>
+</PartDraw>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="darkTwinOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="hand_hour_dark" x="214" y="107" width="22" height="138" pivotX="0.5000" pivotY="0.8551" />
+<MinuteHand resource="hand_minute_dark" x="215" y="43" width="20" height="206" pivotX="0.4800" pivotY="0.8835" />
+</AnalogClock>
+<Group x="0" y="0" width="450" height="450" name="secG_dark">
+<Transform target="alpha" value="[CONFIGURATION.seconds] ? 255 : 0" />
+<AnalogClock x="0" y="0" width="450" height="450">
+<SecondHand resource="hand_second_dark" x="218" y="31" width="15" height="230" pivotX="0.5000" pivotY="0.8435">
+<Sweep frequency="15" />
+</SecondHand>
+</AnalogClock>
+</Group>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_dark_12">
+<Ellipse x="220.50" y="220.50" width="9" height="9">
+<Fill color="#d8d4cc" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="cap_dark_13">
+<Ellipse x="223.20" y="223.20" width="3.6" height="3.6">
+<Fill color="#000000" />
+</Ellipse>
+</PartDraw>
+</Group>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="aod" alpha="0">
+<Variant mode="AMBIENT" target="alpha" value="255" />
+<PartDraw x="0" y="0" width="450" height="450" name="aod0">
+<Ellipse x="223.00" y="18.00" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="325.50" y="45.46" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="400.54" y="120.50" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="428.00" y="223.00" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="400.54" y="325.50" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="325.50" y="400.54" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="223.00" y="428.00" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="120.50" y="400.54" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="45.46" y="325.50" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="18.00" y="223.00" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="45.46" y="120.50" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+<Ellipse x="120.50" y="45.46" width="4" height="4">
+<Fill color="#8f8877" />
+</Ellipse>
+</PartDraw>
+<PartDraw x="0" y="0" width="450" height="450" name="aod3">
+<Ellipse x="221.00" y="221.00" width="8" height="8">
+<Fill color="#d8d4cc" />
+</Ellipse>
+</PartDraw>
+<AnalogClock x="0" y="0" width="450" height="450">
+<HourHand resource="aod_hour" x="216" y="109" width="19" height="132" pivotX="0.4947" pivotY="0.8788" />
+<MinuteHand resource="aod_minute" x="217" y="51" width="17" height="192" pivotX="0.4941" pivotY="0.9063" />
+</AnalogClock>
+</Group>
 </Scene>
 </WatchFace>

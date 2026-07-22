@@ -7,6 +7,28 @@
   html,body{ margin:0; padding:0; background:#000; overflow:hidden; }
   #stage{ width:450px; height:450px; position:absolute; left:0; top:0; }
   #stage svg{ display:block; }
+  /* ⭐ THE REAL FONTS, for BOTH sides. Without these the design fell back to Arial and the
+     build to Times — the diff was comparing two fallbacks, and every text region's floor was
+     inflated by a font neither side ships. These are the exact TTFs the faces package
+     (served from collection3-tools/fonts), so what the gate measures is what the watch draws. */
+  @font-face{ font-family:'Archivo'; font-weight:500; src:url('/fonts/archivo_500.ttf'); }
+  @font-face{ font-family:'Archivo'; font-weight:600; src:url('/fonts/archivo_600.ttf'); }
+  @font-face{ font-family:'Archivo'; font-weight:700; src:url('/fonts/archivo_700.ttf'); }
+  @font-face{ font-family:'Barlow SemiCondensed'; font-weight:500; src:url('/fonts/barlowsemicondensed_500.ttf'); }
+  @font-face{ font-family:'Barlow SemiCondensed'; font-weight:600; src:url('/fonts/barlowsemicondensed_600.ttf'); }
+  @font-face{ font-family:'Barlow SemiCondensed'; font-weight:700; src:url('/fonts/barlowsemicondensed_700.ttf'); }
+  @font-face{ font-family:'Big Shoulders Display'; font-weight:400; src:url('/fonts/bigshouldersdisplay_400.ttf'); }
+  @font-face{ font-family:'Big Shoulders Display'; font-weight:600; src:url('/fonts/bigshouldersdisplay_600.ttf'); }
+  @font-face{ font-family:'Big Shoulders Display'; font-weight:800; src:url('/fonts/bigshouldersdisplay_800.ttf'); }
+  @font-face{ font-family:'Jost'; font-weight:300; src:url('/fonts/jost_300.ttf'); }
+  @font-face{ font-family:'Jost'; font-weight:400; src:url('/fonts/jost_400.ttf'); }
+  @font-face{ font-family:'Jost'; font-weight:500; src:url('/fonts/jost_500.ttf'); }
+  @font-face{ font-family:'Jost'; font-weight:600; src:url('/fonts/jost_600.ttf'); }
+  @font-face{ font-family:'Marcellus'; font-weight:400; src:url('/fonts/marcellus_400.ttf'); }
+  @font-face{ font-family:'Saira SemiCondensed'; font-weight:600; src:url('/fonts/sairasemicondensed_600.ttf'); }
+  @font-face{ font-family:'Saira SemiCondensed'; font-weight:700; src:url('/fonts/sairasemicondensed_700.ttf'); }
+  @font-face{ font-family:'Space Grotesk'; font-weight:500; src:url('/fonts/spacegrotesk_500.ttf'); }
+  @font-face{ font-family:'Space Grotesk'; font-weight:700; src:url('/fonts/spacegrotesk_700.ttf'); }
 </style>
 <script>
 /* ── DETERMINISM ────────────────────────────────────────────────────────────
@@ -45,6 +67,13 @@
 import { loadFace, renderFace, fitText, DEFAULT_SAMPLE_FOR } from './current.js';
 
 const Q = new URLSearchParams(location.search);
+// Fonts must be resident BEFORE either renderer draws — a screenshot that races the font
+// loader measures the fallback, not the face.
+await Promise.all([
+  ['Archivo', 'Barlow SemiCondensed', 'Big Shoulders Display', 'Jost', 'Marcellus',
+   'Saira SemiCondensed', 'Space Grotesk'].flatMap(f => [300, 400, 500, 600, 700, 800].map(w =>
+    document.fonts.load(`${w} 16px "${f}"`).catch(() => {}))),
+].flat());
 const SIDE = Q.get('side') || 'current';       // 'orig' | 'current'
 const FACE_ID = Q.get('face') || 'WF-A2';
 const FACE_DIR = Q.get('dir') || 'Vakt-GT';

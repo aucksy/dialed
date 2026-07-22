@@ -7,7 +7,6 @@
     <string name="theme_2">Champagne</string>
     <string name="theme_3">Abyss</string>
     <string name="theme_4">Aubergine</string>
-    <string name="slot_1">Seconds register (swappable)</string>
-    <string name="slot_2">Date window</string>
+    <string name="slot_1">Date window</string>
     <string name="cfg_dark">Pure-black dark mode</string>
 </resources>

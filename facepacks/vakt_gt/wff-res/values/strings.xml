@@ -10,6 +10,7 @@
     <string name="slot_1">Top register</string>
     <string name="slot_2">Hero counter</string>
     <string name="slot_3">Date window</string>
+    <string name="slot_4">Battery register</string>
     <string name="cfg_seconds">Seconds hand</string>
     <string name="cfg_date">Date display</string>
     <string name="cfg_dark">Pure-black dark mode</string>

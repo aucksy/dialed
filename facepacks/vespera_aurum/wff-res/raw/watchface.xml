@@ -101,7 +101,7 @@
           <Ellipse x="1" y="1" width="95" height="95"><Stroke color="[CONFIGURATION.metal.2]" thickness="1.6" /></Ellipse>
           <Arc centerX="48" centerY="48" width="92" height="92" startAngle="0" endAngle="0" direction="CLOCKWISE">
             <Stroke color="[CONFIGURATION.metal.0]" thickness="4" cap="ROUND" />
-            <Transform target="endAngle" value="((clamp([COMPLICATION.RANGED_VALUE_VALUE], [COMPLICATION.RANGED_VALUE_MIN], [COMPLICATION.RANGED_VALUE_MAX]) - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+            <Transform target="endAngle" value="((clamp([COMPLICATION.RANGED_VALUE_VALUE], [COMPLICATION.RANGED_VALUE_MIN], [COMPLICATION.RANGED_VALUE_MAX]) - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt; 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1)) * 360" />
           </Arc>
         </PartDraw>
         <PartText x="6" y="29" width="83" height="25">
@@ -123,9 +123,19 @@
           <Ellipse x="1" y="1" width="95" height="95"><Stroke color="[CONFIGURATION.metal.2]" thickness="1.6" /></Ellipse>
           <Arc centerX="48" centerY="48" width="92" height="92" startAngle="0" endAngle="0" direction="CLOCKWISE">
             <Stroke color="[CONFIGURATION.metal.0]" thickness="4" cap="ROUND" />
-            <Transform target="endAngle" value="(clamp([COMPLICATION.GOAL_PROGRESS_VALUE], 0, [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) * 360" />
+            <Transform target="endAngle" value="(clamp([COMPLICATION.GOAL_PROGRESS_VALUE], 0, [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt; 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1)) * 360" />
           </Arc>
         </PartDraw>
+        <Group x="0" y="0" width="96" height="96" name="gp_overflow">
+          <Transform target="alpha" value="[COMPLICATION.GOAL_PROGRESS_VALUE] &gt; [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] ? 255 : 0" />
+          <PartDraw x="0" y="0" width="96" height="96">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Arc centerX="48" centerY="48" width="92" height="92" startAngle="0" endAngle="0" direction="CLOCKWISE">
+              <Stroke color="[CONFIGURATION.metal.1]" thickness="4" cap="ROUND" />
+              <Transform target="endAngle" value="clamp(([COMPLICATION.GOAL_PROGRESS_VALUE] - [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt; 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+            </Arc>
+          </PartDraw>
+        </Group>
         <PartText x="6" y="29" width="83" height="25">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="20.8" weight="MEDIUM" color="#FFEDE3CC">
@@ -163,7 +173,7 @@
     <ComplicationSlot slotId="2" name="s2" displayName="@string/slot_2"
                       supportedTypes="RANGED_VALUE GOAL_PROGRESS SHORT_TEXT EMPTY"
                       x="317" y="192" width="96" height="96">
-      <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
+      <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="RANGED_VALUE" />
       <BoundingOval x="0" y="0" width="96" height="96" />
       <Complication type="RANGED_VALUE">
         <PartDraw x="0" y="0" width="96" height="96">
@@ -172,7 +182,7 @@
           <Ellipse x="1" y="1" width="95" height="95"><Stroke color="[CONFIGURATION.metal.2]" thickness="1.6" /></Ellipse>
           <Arc centerX="48" centerY="48" width="92" height="92" startAngle="0" endAngle="0" direction="CLOCKWISE">
             <Stroke color="[CONFIGURATION.metal.0]" thickness="4" cap="ROUND" />
-            <Transform target="endAngle" value="((clamp([COMPLICATION.RANGED_VALUE_VALUE], [COMPLICATION.RANGED_VALUE_MIN], [COMPLICATION.RANGED_VALUE_MAX]) - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])) * 360" />
+            <Transform target="endAngle" value="((clamp([COMPLICATION.RANGED_VALUE_VALUE], [COMPLICATION.RANGED_VALUE_MIN], [COMPLICATION.RANGED_VALUE_MAX]) - [COMPLICATION.RANGED_VALUE_MIN]) / (([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt; 0 ? ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) : 1)) * 360" />
           </Arc>
         </PartDraw>
         <PartText x="6" y="29" width="83" height="25">
@@ -194,9 +204,19 @@
           <Ellipse x="1" y="1" width="95" height="95"><Stroke color="[CONFIGURATION.metal.2]" thickness="1.6" /></Ellipse>
           <Arc centerX="48" centerY="48" width="92" height="92" startAngle="0" endAngle="0" direction="CLOCKWISE">
             <Stroke color="[CONFIGURATION.metal.0]" thickness="4" cap="ROUND" />
-            <Transform target="endAngle" value="(clamp([COMPLICATION.GOAL_PROGRESS_VALUE], 0, [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) * 360" />
+            <Transform target="endAngle" value="(clamp([COMPLICATION.GOAL_PROGRESS_VALUE], 0, [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt; 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1)) * 360" />
           </Arc>
         </PartDraw>
+        <Group x="0" y="0" width="96" height="96" name="gp_overflow">
+          <Transform target="alpha" value="[COMPLICATION.GOAL_PROGRESS_VALUE] &gt; [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] ? 255 : 0" />
+          <PartDraw x="0" y="0" width="96" height="96">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Arc centerX="48" centerY="48" width="92" height="92" startAngle="0" endAngle="0" direction="CLOCKWISE">
+              <Stroke color="[CONFIGURATION.metal.1]" thickness="4" cap="ROUND" />
+              <Transform target="endAngle" value="clamp(([COMPLICATION.GOAL_PROGRESS_VALUE] - [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]) / ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt; 0 ? [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] : 1), 0, 1) * 360" />
+            </Arc>
+          </PartDraw>
+        </Group>
         <PartText x="6" y="29" width="83" height="25">
           <Variant mode="AMBIENT" target="alpha" value="0" />
           <Text align="CENTER"><Font family="ibm_plex_mono_medium" size="20.8" weight="MEDIUM" color="#FFEDE3CC">

@@ -254,7 +254,7 @@
     <ComplicationSlot slotId="3" name="s3" displayName="@string/slot_3"
                       supportedTypes="SHORT_TEXT EMPTY"
                       x="352" y="275" width="90" height="51">
-      <DefaultProviderPolicy defaultSystemProvider="SUNRISE_SUNSET" defaultSystemProviderType="SHORT_TEXT" />
+      <DefaultProviderPolicy defaultSystemProvider="WORLD_CLOCK" defaultSystemProviderType="SHORT_TEXT" />
       <BoundingBox x="0" y="0" width="90" height="51" />
       <Complication type="SHORT_TEXT">
         <PartText x="0" y="22" width="90" height="19">

@@ -133,9 +133,10 @@ function evalExpr(expr) {
 
 const col = (c) => (!c ? null : /^#[0-9a-f]{8}$/i.test(c) ? '#' + c.slice(3) : c);
 const alphaOf = (c) => (/^#[0-9a-f]{8}$/i.test(c) ? parseInt(c.slice(1, 3), 16) / 255 : 1);
-const fontFamily = (f) => (/saira/i.test(f || '') ? 'Saira SemiCondensed' : /barlow/i.test(f || '') ? 'Barlow SemiCondensed'
+const fontFamily = (f) => ((/saira/i.test(f || '') ? 'Saira SemiCondensed' : /barlow/i.test(f || '') ? 'Barlow SemiCondensed'
   : /jost/i.test(f || '') ? 'Jost' : /marcellus/i.test(f || '') ? 'Marcellus'
-  : /bigshoulders/i.test(f || '') ? 'Big Shoulders Display' : /spacegrotesk/i.test(f || '') ? 'Space Grotesk' : 'Archivo');
+  : /bigshoulders/i.test(f || '') ? 'Big Shoulders Display' : /spacegrotesk/i.test(f || '') ? 'Space Grotesk' : 'Archivo')
+  + ', sans-serif'); // fall to sans, never the browser's serif default (frame.html loads the real TTFs)
 const fontWeight = (f) => (/(\d{3})$/.exec(f || '') || [, '400'])[1];
 
 function arcPath(cx, cy, r, a0, a1) {

@@ -193,6 +193,7 @@
           <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13.8667" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
     <ComplicationSlot x="357" y="204" width="62" height="62" slotId="2" name="satMid" displayName="@string/slot_sat_mid"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
@@ -217,6 +218,7 @@
           <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13.8667" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
     <ComplicationSlot x="316" y="311" width="62" height="62" slotId="3" name="satLower" displayName="@string/slot_sat_lower"
         supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY" isCustomizable="TRUE">
@@ -241,6 +243,7 @@
           <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="13.8667" weight="NORMAL" color="#e8f4f6"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
     <ComplicationSlot x="144" y="41" width="192" height="28" slotId="4" name="header" displayName="@string/slot_header"
         supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
@@ -252,6 +255,7 @@
           <Text align="CENTER" ellipsis="TRUE"><Font family="jetbrainsmono" size="12.8" weight="NORMAL" color="#5f7a80"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font></Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
 
   </Scene>

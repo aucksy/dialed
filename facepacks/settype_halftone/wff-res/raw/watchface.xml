@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   SETTYPE · HALFTONE (Fable Collection — Twelve&Sixty design 04·E)
-  Watch Face Format v2 · canvas 300×300
+  Watch Face Format v2 · canvas 480×480
 
   Screen-printed time: hours in a coarse dot screen, minutes in a fine offset
   screen. WFF cannot clip a pattern to glyphs, so the dot-screened digits are
@@ -25,28 +25,28 @@
 
   <BitmapFonts>
     <BitmapFont name="ht_coarse">
-      <Character name="0" width="121" height="170" resource="ht_coarse_0" />
-      <Character name="1" width="121" height="170" resource="ht_coarse_1" />
-      <Character name="2" width="121" height="170" resource="ht_coarse_2" />
-      <Character name="3" width="121" height="170" resource="ht_coarse_3" />
-      <Character name="4" width="121" height="170" resource="ht_coarse_4" />
-      <Character name="5" width="121" height="170" resource="ht_coarse_5" />
-      <Character name="6" width="121" height="170" resource="ht_coarse_6" />
-      <Character name="7" width="121" height="170" resource="ht_coarse_7" />
-      <Character name="8" width="121" height="170" resource="ht_coarse_8" />
-      <Character name="9" width="121" height="170" resource="ht_coarse_9" />
+      <Character name="0" width="150" height="212" resource="ht_coarse_0" />
+      <Character name="1" width="150" height="212" resource="ht_coarse_1" />
+      <Character name="2" width="150" height="212" resource="ht_coarse_2" />
+      <Character name="3" width="150" height="212" resource="ht_coarse_3" />
+      <Character name="4" width="150" height="212" resource="ht_coarse_4" />
+      <Character name="5" width="150" height="212" resource="ht_coarse_5" />
+      <Character name="6" width="150" height="212" resource="ht_coarse_6" />
+      <Character name="7" width="150" height="212" resource="ht_coarse_7" />
+      <Character name="8" width="150" height="212" resource="ht_coarse_8" />
+      <Character name="9" width="150" height="212" resource="ht_coarse_9" />
     </BitmapFont>
     <BitmapFont name="ht_fine">
-      <Character name="0" width="121" height="170" resource="ht_fine_0" />
-      <Character name="1" width="121" height="170" resource="ht_fine_1" />
-      <Character name="2" width="121" height="170" resource="ht_fine_2" />
-      <Character name="3" width="121" height="170" resource="ht_fine_3" />
-      <Character name="4" width="121" height="170" resource="ht_fine_4" />
-      <Character name="5" width="121" height="170" resource="ht_fine_5" />
-      <Character name="6" width="121" height="170" resource="ht_fine_6" />
-      <Character name="7" width="121" height="170" resource="ht_fine_7" />
-      <Character name="8" width="121" height="170" resource="ht_fine_8" />
-      <Character name="9" width="121" height="170" resource="ht_fine_9" />
+      <Character name="0" width="150" height="212" resource="ht_fine_0" />
+      <Character name="1" width="150" height="212" resource="ht_fine_1" />
+      <Character name="2" width="150" height="212" resource="ht_fine_2" />
+      <Character name="3" width="150" height="212" resource="ht_fine_3" />
+      <Character name="4" width="150" height="212" resource="ht_fine_4" />
+      <Character name="5" width="150" height="212" resource="ht_fine_5" />
+      <Character name="6" width="150" height="212" resource="ht_fine_6" />
+      <Character name="7" width="150" height="212" resource="ht_fine_7" />
+      <Character name="8" width="150" height="212" resource="ht_fine_8" />
+      <Character name="9" width="150" height="212" resource="ht_fine_9" />
     </BitmapFont>
   </BitmapFonts>
 
@@ -67,7 +67,7 @@
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DigitalClock x="0" y="0" width="480" height="170">
         <TimeText format="hh" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="0" width="480" height="170">
-          <BitmapFont family="ht_coarse" size="169.6" color="[CONFIGURATION.accent.0]" />
+          <BitmapFont family="ht_coarse" size="170" color="[CONFIGURATION.accent.0]" />
         </TimeText>
       </DigitalClock>
     </Group>
@@ -77,7 +77,7 @@
       <Variant mode="AMBIENT" target="alpha" value="0" />
       <DigitalClock x="0" y="0" width="480" height="170">
         <TimeText format="mm" align="CENTER" x="0" y="0" width="480" height="170">
-          <BitmapFont family="ht_fine" size="169.6" color="[CONFIGURATION.accent.0]" />
+          <BitmapFont family="ht_fine" size="170" color="[CONFIGURATION.accent.0]" />
         </TimeText>
       </DigitalClock>
     </Group>

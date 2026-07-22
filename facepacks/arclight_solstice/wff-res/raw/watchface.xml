@@ -356,6 +356,7 @@
           </Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
 
     <!-- Ring · bottom @180° -->
@@ -407,6 +408,7 @@
           </Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
 
     <!-- Ring · lower-right @135° (4:30, r=135) -->
@@ -458,6 +460,7 @@
           </Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
 
     <!-- ================= SKY MICRO SLOTS (3-4, hidden in ambient) ================= -->
@@ -512,6 +515,7 @@
           </Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
 
     <!-- Ring · upper-right @38°, flanking the time -->
@@ -563,6 +567,7 @@
           </Text>
         </PartText>
       </Complication>
+      <Complication type="EMPTY" />
     </ComplicationSlot>
 
   </Scene>

@@ -17,7 +17,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.aether.ember",
             apkAsset = "faces/aether_ember.apk",
             tokenAsset = "tokens/aether_ember.token",
-            features = listOf("Heart rate", "Steps", "2 complications", "Always-on"),
+            features = listOf("Battery", "Steps", "2 complications", "Always-on"),
             styleTags = listOf("Aether"),
         ),
         Face(
@@ -31,7 +31,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.aether.horizon",
             apkAsset = "faces/aether_horizon.apk",
             tokenAsset = "tokens/aether_horizon.token",
-            features = listOf("Steps", "Sunrise · sunset", "3 complications", "Always-on"),
+            features = listOf("Steps", "Sunrise · sunset", "World clock", "3 complications", "Always-on"),
             styleTags = listOf("Aether"),
         ),
         Face(
@@ -101,7 +101,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.aurum.guilloche",
             apkAsset = "faces/aurum_guilloche.apk",
             tokenAsset = "tokens/aurum_guilloche.token",
-            features = listOf("1 complication", "Always-on"),
+            features = listOf("Date", "1 complication", "Always-on"),
             styleTags = listOf("Aurum"),
         ),
         Face(
@@ -213,7 +213,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.kinetik.escapement",
             apkAsset = "faces/kinetik_escapement.apk",
             tokenAsset = "tokens/kinetik_escapement.token",
-            features = listOf("Heart rate", "Steps", "2 complications", "Always-on"),
+            features = listOf("Battery", "Steps", "2 complications", "Always-on"),
             styleTags = listOf("Kinetik"),
         ),
         Face(
@@ -227,7 +227,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.kinetik.metronome",
             apkAsset = "faces/kinetik_metronome.apk",
             tokenAsset = "tokens/kinetik_metronome.token",
-            features = listOf("Heart rate", "Calendar", "2 complications", "Always-on"),
+            features = listOf("Battery", "Calendar", "2 complications", "Always-on"),
             styleTags = listOf("Kinetik"),
         ),
         Face(
@@ -297,7 +297,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.meridian.classic",
             apkAsset = "faces/meridian_classic.apk",
             tokenAsset = "tokens/meridian_classic.token",
-            features = listOf("2 complications", "Always-on"),
+            features = listOf("Date", "2 complications", "Always-on"),
             styleTags = listOf("Meridian"),
         ),
         Face(
@@ -311,7 +311,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.meridian.petiteseconde",
             apkAsset = "faces/meridian_petiteseconde.apk",
             tokenAsset = "tokens/meridian_petiteseconde.token",
-            features = listOf("Date", "2 complications", "Always-on"),
+            features = listOf("Date", "1 complication", "Always-on"),
             styleTags = listOf("Meridian"),
         ),
         Face(
@@ -409,7 +409,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.terra.altimeter",
             apkAsset = "faces/terra_altimeter.apk",
             tokenAsset = "tokens/terra_altimeter.token",
-            features = listOf("Day & date", "3 complications", "Always-on"),
+            features = listOf("Day & date", "1 complication", "Always-on"),
             styleTags = listOf("Terra"),
         ),
         Face(
@@ -423,7 +423,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.terra.compass",
             apkAsset = "faces/terra_compass.apk",
             tokenAsset = "tokens/terra_compass.token",
-            features = listOf("Day & date", "2 complications", "Always-on"),
+            features = listOf("Day & date", "1 complication", "Always-on"),
             styleTags = listOf("Terra"),
         ),
         Face(
@@ -437,7 +437,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.terra.field24",
             apkAsset = "faces/terra_field24.apk",
             tokenAsset = "tokens/terra_field24.token",
-            features = listOf("Date", "Sunrise · sunset", "3 complications", "Always-on"),
+            features = listOf("Date", "Sunrise · sunset", "World clock", "3 complications", "Always-on"),
             styleTags = listOf("Terra"),
         ),
         Face(
@@ -451,7 +451,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.terra.meridianline",
             apkAsset = "faces/terra_meridianline.apk",
             tokenAsset = "tokens/terra_meridianline.token",
-            features = listOf("Sunrise · sunset", "Calendar", "3 complications", "Always-on"),
+            features = listOf("Sunrise · sunset", "World clock", "Calendar", "3 complications", "Always-on"),
             styleTags = listOf("Terra"),
         ),
         Face(
@@ -465,7 +465,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.terra.solstice",
             apkAsset = "faces/terra_solstice.apk",
             tokenAsset = "tokens/terra_solstice.token",
-            features = listOf("Sunrise · sunset", "Day & date", "3 complications", "Always-on"),
+            features = listOf("Sunrise · sunset", "World clock", "Day & date", "3 complications", "Always-on"),
             styleTags = listOf("Terra"),
         ),
         Face(
@@ -479,7 +479,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.vakt.gt",
             apkAsset = "faces/vakt_gt.apk",
             tokenAsset = "tokens/vakt_gt.token",
-            features = listOf("Date", "3 complications", "Always-on"),
+            features = listOf("Heart rate", "Steps", "Date", "Battery", "4 complications", "Always-on"),
             styleTags = listOf("Vakt"),
         ),
         Face(
@@ -493,7 +493,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.vakt.meridian",
             apkAsset = "faces/vakt_meridian.apk",
             tokenAsset = "tokens/vakt_meridian.token",
-            features = listOf("Calendar", "Date", "3 complications", "Always-on"),
+            features = listOf("Heart rate", "Calendar", "Battery", "Steps", "4 complications", "Always-on"),
             styleTags = listOf("Vakt"),
         ),
         Face(
@@ -507,7 +507,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.vakt.nightwatch",
             apkAsset = "faces/vakt_nightwatch.apk",
             tokenAsset = "tokens/vakt_nightwatch.token",
-            features = listOf("Sunrise · sunset", "Day & date", "4 complications", "Always-on"),
+            features = listOf("Heart rate", "Sunrise · sunset", "World clock", "Battery", "Steps", "5 complications", "Always-on"),
             styleTags = listOf("Vakt"),
         ),
         Face(
@@ -521,7 +521,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.vakt.one",
             apkAsset = "faces/vakt_one.apk",
             tokenAsset = "tokens/vakt_one.token",
-            features = listOf("Notifications", "3 complications", "Always-on"),
+            features = listOf("Heart rate", "Notifications", "Battery", "Steps", "4 complications", "Always-on"),
             styleTags = listOf("Vakt"),
         ),
         Face(
@@ -535,7 +535,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.vakt.ti",
             apkAsset = "faces/vakt_ti.apk",
             tokenAsset = "tokens/vakt_ti.token",
-            features = listOf("Day & date", "3 complications", "Always-on"),
+            features = listOf("Heart rate", "Steps", "2 complications", "Always-on"),
             styleTags = listOf("Vakt"),
         ),
         Face(
@@ -549,7 +549,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.vespera.aurum",
             apkAsset = "faces/vespera_aurum.apk",
             tokenAsset = "tokens/vespera_aurum.token",
-            features = listOf("Steps", "Heart rate", "2 complications", "Always-on"),
+            features = listOf("Steps", "Battery", "2 complications", "Always-on"),
             styleTags = listOf("Vespera"),
         ),
         Face(
@@ -563,7 +563,7 @@ object FaceCatalog {
             packageName = "com.dialed.app.watchfacepush.vespera.meteorite",
             apkAsset = "faces/vespera_meteorite.apk",
             tokenAsset = "tokens/vespera_meteorite.token",
-            features = listOf("Heart rate", "Steps", "2 complications", "Always-on"),
+            features = listOf("Battery", "Steps", "2 complications", "Always-on"),
             styleTags = listOf("Vespera"),
         ),
         Face(

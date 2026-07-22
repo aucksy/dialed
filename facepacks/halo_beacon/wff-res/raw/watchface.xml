@@ -507,6 +507,148 @@
 </PartText>
 </Group>
 </Group>
+<ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="160" y="274" width="130" height="26" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<DefaultProviderPolicy defaultSystemProvider="DAY_AND_DATE" defaultSystemProviderType="SHORT_TEXT" />
+<BoundingBox x="0" y="0" width="130" height="26" outlinePadding="2" />
+<Complication type="SHORT_TEXT">
+<Group x="0" y="0" width="130" height="26" name="scT_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="130" height="26" name="sc_t0">
+<PartDraw x="0" y="0" width="130" height="26" name="patch_t0">
+<Rectangle x="9" y="1" width="57" height="26">
+<Fill color="#e0dcd2" />
+</Rectangle>
+<Rectangle x="63" y="1" width="46" height="26">
+<Fill color="#e0dcd2" />
+</Rectangle>
+</PartDraw>
+<PartText x="9" y="1" width="100" height="26" name="sttx_t0">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="spacegrotesk_500" size="18" color="#98938a"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="130" height="26" name="sc_t1">
+<PartDraw x="0" y="0" width="130" height="26" name="patch_t1">
+<Rectangle x="9" y="1" width="57" height="26">
+<Fill color="#0e0e0f" />
+</Rectangle>
+<Rectangle x="63" y="1" width="46" height="26">
+<Fill color="#0e0e0f" />
+</Rectangle>
+</PartDraw>
+<PartText x="9" y="1" width="100" height="26" name="sttx_t1">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="spacegrotesk_500" size="18" color="#55534d"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="130" height="26" name="sc_t2">
+<PartDraw x="0" y="0" width="130" height="26" name="patch_t2">
+<Rectangle x="9" y="1" width="57" height="26">
+<Fill color="#0c1a1c" />
+</Rectangle>
+<Rectangle x="63" y="1" width="46" height="26">
+<Fill color="#0c1a1c" />
+</Rectangle>
+</PartDraw>
+<PartText x="9" y="1" width="100" height="26" name="sttx_t2">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="spacegrotesk_500" size="18" color="#4d6365"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="130" height="26" name="sc_t3">
+<PartDraw x="0" y="0" width="130" height="26" name="patch_t3">
+<Rectangle x="9" y="1" width="57" height="26">
+<Fill color="#1e0e10" />
+</Rectangle>
+<Rectangle x="63" y="1" width="46" height="26">
+<Fill color="#1e0e10" />
+</Rectangle>
+</PartDraw>
+<PartText x="9" y="1" width="100" height="26" name="sttx_t3">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="spacegrotesk_500" size="18" color="#6a5254"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="130" height="26" name="sc_t4">
+<PartDraw x="0" y="0" width="130" height="26" name="patch_t4">
+<Rectangle x="9" y="1" width="57" height="26">
+<Fill color="#26282a" />
+</Rectangle>
+<Rectangle x="63" y="1" width="46" height="26">
+<Fill color="#26282a" />
+</Rectangle>
+</PartDraw>
+<PartText x="9" y="1" width="100" height="26" name="sttx_t4">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="spacegrotesk_500" size="18" color="#6a6c6f"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="130" height="26" name="scD_SHORT_TEXT">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+<Group x="0" y="0" width="130" height="26" name="sc_dark">
+<PartDraw x="0" y="0" width="130" height="26" name="patch_dark">
+<Rectangle x="9" y="1" width="57" height="26">
+<Fill color="#000000" />
+</Rectangle>
+<Rectangle x="63" y="1" width="46" height="26">
+<Fill color="#000000" />
+</Rectangle>
+</PartDraw>
+<PartText x="9" y="1" width="100" height="26" name="sttx_dark">
+<Text align="CENTER" ellipsis="TRUE">
+<Font family="spacegrotesk_500" size="18" color="#8f8877"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+</Text>
+</PartText>
+</Group>
+</Group>
+</Complication>
+<Complication type="EMPTY" />
+</ComplicationSlot>
+<Group x="0" y="0" width="450" height="450" name="interactiveOver">
+<Variant mode="AMBIENT" target="alpha" value="0" />
+<Group x="0" y="0" width="450" height="450" name="themedOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
+<ListConfiguration id="theme">
+<ListOption id="t0">
+<Group x="0" y="0" width="450" height="450" name="theme_t0" />
+</ListOption>
+<ListOption id="t1">
+<Group x="0" y="0" width="450" height="450" name="theme_t1" />
+</ListOption>
+<ListOption id="t2">
+<Group x="0" y="0" width="450" height="450" name="theme_t2" />
+</ListOption>
+<ListOption id="t3">
+<Group x="0" y="0" width="450" height="450" name="theme_t3" />
+</ListOption>
+<ListOption id="t4">
+<Group x="0" y="0" width="450" height="450" name="theme_t4" />
+</ListOption>
+</ListConfiguration>
+</Group>
+<Group x="0" y="0" width="450" height="450" name="darkTwinOver">
+<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
+</Group>
+</Group>
 <Group x="0" y="0" width="450" height="450" name="aod" alpha="0">
 <Variant mode="AMBIENT" target="alpha" value="255" />
 <DigitalClock x="98" y="168" width="254" height="114">
@@ -520,120 +662,5 @@
 </Text>
 </PartText>
 </Group>
-<ComplicationSlot slotId="0" name="slot1" displayName="@string/slot_1" x="160" y="274" width="130" height="26" supportedTypes="SHORT_TEXT EMPTY" isCustomizable="TRUE">
-<Variant mode="AMBIENT" target="alpha" value="0" />
-<DefaultProviderPolicy defaultSystemProvider="DAY_AND_DATE" defaultSystemProviderType="SHORT_TEXT" />
-<BoundingBox x="0" y="0" width="130" height="26" outlinePadding="2" />
-<Complication type="SHORT_TEXT">
-<Group x="0" y="0" width="130" height="26" name="scT_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 0 : 255" />
-<ListConfiguration id="theme">
-<ListOption id="t0">
-<Group x="0" y="0" width="130" height="26" name="sc_t0">
-<PartDraw x="0" y="0" width="130" height="26" name="patch_t0">
-<Rectangle x="11" y="2" width="53" height="24">
-<Fill color="#e0dcd2" />
-</Rectangle>
-<Rectangle x="65" y="2" width="43" height="24">
-<Fill color="#e0dcd2" />
-</Rectangle>
-</PartDraw>
-<PartText x="11" y="2" width="97" height="24" name="sttx_t0">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#98938a"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t1">
-<Group x="0" y="0" width="130" height="26" name="sc_t1">
-<PartDraw x="0" y="0" width="130" height="26" name="patch_t1">
-<Rectangle x="11" y="2" width="53" height="24">
-<Fill color="#0e0e0f" />
-</Rectangle>
-<Rectangle x="65" y="2" width="43" height="24">
-<Fill color="#0e0e0f" />
-</Rectangle>
-</PartDraw>
-<PartText x="11" y="2" width="97" height="24" name="sttx_t1">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#55534d"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t2">
-<Group x="0" y="0" width="130" height="26" name="sc_t2">
-<PartDraw x="0" y="0" width="130" height="26" name="patch_t2">
-<Rectangle x="11" y="2" width="53" height="24">
-<Fill color="#0c1a1c" />
-</Rectangle>
-<Rectangle x="65" y="2" width="43" height="24">
-<Fill color="#0c1a1c" />
-</Rectangle>
-</PartDraw>
-<PartText x="11" y="2" width="97" height="24" name="sttx_t2">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#4d6365"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t3">
-<Group x="0" y="0" width="130" height="26" name="sc_t3">
-<PartDraw x="0" y="0" width="130" height="26" name="patch_t3">
-<Rectangle x="11" y="2" width="53" height="24">
-<Fill color="#1e0e10" />
-</Rectangle>
-<Rectangle x="65" y="2" width="43" height="24">
-<Fill color="#1e0e10" />
-</Rectangle>
-</PartDraw>
-<PartText x="11" y="2" width="97" height="24" name="sttx_t3">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#6a5254"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-<ListOption id="t4">
-<Group x="0" y="0" width="130" height="26" name="sc_t4">
-<PartDraw x="0" y="0" width="130" height="26" name="patch_t4">
-<Rectangle x="11" y="2" width="53" height="24">
-<Fill color="#26282a" />
-</Rectangle>
-<Rectangle x="65" y="2" width="43" height="24">
-<Fill color="#26282a" />
-</Rectangle>
-</PartDraw>
-<PartText x="11" y="2" width="97" height="24" name="sttx_t4">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#6a6c6f"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</ListOption>
-</ListConfiguration>
-</Group>
-<Group x="0" y="0" width="130" height="26" name="scD_SHORT_TEXT">
-<Transform target="alpha" value="[CONFIGURATION.dark] ? 255 : 0" />
-<Group x="0" y="0" width="130" height="26" name="sc_dark">
-<PartDraw x="0" y="0" width="130" height="26" name="patch_dark">
-<Rectangle x="11" y="2" width="53" height="24">
-<Fill color="#000000" />
-</Rectangle>
-<Rectangle x="65" y="2" width="43" height="24">
-<Fill color="#000000" />
-</Rectangle>
-</PartDraw>
-<PartText x="11" y="2" width="97" height="24" name="sttx_dark">
-<Text align="CENTER" ellipsis="TRUE">
-<Font family="spacegrotesk_500" size="16" color="#8f8877"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
-</Text>
-</PartText>
-</Group>
-</Group>
-</Complication>
-</ComplicationSlot>
 </Scene>
 </WatchFace>

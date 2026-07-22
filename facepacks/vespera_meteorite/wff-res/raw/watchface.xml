@@ -58,7 +58,7 @@
     <ComplicationSlot slotId="1" name="s1" displayName="@string/slot_1"
                       supportedTypes="SHORT_TEXT RANGED_VALUE EMPTY"
                       x="169" y="70" width="144" height="51">
-      <DefaultProviderPolicy defaultSystemProvider="HEART_RATE" defaultSystemProviderType="SHORT_TEXT" />
+      <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="RANGED_VALUE" />
       <BoundingBox x="0" y="0" width="144" height="51" />
       <Complication type="SHORT_TEXT">
         <PartText x="0" y="3" width="144" height="25">
